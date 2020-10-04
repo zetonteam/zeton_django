@@ -10,27 +10,49 @@ Allows you to earn points for your activities and exchange them for prizes.
 - Reduction of undesired behaviour
 - Generating and maintaining therapy effects over time
 
-## Development setup
-Install Python 3.8
+## Dependencies
 
-Create a virtual environment:
-`python3 -m venv venv`
+[Python 3.8](https://www.python.org/downloads/)  
+[pip](https://pip.pypa.io/en/stable/installing/)  
+[Django](https://docs.djangoproject.com/en/3.1/)  
+[Django Rest Framework](https://www.django-rest-framework.org/)  
+[Postgres](https://www.postgresql.org/)  
 
-To activate a venv:
-`source venv/bin/activate`
+## Docker and docker-compose
 
-Install dependencies:
-`pip install -r requirements.txt`
+[Install Docker](https://docs.docker.com/get-docker/)
 
-## Migrate db:
-`python3 manage.py makemigrations`
-`python3 manage.py migrate`
+If you want to build and run containers - you can do it in two ways:
 
-## To create an admin account:
-`python manage.py createsuperuser`
+Build and run containers:
 
-## To run server:
-`python manage.py runserver`
+`docker-compose up -d --build`
+
+Or
+
+Build the image:  
+`docker-compose build`
+
+Fire up cointainers:  
+`docker-compose up`
+
+Or fire up containers in detached mode:  
+`docker-compose up -d`
+
+## Database: postgres (Django, docker-compose)
+
+To make migrations and migrate:  
+```
+docker-compose exec web python manage.py makemigrations
+docker-compose exec web python manage.py migrate
+```
+
+To create superuser:  
+`docker-compose exec web python manage.py createsuperuser`
+
+## Register and login user in the Django app
+
+Go to http://localhost:8000/admin and create a new user.  
 
 ## Access API
 ToDo
