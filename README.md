@@ -12,22 +12,22 @@ Allows you to earn points for your activities and exchange them for prizes.
 
 ## Dependencies
 
-[Python 3.8](https://www.python.org/downloads/) <br>
-[pip](https://pip.pypa.io/en/stable/installing/) <br>
-[Django](https://docs.djangoproject.com/en/3.1/) <br>
-[Django Rest Framework](https://www.django-rest-framework.org/) <br>
-[Postgres](https://www.postgresql.org/) <br>
+[Python 3.8](https://www.python.org/downloads/)  
+[pip](https://pip.pypa.io/en/stable/installing/)  
+[Django](https://docs.djangoproject.com/en/3.1/)  
+[Django Rest Framework](https://www.django-rest-framework.org/)  
+[Postgres](https://www.postgresql.org/)  
 
 ## Development setup
-Install Python 3.8
+Install Python 3.8  
 
-Create a virtual environment:
+Create a virtual environment:  
 `python3 -m venv venv`
 
-To activate a venv:
+To activate a venv:  
 `source venv/bin/activate`
 
-Install dependencies:
+Install dependencies:  
 `pip install -r requirements.txt`
 
 ## Migrate db:
@@ -53,34 +53,35 @@ docker-compose version 1.25.4, build 8d51620a
 
 If you want to build and run containers - you can do it in two ways:
 
-Build and run containers: <br>
+Build and run containers:
+
 `docker-compose up -d --build`
 
 Or
 
-Build the image: <br>
+Build the image:  
 `docker-compose build`
 
-Fire up cointainers: <br>
+Fire up cointainers:  
 `docker-compose up`
 
-Or fire up containers in detached mode: <br>
+Or fire up containers in detached mode:  
 `docker-compose up -d`
 
 ## Database: postgres (Django, docker-compose)
 
-To make migrations and migrate: <br>
+To make migrations and migrate:  
 ```
-docker-compose exec django python manage.py makemigrations
-docker-compose exec django python manage.py migrate
+docker-compose exec web python manage.py makemigrations
+docker-compose exec web python manage.py migrate
 ```
 
-To create superuser: <br>
-`docker-compose exec django python manage.py createsuperuser`
+To create superuser:  
+`docker-compose exec web python manage.py createsuperuser`
 
 ## Register and login user in the Django app
 
-Go to http://localhost:8000/admin and create a new user. <br>
+Go to http://localhost:8000/admin and create a new user.  
 
 ## Access API
 ToDo
