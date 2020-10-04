@@ -18,28 +18,6 @@ Allows you to earn points for your activities and exchange them for prizes.
 [Django Rest Framework](https://www.django-rest-framework.org/)  
 [Postgres](https://www.postgresql.org/)  
 
-## Development setup
-Install Python 3.8  
-
-Create a virtual environment:  
-`python3 -m venv venv`
-
-To activate a venv:  
-`source venv/bin/activate`
-
-Install dependencies:  
-`pip install -r requirements.txt`
-
-## Migrate db:
-`python3 manage.py makemigrations`
-`python3 manage.py migrate`
-
-## To create an admin account:
-`python manage.py createsuperuser`
-
-## To run server:
-`python manage.py runserver`
-
 ## Docker and docker-compose
 
 [Install Docker](https://docs.docker.com/get-docker/)
