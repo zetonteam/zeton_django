@@ -11,19 +11,19 @@ Allows you to earn points for your activities and exchange them for prizes.
 - Generating and maintaining therapy effects over time
 
 ## Development setup
-Install Python 3.7.2
+Install Python 3.8
 
-Create a virtual environment: <br/>
+Create a virtual environment:
 `python3 -m venv venv`
 
-To activate a venv: <br/>
+To activate a venv:
 `source venv/bin/activate`
 
-Install dependencies: <br/>
+Install dependencies:
 `pip install -r requirements.txt`
 
 ## Migrate db:
-`python3 manage.py makemigrations` <br>
+`python3 manage.py makemigrations`
 `python3 manage.py migrate`
 
 ## To create an admin account:
