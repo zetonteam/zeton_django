@@ -4,3 +4,19 @@ from django.db import models
 
 class CustomUser(AbstractUser):
     is_auth = models.BooleanField(null=True, blank=True)
+
+
+class Caregiver(models.Model):
+    user_id = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+
+
+class Student(models.Model):
+    user_id = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    total_points = models.IntegerField()
+
+
+class Point(models.Model):
+    value = models.IntegerField()
+    assigner = models.ForeignKey(Caregiver, on_delete=models.CASCADE)
+    assignee = models.ForeignKey(Student, on_delete=models.CASCADE)
+    assignment_date = models.DateTimeField()
