@@ -11,7 +11,7 @@ Allows you to earn points for your activities and exchange them for prizes.
 - Generating and maintaining therapy effects over time
 
 ## Development setup
-Install Python 3.7.2
+Install Python 3.8
 
 Create a virtual environment:
 `python3 -m venv venv`
