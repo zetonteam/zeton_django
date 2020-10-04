@@ -16,4 +16,13 @@ services:
             - "8000:8000"
         depends_on:
             - db
+            - migration
+    migration:
+        build: .
+        command: ["bash", "-c",  "while !</dev/tcp/db/5432; do sleep 1; done; python manage.py migrate"]
+        volumes:
+            - .:/code
+        depends_on:
+            -   db
+
 
