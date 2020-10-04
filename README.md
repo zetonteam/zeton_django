@@ -21,13 +21,6 @@ Allows you to earn points for your activities and exchange them for prizes.
 ## Docker and docker-compose
 
 [Install Docker](https://docs.docker.com/get-docker/)
-```
-docker -v
-Docker version 19.03.5, build 633a0ea
-
-docker-compose -v
-docker-compose version 1.25.4, build 8d51620a
-```
 
 If you want to build and run containers - you can do it in two ways:
 
