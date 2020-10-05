@@ -1,0 +1,18 @@
+[
+  {
+    "model": "users.prize",
+    "pk": 1,
+    "fields": {
+      "user": 1,
+      "name": "Puszka Coca-cola"
+    }
+  },
+  {
+    "model": "users.prize",
+    "pk": 2,
+    "fields": {
+      "user": 2,
+      "name": "1 godzina na basenie"
+    }
+  }
+]
