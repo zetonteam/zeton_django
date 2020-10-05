@@ -1,0 +1,9 @@
+[
+  {
+    "model": "users.caregiver",
+    "pk": 1,
+    "fields": {
+      "user": 3
+    }
+  }
+]
