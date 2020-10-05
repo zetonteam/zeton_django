@@ -50,10 +50,19 @@ docker-compose exec web python manage.py migrate
 To create superuser:  
 `docker-compose exec web python manage.py createsuperuser`
 
+## To populate data
+
+To populate data using fixtures:  
+`make load_data`
+
 ## Register and login user in the Django app
 
 Go to http://localhost:8000/admin and create a new user.  
 
 ## Access API
-ToDo
+
+Examples for prizes  
+http://localhost:8000/api/users/prizes  
+http://localhost:8000/api/users/prizes/1
+
 

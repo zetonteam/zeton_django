@@ -37,5 +37,5 @@ class PrizesResource(APIView):
             serializer = PrizeSerializer(prizes, many=True)
         else:
             prize = Prize.objects.get(pk=pk)
-            serializer = StudentSerializer(prize)
+            serializer = PrizeSerializer(prize)
         return Response(serializer.data)
