@@ -19,6 +19,8 @@ services:
         depends_on:
             - db
             - migration
+        env_file:
+            - ./env_config/local.env
     migration:
         build: .
         command: ["bash", "-c",  "while !</dev/tcp/db/5432; do sleep 1; done; python manage.py migrate"]

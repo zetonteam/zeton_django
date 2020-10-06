@@ -7,11 +7,11 @@ class CustomUser(AbstractUser):
 
 
 class Caregiver(models.Model):
-    user_id = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
 
 
 class Student(models.Model):
-    user_id = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     total_points = models.IntegerField()
 
 
@@ -20,3 +20,8 @@ class Point(models.Model):
     assigner = models.ForeignKey(Caregiver, on_delete=models.CASCADE)
     assignee = models.ForeignKey(Student, on_delete=models.CASCADE)
     assignment_date = models.DateTimeField()
+
+
+class Prize(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    name = models.CharField(max_length=100)
