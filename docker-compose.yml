@@ -7,6 +7,8 @@ services:
             - POSTGRES_DB=postgres
             - POSTGRES_USER=postgres
             - POSTGRES_PASSWORD=postgres
+        volumes:
+            - .:/postgres_data/  # Persist data even if container shuts down volumes
     web:
         build: .
         command: python manage.py runserver 0.0.0.0:8000
@@ -27,4 +29,5 @@ services:
         depends_on:
             -   db
 
-
+volumes:
+  postgres_data:
