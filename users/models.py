@@ -23,5 +23,5 @@ class Point(models.Model):
 
 
 class Prize(models.Model):
-    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    student = models.ForeignKey(Student, on_delete=models.CASCADE)
     name = models.CharField(max_length=100)
