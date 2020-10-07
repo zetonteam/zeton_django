@@ -3,7 +3,7 @@ from rest_framework.decorators import api_view
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
-from users.models import Student, CustomUser
+from users.models import Student, CustomUser, Prize
 
 
 class StudentSerializer(serializers.Serializer):
@@ -70,12 +70,18 @@ class StudentsResource(APIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-@api_view(["GET"])
-def students_resource(request, pk=None):
-    if pk is None:
-        students = Student.objects.all()
-        serializer = StudentSerializer(students, many=True)
-    else:
-        student = Student.objects.get(pk=pk)
-        serializer = StudentSerializer(student)
-    return Response(serializer.data)
+class PrizeSerializer(serializers.Serializer):
+    pk = serializers.IntegerField()
+    name = serializers.CharField()
+
+
+class PrizesResource(APIView):
+
+    def get(self, request, pk=None):
+        if pk is None:
+            prizes = Prize.objects.all()
+            serializer = PrizeSerializer(prizes, many=True)
+        else:
+            prize = Prize.objects.get(pk=pk)
+            serializer = PrizeSerializer(prize)
+        return Response(serializer.data)
