@@ -1,19 +1,12 @@
-from rest_framework import serializers
+from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
 from users.models import Student, Prize
-
-
-class StudentSerializer(serializers.Serializer):
-    pk = serializers.IntegerField()
-    first_name = serializers.CharField(source="user.first_name")
-    last_name = serializers.CharField(source="user.last_name")
-    total_points = serializers.IntegerField()
+from users.serializers import StudentSerializer, PrizeSerializer
 
 
 class StudentsResource(APIView):
-
     def get(self, request, pk=None):
         if pk is None:
             students = Student.objects.all()
@@ -23,14 +16,32 @@ class StudentsResource(APIView):
             serializer = StudentSerializer(student)
         return Response(serializer.data)
 
+    def post(self, request):
+        serializer = StudentSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data)
 
-class PrizeSerializer(serializers.Serializer):
-    pk = serializers.IntegerField()
-    name = serializers.CharField()
+    def put(self, request, pk):
+        student = Student.objects.get(pk=pk)
+        serializer = StudentSerializer(student, data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data)
+
+    def patch(self, request, pk):
+        student = Student.objects.get(pk=pk)
+        serializer = StudentSerializer(student, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data)
+
+    def delete(self, request, pk):
+        Student.objects.filter(pk=pk).delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 class PrizesResource(APIView):
-
     def get(self, request, pk=None):
         if pk is None:
             prizes = Prize.objects.all()
@@ -39,3 +50,27 @@ class PrizesResource(APIView):
             prize = Prize.objects.get(pk=pk)
             serializer = PrizeSerializer(prize)
         return Response(serializer.data)
+
+    def post(self, request):
+        serializer = PrizeSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data)
+
+    def put(self, request, pk):
+        prize = Prize.objects.get(pk=pk)
+        serializer = PrizeSerializer(prize, data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data)
+
+    def patch(self, request, pk):
+        prize = Prize.objects.get(pk=pk)
+        serializer = PrizeSerializer(prize, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data)
+
+    def delete(self, request, pk):
+        Prize.objects.filter(pk=pk).delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
