@@ -1,3 +1,13 @@
+# Byte-compiled
+__pycache__/
 *.pyc
+
+# Environments
+.env
+.venv
+env/
+venv/
+
+# IDE
 .idea/
-env
+.vscode/
