@@ -61,8 +61,100 @@ Go to http://localhost:8000/admin and create a new user.
 
 ## Access API
 
-Examples for prizes  
-http://localhost:8000/api/users/prizes  
-http://localhost:8000/api/users/prizes/1
+### Examples for students  
 
+Go to http://localhost:8000/api/users/students
+
+You may expect this result: 
+
+```
+HTTP 200 OK
+Allow: GET, POST, PUT, PATCH, DELETE, HEAD, OPTIONS
+Content-Type: application/json
+Vary: Accept
+
+[
+    {
+        "pk": 1,
+        "email": "wojtek-zeton@mailinator.com",
+        "username": "wojtek",
+        "first_name": "Wojtek",
+        "last_name": "",
+        "total_points": 250
+    },
+    {
+        "pk": 2,
+        "email": "kuba-zeton@mailinator.com",
+        "username": "kuba",
+        "first_name": "Kuba",
+        "last_name": "",
+        "total_points": 120
+    }
+]
+```
+
+Go to http://localhost:8000/api/users/students/1  
+
+Result:  
+
+```
+HTTP 200 OK
+Allow: GET, POST, PUT, PATCH, DELETE, HEAD, OPTIONS
+Content-Type: application/json
+Vary: Accept
+
+{
+    "pk": 1,
+    "email": "wojtek-zeton@mailinator.com",
+    "username": "wojtek",
+    "first_name": "Wojtek",
+    "last_name": "",
+    "total_points": 250
+}
+```
+
+### Examples for prizes  
+
+Go to http://localhost:8000/api/users/prizes  
+
+```
+GET /api/users/prizes
+HTTP 200 OK
+Allow: GET, POST, PUT, PATCH, DELETE, HEAD, OPTIONS
+Content-Type: application/json
+Vary: Accept
+
+[
+    {
+        "pk": 1,
+        "student": "1",
+        "name": "Puszka Coca-cola",
+        "value": 10
+    },
+    {
+        "pk": 2,
+        "student": "2",
+        "name": "1 godzina na basenie",
+        "value": 30
+    }
+]
+```
+
+Go to http://localhost:8000/api/users/prizes/1  
+
+Result:
+
+```
+HTTP 200 OK
+Allow: GET, POST, PUT, PATCH, DELETE, HEAD, OPTIONS
+Content-Type: application/json
+Vary: Accept
+
+{
+    "pk": 1,
+    "student": "1",
+    "name": "Puszka Coca-cola",
+    "value": 10
+}
+```
 
