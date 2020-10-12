@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from users.models import Student, CustomUser, Prize
+from users.models import Student, CustomUser, Prize, Task
 
 
 class StudentSerializer(serializers.Serializer):
@@ -39,6 +39,23 @@ class PrizeSerializer(serializers.Serializer):
 
     def create(self, validated_data):
         return Prize.objects.create(**validated_data)
+
+    def update(self, instance, validated_data):
+        instance.student = validated_data.get('student', instance.student)
+        instance.name = validated_data.get('name', instance.name)
+        instance.value = validated_data.get('value', instance.value)
+        instance.save()
+        return instance
+
+
+class TaskSerializer(serializers.Serializer):
+    pk = serializers.IntegerField(read_only=True)
+    student = serializers.CharField(source="student.id")
+    name = serializers.CharField()
+    value = serializers.IntegerField()
+
+    def create(self, validated_data):
+        return Task.objects.create(**validated_data)
 
     def update(self, instance, validated_data):
         instance.student = validated_data.get('student', instance.student)
