@@ -157,4 +157,10 @@ Vary: Accept
     "value": 10
 }
 ```
+### Examples for tasks 
 
+Similarly, tasks:
+
+Go to  
+http://localhost:8000/api/users/tasks  
+http://localhost:8000/api/users/tasks/1  
