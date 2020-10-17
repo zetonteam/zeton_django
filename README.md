@@ -65,6 +65,14 @@ Go to http://localhost:8000/admin and create a new user.
 
 Go to http://localhost:8000/api/users/token-auth/  
 
+As you can see below, you can fill the HTML form with username and password.  
+
+![](https://github.com/zetonteam/zeton_django/blob/auth/images/auth_token_01.png?raw=true)  
+
+After that you should see token.  
+
+![](https://github.com/zetonteam/zeton_django/blob/auth/images/auth_token_02.png?raw=true)  
+
 
 ### Examples for students  
 
