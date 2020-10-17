@@ -61,6 +61,11 @@ Go to http://localhost:8000/admin and create a new user.
 
 ## Access API
 
+### Auth
+
+Go to http://localhost:8000/api/users/token-auth/  
+
+
 ### Examples for students  
 
 Go to http://localhost:8000/api/users/students
