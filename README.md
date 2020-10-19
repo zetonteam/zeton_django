@@ -70,12 +70,12 @@ After that you should see token, copy that
 
 Postman
 
-![]()  
+![](https://github.com/zetonteam/zeton_django/blob/auth-with-simplejwt/images/Screenshot_01.png?raw=true)  
 
 Then you can hit http://localhost:8000/api/users/hello  
 with Authorization TYPE Bearer Token - Token - then paste the token
 
-![]()  
+![](https://github.com/zetonteam/zeton_django/blob/auth-with-simplejwt/images/Screenshot_02.png?raw=true)  
 
 After that you should have access to this page.  
 
