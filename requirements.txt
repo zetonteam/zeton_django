@@ -1,5 +1,6 @@
 Django==3.0.7
 djangorestframework==3.11.0
+djangorestframework-simplejwt==4.4.0
 psycopg2-binary==2.8.6
 django-cors-headers==3.4.0
 pytest==6.1.1

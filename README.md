@@ -61,6 +61,24 @@ Go to http://localhost:8000/admin and create a new user.
 
 ## Access API
 
+### Auth
+
+Go to http://localhost:8000/api/users/token/  
+
+As you can see below, you can fill KEY username and VALUE with password.  
+After that you should see token, copy that  
+
+Postman
+
+![]()  
+
+Then you can hit http://localhost:8000/api/users/hello  
+with Authorization TYPE Bearer Token - Token - then paste the token
+
+![]()  
+
+After that you should have access to this page.  
+
 ### Examples for students  
 
 Go to http://localhost:8000/api/users/students
