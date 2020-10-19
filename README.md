@@ -65,7 +65,7 @@ Go to http://localhost:8000/admin and create a new user.
 
 Go to http://localhost:8000/api/users/token/  
 
-As you can see below, you can fill KEY username and VALUE with password.  
+As you can see below, you can fill KEY with username and VALUE with password.  
 After that you should see token, copy that  
 
 Postman
