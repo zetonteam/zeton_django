@@ -1,12 +1,15 @@
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
 
 from users.models import Student, Prize, Task
 from users.serializers import StudentSerializer, PrizeSerializer, TaskSerializer
 
 
 class StudentsResource(APIView):
+    permission_classes = (IsAuthenticated,)
+
     def get(self, request, pk=None):
         if pk is None:
             students = Student.objects.all()
