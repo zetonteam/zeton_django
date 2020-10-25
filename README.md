@@ -69,11 +69,13 @@ As you can see below, you can fill the body form-data with info:
 
 ![](https://github.com/zetonteam/zeton_django/blob/auth/images/postman_register_01.png?raw=true)  
 
-After that you can hit http://localhost:8000/api/users/students/ with GET method and put into Headers key and value:    
+After that you can hit http://localhost:8000/api/users/students/ with GET method and put into Headers key and value.
+
+Then you have access to private endpoint.   
 
 ![](https://github.com/zetonteam/zeton_django/blob/auth/images/postman_register_02.png?raw=true)  
 
-Then you have access to private endpoints:
+More private endpoints:
 
 Go to http://localhost:8000/api/users/students
 
