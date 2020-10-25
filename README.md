@@ -63,13 +63,13 @@ Go to http://localhost:8000/admin and create a new user.
 
 ### Auth
 
-Go to http://localhost:8000/api/users/token-auth/  
+Go to http://localhost:8000/api/users/register 
 
-As you can see below, you can fill the HTML form with username and password.  
+As you can see below, you can fill the body form-data with info:   
 
 ![](https://github.com/zetonteam/zeton_django/blob/auth/images/auth_token_01.png?raw=true)  
 
-After that you should see token.  
+After that you can hit http://localhost:8000/api/users/students/ with GET method and put into Headers key and value:    
 
 ![](https://github.com/zetonteam/zeton_django/blob/auth/images/auth_token_02.png?raw=true)  
 
