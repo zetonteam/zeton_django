@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from rest_framework.settings import api_settings
+from rest_framework_jwt.settings import api_settings
 
 from users.models import Student, CustomUser, Prize, Task
 
@@ -72,7 +72,7 @@ class CustomUserSerializer(serializers.Serializer):
         fields = ('username',)
 
 
-class CustomUserSerializerWithToken(serializers.ModelSerializer):   # Handling Signups
+class CustomUserSerializerWithToken(serializers.ModelSerializer):   # Handling Register
     token = serializers.SerializerMethodField()
     password = serializers.CharField(write_only=True)
 
