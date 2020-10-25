@@ -67,25 +67,19 @@ Go to http://localhost:8000/api/users/register
 
 As you can see below, you can fill the body form-data with info:   
 
-![](https://github.com/zetonteam/zeton_django/blob/auth/images/auth_token_01.png?raw=true)  
+![](https://github.com/zetonteam/zeton_django/blob/auth/images/postman_register_01.png?raw=true)  
 
 After that you can hit http://localhost:8000/api/users/students/ with GET method and put into Headers key and value:    
 
-![](https://github.com/zetonteam/zeton_django/blob/auth/images/auth_token_02.png?raw=true)  
+![](https://github.com/zetonteam/zeton_django/blob/auth/images/postman_register_02.png?raw=true)  
 
-
-### Examples for students  
+Then you have access to private endpoints:
 
 Go to http://localhost:8000/api/users/students
 
 You may expect this result: 
 
 ```
-HTTP 200 OK
-Allow: GET, POST, PUT, PATCH, DELETE, HEAD, OPTIONS
-Content-Type: application/json
-Vary: Accept
-
 [
     {
         "pk": 1,
@@ -111,11 +105,6 @@ Go to http://localhost:8000/api/users/students/1
 Result:  
 
 ```
-HTTP 200 OK
-Allow: GET, POST, PUT, PATCH, DELETE, HEAD, OPTIONS
-Content-Type: application/json
-Vary: Accept
-
 {
     "pk": 1,
     "email": "wojtek-zeton@mailinator.com",
@@ -126,17 +115,9 @@ Vary: Accept
 }
 ```
 
-### Examples for prizes  
-
 Go to http://localhost:8000/api/users/prizes  
 
 ```
-GET /api/users/prizes
-HTTP 200 OK
-Allow: GET, POST, PUT, PATCH, DELETE, HEAD, OPTIONS
-Content-Type: application/json
-Vary: Accept
-
 [
     {
         "pk": 1,
@@ -158,11 +139,6 @@ Go to http://localhost:8000/api/users/prizes/1
 Result:
 
 ```
-HTTP 200 OK
-Allow: GET, POST, PUT, PATCH, DELETE, HEAD, OPTIONS
-Content-Type: application/json
-Vary: Accept
-
 {
     "pk": 1,
     "student": "1",
@@ -170,10 +146,10 @@ Vary: Accept
     "value": 10
 }
 ```
-### Examples for tasks 
 
 Similarly, tasks:
 
 Go to  
 http://localhost:8000/api/users/tasks  
 http://localhost:8000/api/users/tasks/1  
+
