@@ -63,7 +63,10 @@ Go to http://localhost:8000/admin and create a new user.
 
 ### Auth
 
-Go to http://localhost:8000/api/users/register 
+
+Go to http://localhost:8000/api/users/register/  
+
+You may use Postman for that.
 
 As you can see below, you can fill the body form-data with info:   
 
@@ -77,7 +80,7 @@ Then you have access to private endpoint.
 
 More private endpoints:
 
-Go to http://localhost:8000/api/users/students
+Go to http://localhost:8000/api/users/students/
 
 You may expect this result: 
 
@@ -117,7 +120,7 @@ Result:
 }
 ```
 
-Go to http://localhost:8000/api/users/prizes  
+Go to http://localhost:8000/api/users/prizes/  
 
 ```
 [
@@ -152,6 +155,6 @@ Result:
 Similarly, tasks:
 
 Go to  
-http://localhost:8000/api/users/tasks  
+http://localhost:8000/api/users/tasks/  
 http://localhost:8000/api/users/tasks/1  
 
