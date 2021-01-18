@@ -71,13 +71,13 @@ You may use Postman for that.
 
 As you can see below, you can fill the body form-data with info:   
 
-![](https://github.com/zetonteam/zeton_django/blob/auth/images/postman_register_01.png?raw=true)  
+![](https://github.com/zetonteam/zeton_django/blob/develop/images/postman_register_01.png?raw=true)  
 
 After that you can hit http://localhost:8000/api/users/students/ with GET method and put into Headers key and value.
 
 Then you have access to private endpoint.   
 
-![](https://github.com/zetonteam/zeton_django/blob/auth/images/postman_register_02.png?raw=true)  
+![](https://github.com/zetonteam/zeton_django/blob/develop/images/postman_register_02.png?raw=true)  
 
 More private endpoints:
 
