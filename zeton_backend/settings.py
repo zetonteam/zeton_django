@@ -15,6 +15,11 @@ import os
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 from utils.conversion import str_to_boolean
 
+if os.getenv('ENVIRONMENT') and os.getenv('ENVIRONMENT') == 'DEV':
+    from .settings_dev import *
+else:
+    from .settings_prod import *
+
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # Quick-start development settings - unsuitable for production
@@ -118,18 +123,3 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 AUTH_USER_MODEL = 'users.CustomUser'
-
-REST_FRAMEWORK = {
-    'DEFAULT_PERMISSION_CLASSES': (
-        'rest_framework.permissions.IsAuthenticated',  # Make all endpoints private
-    ),
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
-        'rest_framework.authentication.SessionAuthentication',
-        'rest_framework.authentication.BasicAuthentication',
-    ),
-}
-
-JWT_AUTH = {
-    'JWT_RESPONSE_PAYLOAD_HANDLER': 'zeton_backend.utils.my_jwt_response_handler'
-}

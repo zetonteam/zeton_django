@@ -63,6 +63,7 @@ Go to http://localhost:8000/admin and create a new user.
 
 ### Auth
 
+To run app with tokens, set `.local.env` `ENVIRONMENT` to `PROD`.
 
 Go to http://localhost:8000/api/users/register/  
 
