@@ -20,7 +20,9 @@ Allows you to earn points for your activities and exchange them for prizes.
 
 ## Docker and docker-compose
 
-[Install Docker](https://docs.docker.com/get-docker/)
+[Install Docker](https://docs.docker.com/get-docker/)  
+[Post-installation steps for Linux](https://docs.docker.com/engine/install/linux-postinstall/)  
+[Install docker-compose](https://docs.docker.com/compose/install/)  
 
 If you want to build and run containers - you can do it in two ways:
 
