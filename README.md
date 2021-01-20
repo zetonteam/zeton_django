@@ -20,7 +20,15 @@ Allows you to earn points for your activities and exchange them for prizes.
 
 ## Docker and docker-compose
 
-[Install Docker](https://docs.docker.com/get-docker/)
+1. [Install Docker](https://docs.docker.com/get-docker/)  
+
+If you use Linux and need to use `sudo` before `docker-compose` command just follow step below:
+
+manage Docker as a non-root user:  [Post-installation steps for Linux](https://docs.docker.com/engine/install/linux-postinstall/)  
+
+2. [Install docker-compose](https://docs.docker.com/compose/install/)  
+
+3. Commands:
 
 If you want to build and run containers - you can do it in two ways:
 
@@ -63,6 +71,7 @@ Go to http://localhost:8000/admin and create a new user.
 
 ### Auth
 
+To run app with tokens, set `.local.env` `ENVIRONMENT` to `PROD`.
 
 Go to http://localhost:8000/api/users/register/  
 
@@ -70,13 +79,13 @@ You may use Postman for that.
 
 As you can see below, you can fill the body form-data with info:   
 
-![](https://github.com/zetonteam/zeton_django/blob/auth/images/postman_register_01.png?raw=true)  
+![](https://github.com/zetonteam/zeton_django/blob/develop/images/postman_register_01.png?raw=true)  
 
 After that you can hit http://localhost:8000/api/users/students/ with GET method and put into Headers key and value.
 
 Then you have access to private endpoint.   
 
-![](https://github.com/zetonteam/zeton_django/blob/auth/images/postman_register_02.png?raw=true)  
+![](https://github.com/zetonteam/zeton_django/blob/develop/images/postman_register_02.png?raw=true)  
 
 More private endpoints:
 
