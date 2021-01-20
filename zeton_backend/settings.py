@@ -15,7 +15,7 @@ import os
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 from utils.conversion import str_to_boolean
 
-if os.getenv('ENVIRONMENT') and os.getenv('ENVIRONMENT') == 'DEV':
+if os.getenv('ENVIRONMENT') == 'DEV':
     from .settings_dev import *
 else:
     from .settings_prod import *

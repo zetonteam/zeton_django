@@ -20,9 +20,15 @@ Allows you to earn points for your activities and exchange them for prizes.
 
 ## Docker and docker-compose
 
-[Install Docker](https://docs.docker.com/get-docker/)  
-[Post-installation steps for Linux](https://docs.docker.com/engine/install/linux-postinstall/)  
-[Install docker-compose](https://docs.docker.com/compose/install/)  
+1. [Install Docker](https://docs.docker.com/get-docker/)  
+
+If you use Linux and need to use `sudo` before `docker-compose` command just follow step below:
+
+manage Docker as a non-root user:  [Post-installation steps for Linux](https://docs.docker.com/engine/install/linux-postinstall/)  
+
+2. [Install docker-compose](https://docs.docker.com/compose/install/)  
+
+3. Commands:
 
 If you want to build and run containers - you can do it in two ways:
 
