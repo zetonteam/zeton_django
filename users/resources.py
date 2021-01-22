@@ -3,7 +3,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 
 from users.models import Student, Prize, Task
-from users.serializers import StudentSerializer, PrizeSerializer, TaskSerializer
+from users.serializers import StudentSerializer, PrizeSerializer, TaskSerializer, PointSerializer
 
 
 class StudentsResource(APIView):
@@ -109,3 +109,11 @@ class TasksResource(APIView):
     def delete(self, request, pk):
         Task.objects.filter(pk=pk).delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class PointResource(APIView):
+    def post(self, request, pk=None):
+        serializer = PointSerializer(data=request.data) 
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
