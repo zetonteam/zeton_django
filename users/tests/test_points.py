@@ -31,11 +31,7 @@ def test_add_point_invalid_json(client):
     
     response = client.post(
         "/api/users/students/2/points/",
-        {
-            "value": 1,
-            "assigner": 0,
-            "assignee": 2,  
-        },
+        {},
         content_type="application/json"
     )
     assert response.status_code == 400
