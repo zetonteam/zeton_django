@@ -1,20 +1,6 @@
 [
   {
     "model": "users.customuser",
-    "pk": 1,
-    "fields": {
-      "username": "admin",
-      "email": "admin-zeton@mailinator.com",
-      "password": "pbkdf2_sha256$180000$zMLJTx12IxQd$El8/6kDHWtWBm2T9Iut2ujWAYJ7qx5WIZfUx8oaEHjE=",
-      "first_name": "",
-      "last_name": "",
-      "is_staff": true,
-      "is_active": true,
-      "date_joined": "2020-09-29T10:20:55.758Z"
-    }
-  },
-  {
-    "model": "users.customuser",
     "pk": 2,
     "fields": {
       "username": "wojtek",
