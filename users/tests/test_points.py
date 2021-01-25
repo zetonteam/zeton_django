@@ -68,3 +68,6 @@ def test_get_single_point(client):
     assert response.status_code == 200
     assert response.data["value"] == 22
     
+def test_get_single_point_incorrect_id(client):
+    response = client.get(f"/api/users/students/2/points/foo")
+    assert response.status_code == 404
