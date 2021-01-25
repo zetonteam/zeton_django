@@ -132,3 +132,17 @@ class PointDetail(APIView):
             point = self.get_object(pk=self.kwargs.get('point_pk', ''))
             serializer = PointSerializer(point)
             return Response(serializer.data)
+
+
+class ListPoints(generics.ListAPIView):
+        def get_queryset(self):
+            queryset = Point.objects.all()
+            student_id = self.request.query_params.get('studentId', None)
+            if student_id is not None:
+                queryset = queryset.filter(assignee_id=student_id)
+            return queryset
+
+        def get(self, request, format=None):
+            point = self.get_queryset()
+            serializer = PointSerializer(point, many=True)
+            return Response(serializer.data)
