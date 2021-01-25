@@ -2,7 +2,7 @@ from django.urls import path
 
 from rest_framework_jwt.views import obtain_jwt_token
 
-from users.resources import PointResource, StudentsResource, PrizesResource, TasksResource
+from users.resources import PointResource, StudentsResource, PrizesResource, TasksResource, PointDetail
 
 from users.views import current_user, UserList
 
@@ -12,7 +12,8 @@ urlpatterns = [
     path('current-user/', current_user),
     path('register/', UserList.as_view()),
 
-    path("students/<int:pk>/points/", PointResource.as_view(), name="point-resource"),
+    path("students/<int:pk>/points/<int:point_pk>/", PointDetail.as_view(), name="point-resource"),
+    path("students/<int:pk>/points/", PointResource.as_view(), name="points-resource"),
     path("students/<int:pk>/", StudentsResource.as_view(), name="student-resource"),
     path("students/", StudentsResource.as_view(), name="students-resource"),
 
