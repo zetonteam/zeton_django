@@ -124,7 +124,8 @@ class PointResource(generics.GenericAPIView):
         student_id = self.request.query_params.get('studentId', None)
         if student_id is not None:
             queryset = queryset.filter(assignee_id=student_id)
-        return queryset
+            return queryset
+        return None
 
     def get(self, request, pk=None, format=None):
         if pk is not None:
@@ -132,7 +133,10 @@ class PointResource(generics.GenericAPIView):
             serializer = PointSerializer(point)
         else:
             point = self.get_queryset()
-            serializer = PointSerializer(point, many=True)
+            if point is not None:
+                serializer = PointSerializer(point, many=True)
+            else:
+                raise Http404
         return Response(serializer.data)
 
     def post(self, request, pk=None):
