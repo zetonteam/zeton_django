@@ -10,7 +10,7 @@ def test_add_point(client):
     assert len(points) == 0
 
     response = client.post(
-        "/api/users/students/2/points/",
+        "/api/users/points/",
         {
             "value": 1,
             "assigner": 1,
@@ -30,7 +30,7 @@ def test_add_point_invalid_json(client):
     assert len(points) == 0
     
     response = client.post(
-        "/api/users/students/2/points/",
+        "/api/users/points/",
         {},
         content_type="application/json"
     )
@@ -45,7 +45,7 @@ def test_add_point_invalid_json_keys(client):
     assert len(points) == 0
     
     response = client.post(
-        "/api/users/students/2/points/",
+        "/api/users/points/",
         {
             "value": 1,
             "assignee": 2,  
@@ -63,7 +63,7 @@ def test_get_single_point(client):
     assignee = Student.objects.get(pk=2)
     point = Point.objects.create(value=22, assigner=assigner, assignee=assignee)
 
-    response = client.get(f"/api/users/students/{assignee.pk}/points/{point.pk}/")
+    response = client.get(f"/api/users/points/{point.pk}/")
 
     assert response.status_code == 200
     assert response.data["value"] == 22
