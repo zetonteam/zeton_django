@@ -99,4 +99,4 @@ class CustomUserSerializerWithToken(serializers.ModelSerializer):   # Handling R
 class PointSerializer(serializers.ModelSerializer):
     class Meta:
         model = Point
-        fields = ('value', 'assigner', 'assignee', 'assignment_date')
+        fields = ('pk', 'value', 'assigner', 'assignee', 'assignment_date')
