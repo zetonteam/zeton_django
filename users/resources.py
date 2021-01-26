@@ -112,37 +112,32 @@ class TasksResource(APIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-class PointResource(APIView):
+class PointResource(generics.GenericAPIView):
+    def get_object(self, pk):
+        try:
+            return Point.objects.get(pk=pk)
+        except Point.DoesNotExist:
+            raise Http404
+
+    def get_queryset(self):
+        queryset = Point.objects.all()
+        student_id = self.request.query_params.get('studentId', None)
+        if student_id is not None:
+            queryset = queryset.filter(assignee_id=student_id)
+        return queryset
+
+    def get(self, request, pk=None, format=None):
+        if pk is not None:
+            point = self.get_object(pk=pk)
+            serializer = PointSerializer(point)
+        else:
+            point = self.get_queryset()
+            serializer = PointSerializer(point, many=True)
+        return Response(serializer.data)
+
     def post(self, request, pk=None):
         serializer = PointSerializer(data=request.data) 
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
-class PointDetail(APIView):
-        def get_object(self, pk):
-            try:
-                return Point.objects.get(pk=pk)
-            except Point.DoesNotExist:
-                raise Http404
-        
-        def get(self, request, pk, point_pk, format=None):
-            point = self.get_object(pk=self.kwargs.get('point_pk', ''))
-            serializer = PointSerializer(point)
-            return Response(serializer.data)
-
-
-class ListPoints(generics.ListAPIView):
-        def get_queryset(self):
-            queryset = Point.objects.all()
-            student_id = self.request.query_params.get('studentId', None)
-            if student_id is not None:
-                queryset = queryset.filter(assignee_id=student_id)
-            return queryset
-
-        def get(self, request, format=None):
-            point = self.get_queryset()
-            serializer = PointSerializer(point, many=True)
-            return Response(serializer.data)
