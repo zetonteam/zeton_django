@@ -21,5 +21,6 @@ urlpatterns = [
     path("tasks/<int:pk>/", TasksResource.as_view(), name="task-resource"),
     path("tasks/", TasksResource.as_view(), name="tasks-resource"),
     
-    path("points/", ListPoints.as_view(), name="points-res"),
+    path("points/", PointResource.as_view(), name="points-resource"),
+    path("points/<int:pk>/", PointResource.as_view(), name="point-resource")
 ]
