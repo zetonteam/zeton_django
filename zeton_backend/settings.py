@@ -123,3 +123,7 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 AUTH_USER_MODEL = 'users.CustomUser'
+
+FIXTURE_DIRS = [
+    os.path.join(BASE_DIR, 'fixtures')
+]
