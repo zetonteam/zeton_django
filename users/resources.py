@@ -115,26 +115,23 @@ class TasksResource(APIView):
 class PointResource(generics.GenericAPIView):
     serializer_class = PointSerializer
 
-    def get_object(self, pk):
-        try:
-            return Point.objects.get(pk=pk)
-        except Point.DoesNotExist:
-            raise Http404
-
     def get_queryset(self):
+        if self.kwargs.get('pk') is not None:
+            resource_id = self.kwargs['pk']
+        else:
+            resource_id = self.request.query_params.get('studentId', None)
+            if resource_id is None:
+                raise Http404
+
         queryset = Point.objects.all()
-        student_id = self.request.query_params.get('studentId', None)
-        if student_id is None:
-            raise Http404
-        queryset = queryset.filter(assignee_id=student_id)
+        queryset = queryset.filter(assignee_id=resource_id)
         return queryset
 
     def get(self, request, pk=None, format=None):
+        point = self.get_queryset()
         if pk is not None:
-            point = self.get_object(pk=pk)
-            serializer = PointSerializer(point)
+            serializer = PointSerializer(point.first())
         else:
-            point = self.get_queryset()
             serializer = PointSerializer(point, many=True)
         return Response(serializer.data)
 
