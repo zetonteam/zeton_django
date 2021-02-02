@@ -113,6 +113,8 @@ class TasksResource(APIView):
 
 
 class PointResource(generics.GenericAPIView):
+    serializer_class = PointSerializer
+
     def get_object(self, pk):
         try:
             return Point.objects.get(pk=pk)
