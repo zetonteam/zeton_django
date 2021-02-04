@@ -171,7 +171,7 @@ http://localhost:8000/api/users/tasks/1
 There are currently several enpoints responsible for managing student points available:
 
 1. `api/users/points/` accesible with a `GET` request and followed by a query string pointing to a student primary key.  
-For example: `api/users/points/?studentId=2/` should return Point instances assigned to the student with `pk=2`  
+For example: `api/users/points/?studentId=2` should return Point instances assigned to the student with `pk=2`  
 
 2. `api/users/points/` accesible with `POST` request, payload in a given format is required:
 ```
