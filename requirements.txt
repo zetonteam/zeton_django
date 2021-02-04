@@ -5,3 +5,4 @@ django-cors-headers==3.4.0
 pytest==6.1.1
 pytest-django==3.10.0
 djangorestframework-jwt==1.11.0
+six==1.15.0

@@ -1,9 +1,10 @@
-from rest_framework import status
+from django.http.response import Http404
+from rest_framework import status, generics
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
-from users.models import Student, Prize, Task
-from users.serializers import StudentSerializer, PrizeSerializer, TaskSerializer
+from users.models import Student, Prize, Task, Point
+from users.serializers import StudentSerializer, PrizeSerializer, TaskSerializer, PointSerializer
 
 
 class StudentsResource(APIView):
@@ -109,3 +110,34 @@ class TasksResource(APIView):
     def delete(self, request, pk):
         Task.objects.filter(pk=pk).delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class PointResource(generics.GenericAPIView):
+    serializer_class = PointSerializer
+
+    def get_queryset(self):
+        if self.kwargs.get('pk') is not None:
+            resource_id = self.kwargs['pk']
+        else:
+            resource_id = self.request.query_params.get('studentId', None)
+            if resource_id is None:
+                raise Http404
+
+        queryset = Point.objects.all()
+        queryset = queryset.filter(assignee_id=resource_id)
+        return queryset
+
+    def get(self, request, pk=None, format=None):
+        point = self.get_queryset()
+        if pk is not None:
+            serializer = PointSerializer(point.first())
+        else:
+            serializer = PointSerializer(point, many=True)
+        return Response(serializer.data)
+
+    def post(self, request, pk=None):
+        serializer = PointSerializer(data=request.data) 
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

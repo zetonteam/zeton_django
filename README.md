@@ -167,3 +167,35 @@ Go to
 http://localhost:8000/api/users/tasks/  
 http://localhost:8000/api/users/tasks/1  
 
+## Points endpoints  
+There are currently several enpoints responsible for managing student points available:
+
+1. `api/users/points/` accesible with a `GET` request and followed by a query string pointing to a student primary key.  
+For example: `api/users/points/?studentId=2` should return Point instances assigned to the student with `pk=2`  
+
+2. `api/users/points/` accesible with `POST` request, payload in a given format is required:
+```
+{
+    "value": 40,
+    "assigner": 1,
+    "assignee": 1,
+}
+```
+As a result you should receive a response similar to the following:  
+```
+{
+    "pk": 5,
+    "value": 40,
+    "assigner": 1,
+    "assignee": 1,
+    "assignment_date": "2021-01-26T21:41:04.952509Z"
+}
+```
+
+3. `api/users/points/<int:pk>/` accesible with `GET` request, should return single requested Point instance
+
+
+### Tests  
+There are also some tests, checking above endpoints, available in the `users/tests/users/test_points.py` module.  
+
+To execute the tests simply call `docker-compose exec web pytest` (you can add the `-v` flag for a verbose ouput).

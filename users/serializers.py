@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from rest_framework_jwt.settings import api_settings
 
-from users.models import Student, CustomUser, Prize, Task
+from users.models import Student, CustomUser, Prize, Task, Point
 
 
 class StudentSerializer(serializers.Serializer):
@@ -95,3 +95,8 @@ class CustomUserSerializerWithToken(serializers.ModelSerializer):   # Handling R
     class Meta:
         model = CustomUser
         fields = ('token', 'username', 'password')
+
+class PointSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Point
+        fields = ('pk', 'value', 'assigner', 'assignee', 'assignment_date')

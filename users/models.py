@@ -19,7 +19,7 @@ class Point(models.Model):
     value = models.IntegerField()
     assigner = models.ForeignKey(Caregiver, on_delete=models.CASCADE)
     assignee = models.ForeignKey(Student, on_delete=models.CASCADE)
-    assignment_date = models.DateTimeField()
+    assignment_date = models.DateTimeField(auto_now_add=True)
 
 
 class Prize(models.Model):
