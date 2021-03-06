@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from .models import CustomUser, Caregiver
+from .models import CustomUser, Caregiver, Student
 
 
 @admin.register(CustomUser)
@@ -12,3 +12,8 @@ class CustomUserAdmin(UserAdmin):
 @admin.register(Caregiver)
 class CaregiverAdmin(admin.ModelAdmin):
     list_display = ['user']
+
+
+@admin.register(Student)
+class StudentAdmin(admin.ModelAdmin):
+    list_display = ['user', 'total_points']
