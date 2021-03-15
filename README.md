@@ -203,4 +203,5 @@ To execute the tests simply call `docker-compose exec web pytest` (you can add t
 ## Swagger ui
 
 Our project supports a minimal swagger UI setup for Django Rest Framework, described [here](https://www.django-rest-framework.org/topics/documenting-your-api/).  
-You can access it with [http://localhost:8000/swagger-ui](http://localhost:8000/swagger-ui) endpoint.
+You can access it with [http://localhost:8000/swagger-ui](http://localhost:8000/swagger-ui) endpoint.  
+Openapi compliant text documentation: [http://localhost:8000/openapi](http://localhost:8000/openapi)
