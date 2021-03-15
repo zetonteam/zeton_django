@@ -199,3 +199,9 @@ As a result you should receive a response similar to the following:
 There are also some tests, checking above endpoints, available in the `users/tests/users/test_points.py` module.  
 
 To execute the tests simply call `docker-compose exec web pytest` (you can add the `-v` flag for a verbose ouput).
+
+## Swagger ui
+
+Our project supports a minimal swagger UI setup for Django Rest Framework, described [here](https://www.django-rest-framework.org/topics/documenting-your-api/).  
+You can access it with [http://localhost:8000/swagger-ui](http://localhost:8000/swagger-ui) endpoint.  
+Openapi compliant text documentation: [http://localhost:8000/openapi](http://localhost:8000/openapi)
