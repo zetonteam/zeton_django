@@ -22,3 +22,5 @@ class StudentAdmin(admin.ModelAdmin):
 
 admin.site.register(CustomUser, CustomUserAdmin)
 # admin.site.register(Caregiver)
+
+# test comment
