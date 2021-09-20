@@ -28,6 +28,7 @@ class Caregiver(models.Model):
 class Student(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     total_points = models.IntegerField()
+    caregivers = models.ManyToManyField(Caregiver)
 
     def first_name(self):
         return self.user.first_name
