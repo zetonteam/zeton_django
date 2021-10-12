@@ -6,6 +6,7 @@ from .models import CustomUser, Caregiver, Student
 @admin.register(CustomUser)
 class CustomUserAdmin(admin.ModelAdmin):
     list_display = ['first_name', 'last_name', 'email', 'is_auth', ]
+    empty_value_display = 'unknown'
 
 
 @admin.register(Caregiver)
