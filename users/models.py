@@ -9,6 +9,9 @@ class CustomUser(AbstractUser):
 class Caregiver(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
 
+    def __str__(self):
+        return self.user.first_name + ' ' + self.user.last_name
+
     def first_name(self):
         return self.user.first_name
 
@@ -28,6 +31,10 @@ class Caregiver(models.Model):
 class Student(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     total_points = models.IntegerField()
+    caregivers = models.ManyToManyField(Caregiver, related_name='students', through='Role')
+
+    def __str__(self):
+        return self.user.first_name + ' ' + self.user.last_name
 
     def first_name(self):
         return self.user.first_name
@@ -43,6 +50,15 @@ class Student(models.Model):
         return self.user.email
 
     email.short_description = "email"
+
+
+class Role (models.Model):
+    role_name = models.CharField(max_length=30)
+    caregiver = models.ForeignKey(Caregiver, on_delete=models.CASCADE)
+    student = models.ForeignKey(Student, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.role_name
 
 
 class Point(models.Model):
