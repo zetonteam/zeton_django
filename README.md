@@ -63,6 +63,14 @@ To create superuser:
 To populate data using fixtures:  
 `make load_data`
 
+## To rebuild database 
+If you want rebuild database, you can use command:  
+`docker-compose down -v`
+
+**WARNING!** This command will delete all data from the database 
+
+
+
 ## Register and login user in the Django app
 
 Go to http://localhost:8000/admin and create a new user.  
