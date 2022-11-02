@@ -53,7 +53,10 @@ class Student(models.Model):
 
 
 class Role (models.Model):
-    role_name = models.CharField(max_length=30)
+    class RoleNameChoice(models.TextChoices):
+        CAREGIVER = 'caregiver'
+
+    role_name = models.CharField(max_length=30, choices=RoleNameChoice.choices)
     caregiver = models.ForeignKey(Caregiver, on_delete=models.CASCADE)
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
 
