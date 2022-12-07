@@ -17,4 +17,4 @@ migrate:
 	docker-compose exec web python manage.py migrate
 
 dbshell:
-	docker-compose exec web python manage.py dbshell
+	docker-compose exec web python manage.py shell
