@@ -40,7 +40,7 @@ class StudentsResource(APIView):
     def delete(self, request, pk):
         Student.objects.filter(pk=pk).delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
-    
+
 
 class CaregiversResource(APIView):
     def get(self, request, pk):
@@ -146,9 +146,8 @@ class PointResource(generics.GenericAPIView):
         return Response(serializer.data)
 
     def post(self, request, pk=None):
-        serializer = PointSerializer(data=request.data) 
+        serializer = PointSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-

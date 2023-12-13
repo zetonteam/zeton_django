@@ -24,7 +24,7 @@ class CaregiverAdmin(admin.ModelAdmin):
 @admin.register(Student)
 class StudentAdmin(admin.ModelAdmin):
     inlines = (RoleInline,)
-    list_display = ['user', 'first_name', 'last_name',  'email', 'total_points']
+    list_display = ['user', 'first_name', 'last_name', 'email', 'total_points']
 
 
 @admin.register(Role)
