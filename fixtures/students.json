@@ -1,18 +1,18 @@
 [
-  {
-    "model": "users.student",
-    "pk": 1,
-    "fields": {
-      "user": 2,
-      "total_points": 250
-    }
-  },
-  {
-    "model": "users.student",
-    "pk": 2,
-    "fields": {
-      "user": 4,
-      "total_points": 120
-    }
+{
+  "model": "users.student",
+  "pk": 1,
+  "fields": {
+    "user": 2,
+    "total_points": 250
   }
+},
+{
+  "model": "users.student",
+  "pk": 2,
+  "fields": {
+    "user": 4,
+    "total_points": 120
+  }
+}
 ]

@@ -7,6 +7,16 @@ class CustomUser(AbstractUser):
 
 
 class Caregiver(models.Model):
+    """ 
+    Caregiver contains data about account holders and relational users (Students).
+    One user can be connected to many Caregivers (one-many).
+    It may contain more than one Students (many-many).
+
+    TODO:
+    - ID for each Caregiver.
+    - LifeRole (eg. Parent, Teacher, Therapist) for each Caregiver.
+    - SuperSuperCaregiver
+    """
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
 
     def __str__(self):
@@ -25,7 +35,7 @@ class Caregiver(models.Model):
     def email(self):
         return self.user.email
 
-    email.short_description = "email"
+    email.short_description = "email" 
 
 
 class Student(models.Model):
@@ -52,7 +62,7 @@ class Student(models.Model):
     email.short_description = "email"
 
 
-class Role (models.Model):
+class Role(models.Model):
     class RoleNameChoice(models.TextChoices):
         CAREGIVER = 'caregiver'
 
@@ -61,7 +71,7 @@ class Role (models.Model):
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.role_name
+        return f"{self.role_name} | {self.caregiver.user.first_name}"
 
 
 class Point(models.Model):
