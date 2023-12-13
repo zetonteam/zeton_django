@@ -30,6 +30,11 @@ class StudentSerializer(serializers.Serializer):
         instance.total_points = validated_data.get("total_points", instance.total_points)
         instance.save()
         return instance
+    
+
+class CaregiverSerializer(serializers.Serializer):
+    pk = serializers.IntegerField(read_only=True)
+    students = StudentSerializer(many=True)
 
 
 class PrizeSerializer(serializers.Serializer):
