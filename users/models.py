@@ -35,7 +35,7 @@ class Caregiver(models.Model):
     def email(self):
         return self.user.email
 
-    email.short_description = "email" 
+    email.short_description = "email"
 
 
 class Student(models.Model):

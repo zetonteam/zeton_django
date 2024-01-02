@@ -32,6 +32,11 @@ class StudentSerializer(serializers.Serializer):
         return instance
 
 
+class CaregiverSerializer(serializers.Serializer):
+    pk = serializers.IntegerField(read_only=True)
+    students = StudentSerializer(many=True)
+
+
 class PrizeSerializer(serializers.Serializer):
     pk = serializers.IntegerField(read_only=True)
     student = serializers.CharField(source="student.id")
@@ -72,7 +77,7 @@ class CustomUserSerializer(serializers.Serializer):
         fields = ('username',)
 
 
-class CustomUserSerializerWithToken(serializers.ModelSerializer):   # Handling Register
+class CustomUserSerializerWithToken(serializers.ModelSerializer):  # Handling Register
     token = serializers.SerializerMethodField()
     password = serializers.CharField(write_only=True)
 
@@ -95,6 +100,7 @@ class CustomUserSerializerWithToken(serializers.ModelSerializer):   # Handling R
     class Meta:
         model = CustomUser
         fields = ('token', 'username', 'password')
+
 
 class PointSerializer(serializers.ModelSerializer):
     class Meta:
