@@ -127,3 +127,6 @@ AUTH_USER_MODEL = 'users.CustomUser'
 FIXTURE_DIRS = [
     os.path.join(BASE_DIR, 'fixtures')
 ]
+
+# Default primary key field type.
+DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
