@@ -19,6 +19,9 @@ class Caregiver(models.Model):
     """
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
 
+    class Meta:
+        db_table = "caregivers"
+
     def __str__(self):
         return self.user.first_name + ' ' + self.user.last_name
 
@@ -39,6 +42,9 @@ class Caregiver(models.Model):
 
 
 class Student(models.Model):
+    class Meta:
+        db_table = "students"
+
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     total_points = models.IntegerField()
     caregivers = models.ManyToManyField(Caregiver, related_name='students', through='Role')
@@ -63,6 +69,9 @@ class Student(models.Model):
 
 
 class Role(models.Model):
+    class Meta:
+        db_table = "roles"
+
     class RoleNameChoice(models.TextChoices):
         CAREGIVER = 'caregiver'
 
@@ -75,6 +84,9 @@ class Role(models.Model):
 
 
 class Point(models.Model):
+    class Meta:
+        db_table = "student_points"
+
     value = models.IntegerField()
     assigner = models.ForeignKey(Caregiver, on_delete=models.CASCADE)
     assignee = models.ForeignKey(Student, on_delete=models.CASCADE)
@@ -82,14 +94,18 @@ class Point(models.Model):
 
 
 class Prize(models.Model):
+    class Meta:
+        db_table = "student_prizes"
+
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
     name = models.CharField(max_length=100)
     value = models.IntegerField()
 
 
 class Task(models.Model):
+    class Meta:
+        db_table = "student_tasks"
+
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
     name = models.CharField(max_length=100)
     value = models.IntegerField()
-
-    # test comment
