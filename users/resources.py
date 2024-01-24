@@ -1,10 +1,13 @@
 from django.http.response import Http404
+from django.db.models import F
 from rest_framework import status, generics, permissions
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
 from users.models import Student, Caregiver, Prize, Task, Point
 from users.serializers import CaregiverSerializer, StudentSerializer, PrizeSerializer, TaskSerializer, PointSerializer
+
+import logging
 
 
 class StudentsResource(APIView):
@@ -148,6 +151,8 @@ class PointResource(generics.GenericAPIView):
     def post(self, request, pk=None):
         serializer = PointSerializer(data=request.data)
         if serializer.is_valid():
-            serializer.save()
+            points = serializer.save()
+            points.student.total_points = F("total_points") + serializer.data['value']
+            points.student.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

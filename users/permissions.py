@@ -1,4 +1,4 @@
-from models import Role
+from users.models import Role
 
 
 def has_user_access_to_student(user_id, student_id) -> bool:
