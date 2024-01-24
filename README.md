@@ -191,7 +191,7 @@ There are currently several enpoints responsible for managing student points ava
 {
     "value": 40,
     "assigner": 1,
-    "assignee": 1,
+    "student": 1,
 }
 ```
 
@@ -202,7 +202,7 @@ As a result you should receive a response similar to the following:
     "pk": 5,
     "value": 40,
     "assigner": 1,
-    "assignee": 1,
+    "student": 1,
     "assignment_date": "2021-01-26T21:41:04.952509Z"
 }
 ```

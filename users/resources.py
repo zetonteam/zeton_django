@@ -134,7 +134,7 @@ class PointResource(generics.GenericAPIView):
                 raise Http404
 
         queryset = Point.objects.all()
-        queryset = queryset.filter(assignee_id=resource_id)
+        queryset = queryset.filter(student_id=resource_id)
         return queryset
 
     def get(self, request, pk=None, format=None):

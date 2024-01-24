@@ -14,7 +14,7 @@ def test_add_point(client):
         {
             "value": 1,
             "assigner": 1,
-            "assignee": 2,
+            "student": 2,
         },
         content_type="application/json"
     )
@@ -48,7 +48,7 @@ def test_add_point_invalid_json_keys(client):
         "/api/users/points/",
         {
             "value": 1,
-            "assignee": 2,  
+            "student": 2,
         },
         content_type="application/json"
     )
@@ -60,8 +60,8 @@ def test_add_point_invalid_json_keys(client):
 @pytest.mark.django_db
 def test_get_single_point(client):
     assigner =  Caregiver.objects.get(pk=1)
-    assignee = Student.objects.get(pk=2)
-    point = Point.objects.create(value=22, assigner=assigner, assignee=assignee)
+    student = Student.objects.get(pk=2)
+    point = Point.objects.create(value=22, assigner=assigner, student=student)
 
     response = client.get(f"/api/users/points/{point.pk}/")
 
@@ -78,9 +78,9 @@ def test_get_points_for_filtered_student(client):
     requested_student = Student.objects.get(pk=2)
     other_student = Student.objects.get(pk=1)
 
-    point_1 = Point.objects.create(value=22, assigner=caregiver, assignee=requested_student)
-    point_2 = Point.objects.create(value=17, assigner=caregiver, assignee=requested_student)
-    point_3 = Point.objects.create(value=144, assigner=caregiver, assignee=other_student)
+    point_1 = Point.objects.create(value=22, assigner=caregiver, student=requested_student)
+    point_2 = Point.objects.create(value=17, assigner=caregiver, student=requested_student)
+    point_3 = Point.objects.create(value=144, assigner=caregiver, student=other_student)
 
     response = client.get(f"/api/users/points/?studentId={requested_student.pk}")
 
@@ -95,9 +95,9 @@ def test_get_points_for_filtered_student_invalid_query_string(client):
     requested_student = Student.objects.get(pk=2)
     other_student = Student.objects.get(pk=1)
 
-    point_1 = Point.objects.create(value=22, assigner=caregiver, assignee=requested_student)
-    point_2 = Point.objects.create(value=17, assigner=caregiver, assignee=requested_student)
-    point_3 = Point.objects.create(value=144, assigner=caregiver, assignee=other_student)
+    point_1 = Point.objects.create(value=22, assigner=caregiver, student=requested_student)
+    point_2 = Point.objects.create(value=17, assigner=caregiver, student=requested_student)
+    point_3 = Point.objects.create(value=144, assigner=caregiver, student=other_student)
 
     response = client.get(f"/api/users/points/?invalidQueryString={requested_student.pk}")
 

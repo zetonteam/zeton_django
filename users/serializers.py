@@ -109,8 +109,8 @@ class PointSerializer(serializers.ModelSerializer):
         we need to check assigner has permission to add points for student/'assignee'
         add points to students total_points
 
-
     """
+
     class Meta:
         model = Point
-        fields = ('pk', 'value', 'assigner', 'assignee', 'assignment_date')
+        fields = ('pk', 'value', 'assigner', 'student', 'assignment_date')
