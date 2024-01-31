@@ -207,7 +207,6 @@ As a result you should receive a response similar to the following:
 }
 ```
 
-3. `api/users/points/<int:pk>/` accesible with `GET` request, should return single requested Point instance
 
 ### Tests
 

@@ -1,5 +1,7 @@
 from django.http.response import Http404
 from django.db.models import F
+from drf_spectacular.types import OpenApiTypes
+from drf_spectacular.utils import extend_schema, OpenApiParameter, OpenApiExample
 from rest_framework import status, generics, permissions
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -140,6 +142,20 @@ class PointResource(generics.GenericAPIView):
         queryset = queryset.filter(student_id=resource_id)
         return queryset
 
+    @extend_schema(
+        # extra parameters added to the schema
+        parameters=[
+            OpenApiParameter(name='studentId', description='Filter by studentId', required=False, type=int)
+        ],
+        # override default docstring extraction
+        description='Endpoint to generate points of particular student',
+        # provide Authentication class that deviates from the views default
+        auth=None,
+        # change the auto-generated operation name
+        operation_id=None,
+        # or even completely override what AutoSchema would generate. Provide raw Open API spec as Dict.
+        operation=None,
+    )
     def get(self, request, pk=None, format=None):
         point = self.get_queryset()
         if pk is not None:
