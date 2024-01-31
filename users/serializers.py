@@ -2,6 +2,7 @@ from rest_framework import serializers
 from rest_framework_jwt.settings import api_settings
 
 from users.models import Student, CustomUser, Prize, Task, Point
+from users.permissions import has_caregiver_access_to_student
 
 
 class StudentSerializer(serializers.Serializer):
@@ -103,6 +104,23 @@ class CustomUserSerializerWithToken(serializers.ModelSerializer):  # Handling Re
 
 
 class PointSerializer(serializers.ModelSerializer):
+    """
+    TODO
+        we need to check assigner has permission to add points for student/'assignee'
+        add points to students total_points
+
+    """
+
     class Meta:
         model = Point
-        fields = ('pk', 'value', 'assigner', 'assignee', 'assignment_date')
+        fields = ('pk', 'value', 'assigner', 'student', 'assignment_date')
+
+    def validate_value(self, value):
+        if value > 0:
+            return value
+        raise serializers.ValidationError("Value must be greater than 0")
+
+    def validate(self, data):
+        if has_caregiver_access_to_student(data['assigner'], data['student']):
+            return data
+        raise serializers.ValidationError("Caregiver does not have access to student.")
