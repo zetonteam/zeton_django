@@ -104,12 +104,7 @@ class CustomUserSerializerWithToken(serializers.ModelSerializer):  # Handling Re
 
 
 class PointSerializer(serializers.ModelSerializer):
-    """
-    TODO
-        we need to check assigner has permission to add points for student/'assignee'
-        add points to students total_points
 
-    """
 
     class Meta:
         model = Point

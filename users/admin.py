@@ -9,7 +9,7 @@ class RoleInline(admin.TabularInline):
 
 
 @admin.register(CustomUser)
-class CustomUserAdmin(admin.ModelAdmin):
+class CustomUserAdmin(UserAdmin):
     list_display = ['username', 'first_name', 'last_name', 'email', 'is_auth', ]
     empty_value_display = 'unknown'
 
