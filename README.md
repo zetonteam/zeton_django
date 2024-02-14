@@ -207,13 +207,72 @@ As a result you should receive a response similar to the following:
 }
 ```
 
-3. `api/users/points/<int:pk>/` accesible with `GET` request, should return single requested Point instance
 
 ### Tests
 
 There are also some tests, checking above endpoints, available in the `users/tests/users/test_points.py` module.
 
 To execute the tests simply call `docker compose exec web pytest` (you can add the `-v` flag for a verbose ouput).
+
+## Planned endpoints
+
+### GET /api/students
+
+List all students for logged in caregiver
+
+### POST /api/students (future)
+
+Add new student for a caregiver
+
+### GET /api/students/<id:int>
+
+Retrieve information about student with given ID:
+- ...
+- total_points
+
+### PATCH /api/students/<id:int>
+
+Update student
+
+### GET /api/students/<id:int>/points
+
+List history of points received by student
+
+### POST /api/students/<id:int>/points
+
+Add hew points to student
+
+### GET /api/students/<id:int>/tasks
+
+List of tasks assigned to student
+
+### POST /api/students/<id:int>/tasks
+
+Add new task for student
+
+### PATCH /api/students/<id:int>/tasks/<task_id:int>
+
+Edit existing task + soft delete
+
+### GET /api/students/<id:int>/prizes
+
+List of prizes assigned to student
+
+### POST /api/students/<id:int>/prizes
+
+Add new prize for student
+
+### PATCH /api/students/<id:int>/prizes/<prize_id:int>
+
+Edit existing prize + soft delete
+
+### POST /api/caregivers (future)
+
+Add new caregiver
+
+### POST /api/roles (future)
+
+Add new role (association between student and caregiver)
 
 ## Swagger ui
 

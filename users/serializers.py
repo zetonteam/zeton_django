@@ -72,10 +72,10 @@ class TaskSerializer(serializers.Serializer):
         return instance
 
 
-class CustomUserSerializer(serializers.Serializer):
+class CustomUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
-        fields = ('username',)
+        fields = ('id', 'username')
 
 
 class CustomUserSerializerWithToken(serializers.ModelSerializer):  # Handling Register
@@ -104,12 +104,7 @@ class CustomUserSerializerWithToken(serializers.ModelSerializer):  # Handling Re
 
 
 class PointSerializer(serializers.ModelSerializer):
-    """
-    TODO
-        we need to check assigner has permission to add points for student/'assignee'
-        add points to students total_points
 
-    """
 
     class Meta:
         model = Point

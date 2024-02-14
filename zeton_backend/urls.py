@@ -2,9 +2,10 @@ from django.contrib import admin
 from django.urls import path, include
 from django.views.generic.base import TemplateView
 from rest_framework.schemas import get_schema_view
+from drf_spectacular.views import SpectacularAPIView, SpectacularRedocView, SpectacularSwaggerView
 
 api_urls = [
-    path("users/", include("users.urls")),
+    path("", include("users.urls")),
 ]
 
 urlpatterns = [
@@ -17,6 +18,8 @@ urlpatterns = [
     ), name='openapi-schema'),
     path('swagger-ui/', TemplateView.as_view(
         template_name='swagger-ui.html',
-        extra_context={'schema_url':'openapi-schema'}
+        extra_context={'schema_url':'schema'}
     ), name='swagger-ui'),
+    # YOUR PATTERNS
+    path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
 ]
