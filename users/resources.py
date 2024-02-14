@@ -129,6 +129,7 @@ class TasksResource(APIView):
 
 class PointResource(generics.GenericAPIView):
     serializer_class = PointSerializer
+    permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
         if self.kwargs.get('pk') is not None:
@@ -149,8 +150,6 @@ class PointResource(generics.GenericAPIView):
         ],
         # override default docstring extraction
         description='Endpoint to generate points of particular student',
-        # provide Authentication class that deviates from the views default
-        auth=None,
         # change the auto-generated operation name
         operation_id=None,
         # or even completely override what AutoSchema would generate. Provide raw Open API spec as Dict.

@@ -72,10 +72,10 @@ class TaskSerializer(serializers.Serializer):
         return instance
 
 
-class CustomUserSerializer(serializers.Serializer):
+class CustomUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
-        fields = ('username',)
+        fields = ('id', 'username')
 
 
 class CustomUserSerializerWithToken(serializers.ModelSerializer):  # Handling Register
