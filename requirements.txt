@@ -1,6 +1,6 @@
 Django==4.2.9
 djangorestframework==3.14.0
-psycopg==3.1.16
+psycopg==3.1.18
 django-cors-headers==4.3.1
 pytest==7.4.4
 pytest-django==4.7.0
