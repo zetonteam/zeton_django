@@ -7,6 +7,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from users.models import Student, Caregiver, Prize, Task, Point
+from users.permissions import has_user_access_to_student
 from users.serializers import StudentSerializer, PrizeSerializer, TaskSerializer, PointSerializer
 
 
@@ -14,8 +15,8 @@ class StudentsResource(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request, pk=None):
+        user_id = request.user.id
         if pk is None:
-            user_id = request.user.id
 
             try:
                 caregiver = Caregiver.objects.get(user_id=user_id)
@@ -25,22 +26,22 @@ class StudentsResource(APIView):
             students = caregiver.students.all()
             serializer = StudentSerializer(students, many=True)
         else:
-            student = Student.objects.get(pk=pk)
-            serializer = StudentSerializer(student)
+            if has_user_access_to_student(user_id, pk):
+                student = Student.objects.get(pk=pk)
+                serializer = StudentSerializer(student)
+            else:
+                raise PermissionDenied
+
         return Response(serializer.data)
 
-    def post(self, request):
-        serializer = StudentSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return Response(serializer.data)
 
-    def put(self, request, pk):
-        student = Student.objects.get(pk=pk)
-        serializer = StudentSerializer(student, data=request.data)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return Response(serializer.data)
+#TODO future
+    # def post(self, request):
+    #     serializer = StudentSerializer(data=request.data)
+    #     serializer.is_valid(raise_exception=True)
+    #     serializer.save()
+    #     return Response(serializer.data)
+
 
     def patch(self, request, pk):
         student = Student.objects.get(pk=pk)
@@ -48,10 +49,10 @@ class StudentsResource(APIView):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data)
-
-    def delete(self, request, pk):
-        Student.objects.filter(pk=pk).delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+#TODO future
+    # def delete(self, request, pk):
+    #     Student.objects.filter(pk=pk).delete()
+    #     return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 class PrizesResource(APIView):
