@@ -1,22 +1,28 @@
-from django.http.response import Http404
 from django.db.models import F
-from drf_spectacular.types import OpenApiTypes
-from drf_spectacular.utils import extend_schema, OpenApiParameter, OpenApiExample
+from django.http.response import Http404
+from drf_spectacular.utils import extend_schema, OpenApiParameter
 from rest_framework import status, generics, permissions
-from rest_framework.views import APIView
+from rest_framework.exceptions import PermissionDenied
 from rest_framework.response import Response
+from rest_framework.views import APIView
 
 from users.models import Student, Caregiver, Prize, Task, Point
 from users.serializers import StudentSerializer, PrizeSerializer, TaskSerializer, PointSerializer
 
-import logging
-
 
 class StudentsResource(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
     def get(self, request, pk=None):
         if pk is None:
-            caregiver = request.user
-            students = Student.objects.all()
+            user_id = request.user.id
+
+            try:
+                caregiver = Caregiver.objects.get(user_id=user_id)
+            except Caregiver.DoesNotExist:
+                raise PermissionDenied
+
+            students = caregiver.students.all()
             serializer = StudentSerializer(students, many=True)
         else:
             student = Student.objects.get(pk=pk)
