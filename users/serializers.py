@@ -33,11 +33,6 @@ class StudentSerializer(serializers.Serializer):
         return instance
 
 
-class CaregiverSerializer(serializers.Serializer):
-    pk = serializers.IntegerField(read_only=True)
-    students = StudentSerializer(many=True)
-
-
 class PrizeSerializer(serializers.Serializer):
     pk = serializers.IntegerField(read_only=True)
     student = serializers.CharField(source="student.id")
@@ -104,8 +99,6 @@ class CustomUserSerializerWithToken(serializers.ModelSerializer):  # Handling Re
 
 
 class PointSerializer(serializers.ModelSerializer):
-
-
     class Meta:
         model = Point
         fields = ('pk', 'value', 'assigner', 'student', 'assignment_date')

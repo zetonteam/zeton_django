@@ -7,7 +7,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 
 from users.models import Student, Caregiver, Prize, Task, Point
-from users.serializers import CaregiverSerializer, StudentSerializer, PrizeSerializer, TaskSerializer, PointSerializer
+from users.serializers import StudentSerializer, PrizeSerializer, TaskSerializer, PointSerializer
 
 import logging
 
@@ -15,6 +15,7 @@ import logging
 class StudentsResource(APIView):
     def get(self, request, pk=None):
         if pk is None:
+            caregiver = request.user
             students = Student.objects.all()
             serializer = StudentSerializer(students, many=True)
         else:
@@ -45,16 +46,6 @@ class StudentsResource(APIView):
     def delete(self, request, pk):
         Student.objects.filter(pk=pk).delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
-
-
-class CaregiversResource(APIView):
-    def get(self, request, pk):
-        try:
-            caregiver = Caregiver.objects.get(pk=pk)
-        except Caregiver.DoesNotExist:
-            return Response(status=status.HTTP_404_NOT_FOUND)
-        serializer = CaregiverSerializer(caregiver)
-        return Response(serializer.data)
 
 
 class PrizesResource(APIView):
