@@ -11,7 +11,7 @@ class StudentSerializer(serializers.Serializer):
     username = serializers.CharField(source="user.username")
     first_name = serializers.CharField(source="user.first_name")
     last_name = serializers.CharField(source="user.last_name")
-    total_points = serializers.IntegerField()
+    total_points = serializers.IntegerField(read_only=True)
 
     def create(self, validated_data):
         user_data = validated_data.pop("user")
