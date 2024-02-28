@@ -12,6 +12,7 @@ urlpatterns = [
     path('current-user/', current_user),
     path('register/', UserList.as_view()),
 
+    path("students/<int:pk>/points/", PointResource.as_view(), name="points-resource"),
     path("students/<int:pk>/", StudentsResource.as_view(), name="student-resource"),
     path("students/", StudentsResource.as_view(), name="students-resource"),
 
@@ -20,5 +21,5 @@ urlpatterns = [
 
     path("tasks/<int:pk>/", TasksResource.as_view(), name="task-resource"),
     path("tasks/", TasksResource.as_view(), name="tasks-resource"),
-    path("points/", PointResource.as_view(), name="points-resource"),
+
 ]

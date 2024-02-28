@@ -146,3 +146,12 @@ JWT_AUTH = {
     'JWT_RESPONSE_PAYLOAD_HANDLER': 'zeton_backend.utils.my_jwt_response_handler',
     'JWT_EXPIRATION_DELTA': datetime.timedelta(minutes=120),
 }
+
+SPECTACULAR_SETTINGS = {
+
+    # available SwaggerUI configuration parameters
+    # https://swagger.io/docs/open-source-tools/swagger-ui/usage/configuration/
+    "SWAGGER_UI_SETTINGS": {
+        "persistAuthorization": True
+    },
+}
