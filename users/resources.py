@@ -1,39 +1,47 @@
-from django.http.response import Http404
 from django.db.models import F
-from drf_spectacular.types import OpenApiTypes
-from drf_spectacular.utils import extend_schema, OpenApiParameter, OpenApiExample
+from django.http.response import Http404
+from drf_spectacular.utils import extend_schema, OpenApiParameter
 from rest_framework import status, generics, permissions
-from rest_framework.views import APIView
+from rest_framework.exceptions import PermissionDenied
 from rest_framework.response import Response
+from rest_framework.views import APIView
 
 from users.models import Student, Caregiver, Prize, Task, Point
-from users.serializers import CaregiverSerializer, StudentSerializer, PrizeSerializer, TaskSerializer, PointSerializer
-
-import logging
+from users.permissions import has_user_access_to_student
+from users.serializers import StudentSerializer, PrizeSerializer, TaskSerializer, PointSerializer
 
 
 class StudentsResource(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
     def get(self, request, pk=None):
+        user_id = request.user.id
         if pk is None:
-            students = Student.objects.all()
+
+            try:
+                caregiver = Caregiver.objects.get(user_id=user_id)
+            except Caregiver.DoesNotExist:
+                raise PermissionDenied
+
+            students = caregiver.students.all()
             serializer = StudentSerializer(students, many=True)
         else:
-            student = Student.objects.get(pk=pk)
-            serializer = StudentSerializer(student)
+            if has_user_access_to_student(user_id, pk):
+                student = Student.objects.get(pk=pk)
+                serializer = StudentSerializer(student)
+            else:
+                raise PermissionDenied
+
         return Response(serializer.data)
 
-    def post(self, request):
-        serializer = StudentSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return Response(serializer.data)
 
-    def put(self, request, pk):
-        student = Student.objects.get(pk=pk)
-        serializer = StudentSerializer(student, data=request.data)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return Response(serializer.data)
+#TODO future
+    # def post(self, request):
+    #     serializer = StudentSerializer(data=request.data)
+    #     serializer.is_valid(raise_exception=True)
+    #     serializer.save()
+    #     return Response(serializer.data)
+
 
     def patch(self, request, pk):
         student = Student.objects.get(pk=pk)
@@ -41,20 +49,10 @@ class StudentsResource(APIView):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data)
-
-    def delete(self, request, pk):
-        Student.objects.filter(pk=pk).delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
-
-
-class CaregiversResource(APIView):
-    def get(self, request, pk):
-        try:
-            caregiver = Caregiver.objects.get(pk=pk)
-        except Caregiver.DoesNotExist:
-            return Response(status=status.HTTP_404_NOT_FOUND)
-        serializer = CaregiverSerializer(caregiver)
-        return Response(serializer.data)
+#TODO future
+    # def delete(self, request, pk):
+    #     Student.objects.filter(pk=pk).delete()
+    #     return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 class PrizesResource(APIView):
