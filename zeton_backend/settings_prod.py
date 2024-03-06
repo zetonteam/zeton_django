@@ -17,10 +17,8 @@ from utils.conversion import str_to_boolean
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
-
 
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': (

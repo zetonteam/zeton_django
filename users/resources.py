@@ -2,7 +2,7 @@ from django.db.models import F
 from django.http.response import Http404
 from drf_spectacular.utils import extend_schema, OpenApiParameter
 from rest_framework import status, generics, permissions
-from rest_framework.exceptions import PermissionDenied
+from rest_framework.exceptions import PermissionDenied, MethodNotAllowed
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -13,6 +13,7 @@ from users.serializers import StudentSerializer, PrizeSerializer, TaskSerializer
 
 class StudentsResource(APIView):
     permission_classes = [permissions.IsAuthenticated]
+    serializer_class = StudentSerializer
 
     def get(self, request, pk=None):
         user_id = request.user.id
@@ -44,6 +45,21 @@ class StudentsResource(APIView):
 
 
     def patch(self, request, pk):
+        user_id = request.user.id
+        if pk is None:
+            raise MethodNotAllowed
+
+        if not has_user_access_to_student(user_id, pk):
+            raise PermissionDenied
+
+        student = Student.objects.get(pk=pk)
+        serializer = StudentSerializer(student, data=request.data,  partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data)
+
+
+
         student = Student.objects.get(pk=pk)
         serializer = StudentSerializer(student, data=request.data, partial=True)
         serializer.is_valid(raise_exception=True)
