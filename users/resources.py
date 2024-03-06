@@ -35,14 +35,12 @@ class StudentsResource(APIView):
 
         return Response(serializer.data)
 
-
-#TODO future
+    # TODO future
     # def post(self, request):
     #     serializer = StudentSerializer(data=request.data)
     #     serializer.is_valid(raise_exception=True)
     #     serializer.save()
     #     return Response(serializer.data)
-
 
     def patch(self, request, pk):
         user_id = request.user.id
@@ -53,22 +51,22 @@ class StudentsResource(APIView):
             raise PermissionDenied
 
         student = Student.objects.get(pk=pk)
-        serializer = StudentSerializer(student, data=request.data,  partial=True)
+        serializer = StudentSerializer(student, data=request.data, partial=True)
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data)
-
-
 
         student = Student.objects.get(pk=pk)
         serializer = StudentSerializer(student, data=request.data, partial=True)
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data)
-#TODO future
-    # def delete(self, request, pk):
-    #     Student.objects.filter(pk=pk).delete()
-    #     return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+# TODO future
+# def delete(self, request, pk):
+#     Student.objects.filter(pk=pk).delete()
+#     return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 class PrizesResource(APIView):
@@ -160,10 +158,10 @@ class PointResource(generics.GenericAPIView):
     @extend_schema(
         # extra parameters added to the schema
         parameters=[
-            OpenApiParameter(name='studentId', description='Filter by studentId', required=False, type=int)
+            OpenApiParameter(name='lastRecords', description='Get last n records of points', required=False, type=int)
         ],
         # override default docstring extraction
-        description='Endpoint to generate points of particular student',
+        description='Endpoint to generate last n records of points of particular student',
         # change the auto-generated operation name
         operation_id=None,
         # or even completely override what AutoSchema would generate. Provide raw Open API spec as Dict.
@@ -177,18 +175,19 @@ class PointResource(generics.GenericAPIView):
             raise PermissionDenied
 
         if has_user_access_to_student(user_id, pk):
-            point = self.get_queryset()
+
+            last_records = int(request.query_params.get('lastRecords'))
+            if last_records is not None:
+                point = self.get_queryset()[:last_records]
+            else:
+                point = self.get_queryset()
+
             serializer = PointSerializer(point, many=True)
+
         else:
             raise PermissionDenied
 
         return Response(serializer.data)
-        # point = self.get_queryset()
-        #if pk is not None:
-        #    serializer = PointSerializer(point.first())
-        #else:
-        #    serializer = PointSerializer(point, many=True)
-        #return Response(serializer.data)
 
     def post(self, request, pk=None):
         serializer = PointSerializer(data=request.data)
