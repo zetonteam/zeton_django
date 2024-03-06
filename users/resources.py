@@ -170,12 +170,25 @@ class PointResource(generics.GenericAPIView):
         operation=None,
     )
     def get(self, request, pk=None, format=None):
-        point = self.get_queryset()
-        if pk is not None:
-            serializer = PointSerializer(point.first())
-        else:
+        user_id = request.user.id
+        try:
+            caregiver = Caregiver.objects.get(user_id=user_id)
+        except Caregiver.DoesNotExist:
+            raise PermissionDenied
+
+        if has_user_access_to_student(user_id, pk):
+            point = self.get_queryset()
             serializer = PointSerializer(point, many=True)
+        else:
+            raise PermissionDenied
+
         return Response(serializer.data)
+        # point = self.get_queryset()
+        #if pk is not None:
+        #    serializer = PointSerializer(point.first())
+        #else:
+        #    serializer = PointSerializer(point, many=True)
+        #return Response(serializer.data)
 
     def post(self, request, pk=None):
         serializer = PointSerializer(data=request.data)
