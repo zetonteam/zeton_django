@@ -153,15 +153,18 @@ class PointResource(generics.GenericAPIView):
 
         queryset = Point.objects.all()
         queryset = queryset.filter(student_id=resource_id)
-        return queryset
+        return queryset.order_by("-assignment_date")
 
     @extend_schema(
         # extra parameters added to the schema
         parameters=[
-            OpenApiParameter(name='lastRecords', description='Get last n records of points', required=False, type=int)
+            #todo delete last record
+            OpenApiParameter(name='lastRecords', description='Get last n records of points', required=False, type=int),
+            OpenApiParameter(name='page', description='number of page from pagination', required=False, type=int),
+            OpenApiParameter(name='page_size', description='number of records in page for pagination', required=False, type=int),
         ],
         # override default docstring extraction
-        description='Endpoint to generate last n records of points of particular student',
+        description='Endpoint to generate last records of points of particular student by pagination',
         # change the auto-generated operation name
         operation_id=None,
         # or even completely override what AutoSchema would generate. Provide raw Open API spec as Dict.
