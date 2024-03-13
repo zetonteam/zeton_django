@@ -176,9 +176,9 @@ class PointResource(generics.GenericAPIView):
 
         if has_user_access_to_student(user_id, pk):
 
-            last_records = int(request.query_params.get('lastRecords'))
+            last_records = request.query_params.get('lastRecords')
             if last_records is not None:
-                point = self.get_queryset()[:last_records]
+                point = self.get_queryset()[:int(last_records)]
             else:
                 point = self.get_queryset()
 
