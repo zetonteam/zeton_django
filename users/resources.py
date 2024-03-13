@@ -174,18 +174,22 @@ class PointResource(generics.GenericAPIView):
         except Caregiver.DoesNotExist:
             raise PermissionDenied
 
-        if has_user_access_to_student(user_id, pk):
-
-            last_records = request.query_params.get('lastRecords')
-            if last_records is not None:
-                point = self.get_queryset()[:int(last_records)]
-            else:
-                point = self.get_queryset()
-
-            serializer = PointSerializer(point, many=True)
-
-        else:
+        if not has_user_access_to_student(user_id, pk):
             raise PermissionDenied
+
+        last_records = request.query_params.get('lastRecords')
+        query_set = self.get_queryset()
+        page = self.paginate_queryset(query_set)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        if last_records is not None:
+            point = query_set[:int(last_records)]
+        else:
+            point = query_set
+
+        serializer = PointSerializer(point, many=True)
 
         return Response(serializer.data)
 
