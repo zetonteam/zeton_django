@@ -184,12 +184,3 @@ class PointResource(generics.GenericAPIView):
 
         serializer = self.get_serializer(page, many=True)
         return self.get_paginated_response(serializer.data)
-
-    def post(self, request, pk=None):
-        serializer = PointSerializer(data=request.data)
-        if serializer.is_valid():
-            points = serializer.save()
-            points.student.total_points = F("total_points") + serializer.data['value']
-            points.student.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
