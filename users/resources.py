@@ -158,10 +158,9 @@ class PointResource(generics.GenericAPIView):
     @extend_schema(
         # extra parameters added to the schema
         parameters=[
-            #todo delete last record
-            OpenApiParameter(name='lastRecords', description='Get last n records of points', required=False, type=int),
             OpenApiParameter(name='page', description='number of page from pagination', required=False, type=int),
-            OpenApiParameter(name='page_size', description='number of records in page for pagination', required=False, type=int),
+            OpenApiParameter(name='page_size', description='number of records in page for pagination', required=False,
+                             type=int),
         ],
         # override default docstring extraction
         description='Endpoint to generate last records of points of particular student by pagination',
@@ -180,21 +179,11 @@ class PointResource(generics.GenericAPIView):
         if not has_user_access_to_student(user_id, pk):
             raise PermissionDenied
 
-        last_records = request.query_params.get('lastRecords')
         query_set = self.get_queryset()
         page = self.paginate_queryset(query_set)
-        if page is not None:
-            serializer = self.get_serializer(page, many=True)
-            return self.get_paginated_response(serializer.data)
 
-        if last_records is not None:
-            point = query_set[:int(last_records)]
-        else:
-            point = query_set
-
-        serializer = PointSerializer(point, many=True)
-
-        return Response(serializer.data)
+        serializer = self.get_serializer(page, many=True)
+        return self.get_paginated_response(serializer.data)
 
     def post(self, request, pk=None):
         serializer = PointSerializer(data=request.data)
