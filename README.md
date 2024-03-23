@@ -238,9 +238,10 @@ Update student
 
 List history of points received by student
 
-### POST /api/students/<id:int>/points
+### POST /api/students/<id:int>/points (no longer needed)
 
-Add hew points to student
+~~Add hew points to student~~
+Points should be automatically added when completing a task (another endpoint)
 
 ### GET /api/students/<id:int>/tasks
 

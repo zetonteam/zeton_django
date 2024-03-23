@@ -35,14 +35,12 @@ class StudentsResource(APIView):
 
         return Response(serializer.data)
 
-
-#TODO future
+    # TODO future
     # def post(self, request):
     #     serializer = StudentSerializer(data=request.data)
     #     serializer.is_valid(raise_exception=True)
     #     serializer.save()
     #     return Response(serializer.data)
-
 
     def patch(self, request, pk):
         user_id = request.user.id
@@ -53,22 +51,22 @@ class StudentsResource(APIView):
             raise PermissionDenied
 
         student = Student.objects.get(pk=pk)
-        serializer = StudentSerializer(student, data=request.data,  partial=True)
+        serializer = StudentSerializer(student, data=request.data, partial=True)
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data)
-
-
 
         student = Student.objects.get(pk=pk)
         serializer = StudentSerializer(student, data=request.data, partial=True)
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data)
-#TODO future
-    # def delete(self, request, pk):
-    #     Student.objects.filter(pk=pk).delete()
-    #     return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+# TODO future
+# def delete(self, request, pk):
+#     Student.objects.filter(pk=pk).delete()
+#     return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 class PrizesResource(APIView):
@@ -155,33 +153,34 @@ class PointResource(generics.GenericAPIView):
 
         queryset = Point.objects.all()
         queryset = queryset.filter(student_id=resource_id)
-        return queryset
+        return queryset.order_by("-assignment_date")
 
     @extend_schema(
         # extra parameters added to the schema
         parameters=[
-            OpenApiParameter(name='studentId', description='Filter by studentId', required=False, type=int)
+            OpenApiParameter(name='page', description='number of page from pagination', required=False, type=int),
+            OpenApiParameter(name='page_size', description='number of records in page for pagination', required=False,
+                             type=int),
         ],
         # override default docstring extraction
-        description='Endpoint to generate points of particular student',
+        description='Endpoint to generate last records of points of particular student by pagination',
         # change the auto-generated operation name
         operation_id=None,
         # or even completely override what AutoSchema would generate. Provide raw Open API spec as Dict.
         operation=None,
     )
     def get(self, request, pk=None, format=None):
-        point = self.get_queryset()
-        if pk is not None:
-            serializer = PointSerializer(point.first())
-        else:
-            serializer = PointSerializer(point, many=True)
-        return Response(serializer.data)
+        user_id = request.user.id
+        try:
+            caregiver = Caregiver.objects.get(user_id=user_id)
+        except Caregiver.DoesNotExist:
+            raise PermissionDenied
 
-    def post(self, request, pk=None):
-        serializer = PointSerializer(data=request.data)
-        if serializer.is_valid():
-            points = serializer.save()
-            points.student.total_points = F("total_points") + serializer.data['value']
-            points.student.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        if not has_user_access_to_student(user_id, pk):
+            raise PermissionDenied
+
+        query_set = self.get_queryset()
+        page = self.paginate_queryset(query_set)
+
+        serializer = self.get_serializer(page, many=True)
+        return self.get_paginated_response(serializer.data)
