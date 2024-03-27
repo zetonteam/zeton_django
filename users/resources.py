@@ -1,14 +1,18 @@
-from django.db.models import F
 from django.http.response import Http404
-from drf_spectacular.utils import extend_schema, OpenApiParameter
-from rest_framework import status, generics, permissions
-from rest_framework.exceptions import PermissionDenied, MethodNotAllowed
+from drf_spectacular.utils import OpenApiParameter, extend_schema
+from rest_framework import generics, permissions, status
+from rest_framework.exceptions import MethodNotAllowed, PermissionDenied
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from users.models import Student, Caregiver, Prize, Task, Point
+from users.models import Caregiver, Point, Prize, Student, Task
 from users.permissions import has_user_access_to_student
-from users.serializers import StudentSerializer, PrizeSerializer, TaskSerializer, PointSerializer
+from users.serializers import (
+    PointSerializer,
+    PrizeSerializer,
+    StudentSerializer,
+    TaskSerializer,
+)
 
 
 class StudentsResource(APIView):
@@ -18,7 +22,6 @@ class StudentsResource(APIView):
     def get(self, request, pk=None):
         user_id = request.user.id
         if pk is None:
-
             try:
                 caregiver = Caregiver.objects.get(user_id=user_id)
             except Caregiver.DoesNotExist:
@@ -144,10 +147,10 @@ class PointResource(generics.GenericAPIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
-        if self.kwargs.get('pk') is not None:
-            resource_id = self.kwargs['pk']
+        if self.kwargs.get("pk") is not None:
+            resource_id = self.kwargs["pk"]
         else:
-            resource_id = self.request.query_params.get('studentId', None)
+            resource_id = self.request.query_params.get("studentId", None)
             if resource_id is None:
                 raise Http404
 
@@ -158,12 +161,21 @@ class PointResource(generics.GenericAPIView):
     @extend_schema(
         # extra parameters added to the schema
         parameters=[
-            OpenApiParameter(name='page', description='number of page from pagination', required=False, type=int),
-            OpenApiParameter(name='page_size', description='number of records in page for pagination', required=False,
-                             type=int),
+            OpenApiParameter(
+                name="page",
+                description="number of page from pagination",
+                required=False,
+                type=int,
+            ),
+            OpenApiParameter(
+                name="page_size",
+                description="number of records in page for pagination",
+                required=False,
+                type=int,
+            ),
         ],
         # override default docstring extraction
-        description='Endpoint to generate last records of points of particular student by pagination',
+        description="Endpoint to generate last records of points of particular student by pagination",
         # change the auto-generated operation name
         operation_id=None,
         # or even completely override what AutoSchema would generate. Provide raw Open API spec as Dict.
@@ -172,7 +184,7 @@ class PointResource(generics.GenericAPIView):
     def get(self, request, pk=None, format=None):
         user_id = request.user.id
         try:
-            caregiver = Caregiver.objects.get(user_id=user_id)
+            _ = Caregiver.objects.get(user_id=user_id)
         except Caregiver.DoesNotExist:
             raise PermissionDenied
 

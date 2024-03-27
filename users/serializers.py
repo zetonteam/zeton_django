@@ -1,8 +1,7 @@
 from rest_framework import serializers
 from rest_framework_jwt.settings import api_settings
 
-from users.models import Student, CustomUser, Prize, Task, Point
-from users.permissions import has_caregiver_access_to_student
+from users.models import CustomUser, Point, Prize, Student, Task
 
 
 class StudentSerializer(serializers.Serializer):
@@ -17,7 +16,9 @@ class StudentSerializer(serializers.Serializer):
         user_data = validated_data.pop("user")
         user = CustomUser.objects.create(**user_data)
 
-        return Student.objects.create(user=user, total_points=validated_data["total_points"])
+        return Student.objects.create(
+            user=user, total_points=validated_data["total_points"]
+        )
 
     def update(self, instance, validated_data):
         user = instance.user
@@ -28,7 +29,9 @@ class StudentSerializer(serializers.Serializer):
         user.last_name = user_data.get("last_name", user.last_name)
         user.save()
 
-        instance.total_points = validated_data.get("total_points", instance.total_points)
+        instance.total_points = validated_data.get(
+            "total_points", instance.total_points
+        )
         instance.save()
         return instance
 
@@ -43,9 +46,9 @@ class PrizeSerializer(serializers.Serializer):
         return Prize.objects.create(**validated_data)
 
     def update(self, instance, validated_data):
-        instance.student = validated_data.get('student', instance.student)
-        instance.name = validated_data.get('name', instance.name)
-        instance.value = validated_data.get('value', instance.value)
+        instance.student = validated_data.get("student", instance.student)
+        instance.name = validated_data.get("name", instance.name)
+        instance.value = validated_data.get("value", instance.value)
         instance.save()
         return instance
 
@@ -60,9 +63,9 @@ class TaskSerializer(serializers.Serializer):
         return Task.objects.create(**validated_data)
 
     def update(self, instance, validated_data):
-        instance.student = validated_data.get('student', instance.student)
-        instance.name = validated_data.get('name', instance.name)
-        instance.value = validated_data.get('value', instance.value)
+        instance.student = validated_data.get("student", instance.student)
+        instance.name = validated_data.get("name", instance.name)
+        instance.value = validated_data.get("value", instance.value)
         instance.save()
         return instance
 
@@ -70,7 +73,7 @@ class TaskSerializer(serializers.Serializer):
 class CustomUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
-        fields = ('id', 'username')
+        fields = ("id", "username")
 
 
 class CustomUserSerializerWithToken(serializers.ModelSerializer):  # Handling Register
@@ -86,7 +89,7 @@ class CustomUserSerializerWithToken(serializers.ModelSerializer):  # Handling Re
         return token
 
     def create(self, validated_data):
-        password = validated_data.pop('password', None)
+        password = validated_data.pop("password", None)
         instance = self.Meta.model(**validated_data)
         if password is not None:
             instance.set_password(password)
@@ -95,10 +98,10 @@ class CustomUserSerializerWithToken(serializers.ModelSerializer):  # Handling Re
 
     class Meta:
         model = CustomUser
-        fields = ('token', 'username', 'password')
+        fields = ("token", "username", "password")
 
 
 class PointSerializer(serializers.ModelSerializer):
     class Meta:
         model = Point
-        fields = ('pk', 'value', 'assigner', 'student', 'assignment_date')
+        fields = ("pk", "value", "assigner", "student", "assignment_date")

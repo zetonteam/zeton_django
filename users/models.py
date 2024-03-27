@@ -7,7 +7,7 @@ class CustomUser(AbstractUser):
 
 
 class Caregiver(models.Model):
-    """ 
+    """
     Caregiver contains data about account holders and relational users (Students).
     One user can be connected to many Caregivers (one-many).
     It may contain more than one Students (many-many).
@@ -17,13 +17,14 @@ class Caregiver(models.Model):
     - LifeRole (eg. Parent, Teacher, Therapist) for each Caregiver.
     - SuperSuperCaregiver
     """
+
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
 
     class Meta:
         db_table = "caregivers"
 
     def __str__(self):
-        return self.user.first_name + ' ' + self.user.last_name
+        return self.user.first_name + " " + self.user.last_name
 
     def first_name(self):
         return self.user.first_name
@@ -47,10 +48,12 @@ class Student(models.Model):
 
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     total_points = models.IntegerField()
-    caregivers = models.ManyToManyField(Caregiver, related_name='students', through='Role')
+    caregivers = models.ManyToManyField(
+        Caregiver, related_name="students", through="Role"
+    )
 
     def __str__(self):
-        return self.user.first_name + ' ' + self.user.last_name
+        return self.user.first_name + " " + self.user.last_name
 
     def first_name(self):
         return self.user.first_name
@@ -73,7 +76,7 @@ class Role(models.Model):
         db_table = "roles"
 
     class RoleNameChoice(models.TextChoices):
-        CAREGIVER = 'caregiver'
+        CAREGIVER = "caregiver"
 
     role_name = models.CharField(max_length=30, choices=RoleNameChoice.choices)
     caregiver = models.ForeignKey(Caregiver, on_delete=models.CASCADE)

@@ -1,0 +1,4 @@
+# https://black.readthedocs.io/en/stable/guides/introducing_black_to_your_project.html#avoiding-ruining-git-blame
+
+# first run of pre-commit with ruff
+230a2a90d23f9704c0090621c3c349048aeb2042

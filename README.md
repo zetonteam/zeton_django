@@ -18,13 +18,26 @@ Allows you to earn points for your activities and exchange them for prizes.
 [Django Rest Framework](https://www.django-rest-framework.org/)  
 [Postgres](https://www.postgresql.org/)
 
+## Contributing
+
+Before you make any commits to this repository make sure to install [pre-commit]() hooks:
+
+```
+# install pre-commit on your machine using pipx if you haven't already
+❯ pipx install pre-commit
+# install hooks defined in .pre-commit-config.yaml (only needs to be done once)
+❯ pre-commit install
+# (optional) invoke pre-commit against all files
+❯ pre-commit run -a
+```
+
 ## Docker and docker-compose
 
 1. [Install Docker](https://docs.docker.com/get-docker/)
 
 If you use Linux and need to use `sudo` before `docker compose` command just follow step below:
 
-manage Docker as a non-root
+Manage Docker as a non-root
 user:  [Post-installation steps for Linux](https://docs.docker.com/engine/install/linux-postinstall/)
 
 2. We use Docker Compose V2 which is integrated into Docker Desktop versions. For more information,
@@ -43,7 +56,7 @@ Or
 Build the image:  
 `docker compose build`
 
-Fire up cointainers:  
+Fire up containers:  
 `docker compose up`
 
 Or fire up containers in detached mode:  
@@ -185,7 +198,7 @@ There are currently several enpoints responsible for managing student points ava
    key.  
    For example: `api/users/points/?studentId=2` should return Point instances assigned to the student with `pk=2`
 
-2. `api/users/points/` accesible with `POST` request, payload in a given format is required:
+2. `api/users/points/` accessible with `POST` request, payload in a given format is required:
 
 ```
 {
@@ -240,7 +253,7 @@ List history of points received by student
 
 ### POST /api/students/<id:int>/points (no longer needed)
 
-~~Add hew points to student~~
+~~Add new points to student~~
 Points should be automatically added when completing a task (another endpoint)
 
 ### GET /api/students/<id:int>/tasks
