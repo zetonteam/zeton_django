@@ -8,7 +8,12 @@ from rest_framework.views import APIView
 
 from users.models import Student, Caregiver, Prize, Task, Point
 from users.permissions import has_user_access_to_student
-from users.serializers import StudentSerializer, PrizeSerializer, TaskSerializer, PointSerializer
+from users.serializers import (
+    StudentSerializer,
+    PrizeSerializer,
+    TaskSerializer,
+    PointSerializer,
+)
 
 
 class StudentsResource(APIView):
@@ -104,6 +109,25 @@ class PrizesResource(APIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
+class StudentPrizesResource(APIView):
+    serializer_class = PrizeSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request, pk):
+        user_id = request.user.id
+
+        if pk is None:
+            raise MethodNotAllowed
+
+        if not has_user_access_to_student(user_id, pk):
+            raise PermissionDenied
+
+        student = Student.objects.get(pk=pk)
+        prizes = Prize.objects.filter(student=student)
+        serializer = PrizeSerializer(prizes, many=True)
+        return Response(serializer.data)
+
+
 class TasksResource(APIView):
     def get(self, request, pk=None):
         if pk is None:
@@ -144,10 +168,10 @@ class PointResource(generics.GenericAPIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
-        if self.kwargs.get('pk') is not None:
-            resource_id = self.kwargs['pk']
+        if self.kwargs.get("pk") is not None:
+            resource_id = self.kwargs["pk"]
         else:
-            resource_id = self.request.query_params.get('studentId', None)
+            resource_id = self.request.query_params.get("studentId", None)
             if resource_id is None:
                 raise Http404
 
@@ -158,12 +182,21 @@ class PointResource(generics.GenericAPIView):
     @extend_schema(
         # extra parameters added to the schema
         parameters=[
-            OpenApiParameter(name='page', description='number of page from pagination', required=False, type=int),
-            OpenApiParameter(name='page_size', description='number of records in page for pagination', required=False,
-                             type=int),
+            OpenApiParameter(
+                name="page",
+                description="number of page from pagination",
+                required=False,
+                type=int,
+            ),
+            OpenApiParameter(
+                name="page_size",
+                description="number of records in page for pagination",
+                required=False,
+                type=int,
+            ),
         ],
         # override default docstring extraction
-        description='Endpoint to generate last records of points of particular student by pagination',
+        description="Endpoint to generate last records of points of particular student by pagination",
         # change the auto-generated operation name
         operation_id=None,
         # or even completely override what AutoSchema would generate. Provide raw Open API spec as Dict.
