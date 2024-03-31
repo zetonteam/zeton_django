@@ -116,15 +116,23 @@ class StudentPrizesResource(APIView):
     def get(self, request, pk):
         user_id = request.user.id
 
-        if pk is None:
-            raise MethodNotAllowed
-
         if not has_user_access_to_student(user_id, pk):
             raise PermissionDenied
 
         student = Student.objects.get(pk=pk)
         prizes = Prize.objects.filter(student=student)
         serializer = PrizeSerializer(prizes, many=True)
+        return Response(serializer.data)
+
+    def post(self, request, pk):
+        user_id = request.user.id
+
+        if not has_user_access_to_student(user_id, pk):
+            raise PermissionDenied
+
+        serializer = PrizeSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
         return Response(serializer.data)
 
 
