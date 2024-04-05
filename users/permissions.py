@@ -4,7 +4,9 @@ from rest_framework import permissions
 
 class HasUserAccessToStudent(permissions.BasePermission):
     def has_permission(self, request, view):
-        return Role.objects.filter(student_id=view.kwargs.get('pk'), caregiver__user_id=request.user.id).exists()
+        return Role.objects.filter(
+            student_id=view.kwargs.get("pk"), caregiver__user_id=request.user.id
+        ).exists()
 
 
 def has_caregiver_access_to_student(caregiver_id, student_id) -> bool:

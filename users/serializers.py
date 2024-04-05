@@ -43,8 +43,10 @@ class PrizeSerializer(serializers.Serializer):
     value = serializers.IntegerField()
 
     def create(self, validated_data):
-        student_id = validated_data.pop('student')['id']
-        return Prize.objects.create(student=Student.objects.get(pk=student_id), **validated_data)
+        student_id = validated_data.pop("student")["id"]
+        return Prize.objects.create(
+            student=Student.objects.get(pk=student_id), **validated_data
+        )
 
     def update(self, instance, validated_data):
         instance.student = validated_data.get("student", instance.student)

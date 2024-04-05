@@ -19,7 +19,9 @@ class StudentsResource(APIView):
     serializer_class = StudentSerializer
 
     def get_permissions(self):
-        if self.kwargs.get('pk'):  # PK is provided- user wants to extract data for a single student
+        if self.kwargs.get(
+            "pk"
+        ):  # PK is provided- user wants to extract data for a single student
             return [permissions.IsAuthenticated(), HasUserAccessToStudent()]
         else:
             return [permissions.IsAuthenticated()]
@@ -124,7 +126,7 @@ class TasksResource(APIView):
 
 class PointResource(generics.GenericAPIView):
     serializer_class = PointSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated, HasUserAccessToStudent]
 
     def get_queryset(self):
         if self.kwargs.get("pk") is not None:
@@ -166,9 +168,6 @@ class PointResource(generics.GenericAPIView):
         try:
             _ = Caregiver.objects.get(user_id=user_id)
         except Caregiver.DoesNotExist:
-            raise PermissionDenied
-
-        if not has_user_access_to_student(user_id, pk):
             raise PermissionDenied
 
         query_set = self.get_queryset()
