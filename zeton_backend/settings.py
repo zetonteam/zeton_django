@@ -145,6 +145,7 @@ REST_FRAMEWORK = {
 JWT_AUTH = {
     "JWT_RESPONSE_PAYLOAD_HANDLER": "zeton_backend.utils.my_jwt_response_handler",
     "JWT_EXPIRATION_DELTA": datetime.timedelta(minutes=120),
+    "JWT_AUTH_HEADER_PREFIX": "Bearer",
 }
 
 SPECTACULAR_SETTINGS = {
