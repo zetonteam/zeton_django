@@ -6,7 +6,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from users.models import Caregiver, Point, Prize, Student, Task
-from users.permissions import has_user_access_to_student
+from users.permissions import HasUserAccessToStudent
 from users.serializers import (
     PointSerializer,
     PrizeSerializer,
@@ -16,8 +16,15 @@ from users.serializers import (
 
 
 class StudentsResource(APIView):
-    permission_classes = [permissions.IsAuthenticated]
     serializer_class = StudentSerializer
+
+    def get_permissions(self):
+        if self.kwargs.get(
+            "pk"
+        ):  # PK is provided- user wants to extract data for a single student
+            return [permissions.IsAuthenticated(), HasUserAccessToStudent()]
+        else:
+            return [permissions.IsAuthenticated()]
 
     def get(self, request, pk=None):
         user_id = request.user.id
@@ -30,11 +37,8 @@ class StudentsResource(APIView):
             students = caregiver.students.all()
             serializer = StudentSerializer(students, many=True)
         else:
-            if has_user_access_to_student(user_id, pk):
-                student = Student.objects.get(pk=pk)
-                serializer = StudentSerializer(student)
-            else:
-                raise PermissionDenied
+            student = Student.objects.get(pk=pk)
+            serializer = StudentSerializer(student)
 
         return Response(serializer.data)
 
@@ -49,9 +53,6 @@ class StudentsResource(APIView):
         user_id = request.user.id
         if pk is None:
             raise MethodNotAllowed
-
-        if not has_user_access_to_student(user_id, pk):
-            raise PermissionDenied
 
         student = Student.objects.get(pk=pk)
         serializer = StudentSerializer(student, data=request.data, partial=True)
@@ -73,38 +74,19 @@ class StudentsResource(APIView):
 
 
 class PrizesResource(APIView):
-    def get(self, request, pk=None):
-        if pk is None:
-            prizes = Prize.objects.all()
-            serializer = PrizeSerializer(prizes, many=True)
-        else:
-            prize = Prize.objects.get(pk=pk)
-            serializer = PrizeSerializer(prize)
+    serializer_class = PrizeSerializer
+    permission_classes = [permissions.IsAuthenticated, HasUserAccessToStudent]
+
+    def get(self, request, pk):
+        prizes = Prize.objects.filter(student_id=pk)
+        serializer = PrizeSerializer(prizes, many=True)
         return Response(serializer.data)
 
-    def post(self, request):
+    def post(self, request, pk):
         serializer = PrizeSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data)
-
-    def put(self, request, pk):
-        prize = Prize.objects.get(pk=pk)
-        serializer = PrizeSerializer(prize, data=request.data)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return Response(serializer.data)
-
-    def patch(self, request, pk):
-        prize = Prize.objects.get(pk=pk)
-        serializer = PrizeSerializer(prize, data=request.data, partial=True)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return Response(serializer.data)
-
-    def delete(self, request, pk):
-        Prize.objects.filter(pk=pk).delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 class TasksResource(APIView):
@@ -144,7 +126,7 @@ class TasksResource(APIView):
 
 class PointResource(generics.GenericAPIView):
     serializer_class = PointSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated, HasUserAccessToStudent]
 
     def get_queryset(self):
         if self.kwargs.get("pk") is not None:
@@ -186,9 +168,6 @@ class PointResource(generics.GenericAPIView):
         try:
             _ = Caregiver.objects.get(user_id=user_id)
         except Caregiver.DoesNotExist:
-            raise PermissionDenied
-
-        if not has_user_access_to_student(user_id, pk):
             raise PermissionDenied
 
         query_set = self.get_queryset()
