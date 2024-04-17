@@ -83,24 +83,16 @@ class PrizesResource(APIView):
 
 
 class TasksResource(APIView):
-    def get(self, request, pk=None):
-        if pk is None:
-            tasks = Task.objects.all()
-            serializer = TaskSerializer(tasks, many=True)
-        else:
-            task = Task.objects.get(pk=pk)
-            serializer = TaskSerializer(task)
+    serializer_class = TaskSerializer
+    permission_classes = [permissions.IsAuthenticated, HasUserAccessToStudent]
+
+    def get(self, request, pk):
+        tasks = Task.objects.filter(student_id=pk)
+        serializer = TaskSerializer(tasks, many=True)
         return Response(serializer.data)
 
-    def post(self, request):
+    def post(self, request, pk):
         serializer = TaskSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return Response(serializer.data)
-
-    def put(self, request, pk):
-        task = Task.objects.get(pk=pk)
-        serializer = PrizeSerializer(task, data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data)
