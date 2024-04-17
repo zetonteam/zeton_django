@@ -50,15 +50,8 @@ class StudentsResource(APIView):
     #     return Response(serializer.data)
 
     def patch(self, request, pk):
-        user_id = request.user.id
         if pk is None:
             raise MethodNotAllowed
-
-        student = Student.objects.get(pk=pk)
-        serializer = StudentSerializer(student, data=request.data, partial=True)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return Response(serializer.data)
 
         student = Student.objects.get(pk=pk)
         serializer = StudentSerializer(student, data=request.data, partial=True)
