@@ -229,7 +229,7 @@ To execute the tests simply call `docker compose exec web pytest` (you can add t
 
 ## Planned endpoints
 
-### GET /api/students
+### GET /api/students  / DONE
 
 List all students for logged in caregiver
 
@@ -237,17 +237,17 @@ List all students for logged in caregiver
 
 Add new student for a caregiver
 
-### GET /api/students/<id:int>
+### GET /api/students/<id:int> / DONE
 
 Retrieve information about student with given ID:
 - ...
 - total_points
 
-### PATCH /api/students/<id:int>
+### PATCH /api/students/<id:int> / DONE
 
 Update student
 
-### GET /api/students/<id:int>/points
+### GET /api/students/<id:int>/points / DONE
 
 List history of points received by student
 
@@ -268,11 +268,11 @@ Add new task for student
 
 Edit existing task + soft delete
 
-### GET /api/students/<id:int>/prizes
+### GET /api/students/<id:int>/prizes / DONE
 
 List of prizes assigned to student
 
-### POST /api/students/<id:int>/prizes
+### POST /api/students/<id:int>/prizes / DONE
 
 Add new prize for student
 
