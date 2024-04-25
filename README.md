@@ -255,7 +255,7 @@ List history of points received by student
 
 ~~Add new points to student~~
 Points should be automatically added when completing a task (another endpoint)
-
+ (session012)
 ### GET /api/students/<id:int>/tasks
 
 List of tasks assigned to student
@@ -268,6 +268,10 @@ Add new task for student
 
 Edit existing task + soft delete
 
+### POST /api/students/<id:int>/tasks/<task_id:int>/reward
+
+Add points to student for a completed task 
+
 ### GET /api/students/<id:int>/prizes
 
 List of prizes assigned to student
@@ -279,6 +283,10 @@ Add new prize for student
 ### PATCH /api/students/<id:int>/prizes/<prize_id:int>
 
 Edit existing prize + soft delete
+
+### POST /api/students/<id:int>/prizes/<prize_id:int>/claim
+ 
+Exchange points for prize
 
 ### POST /api/caregivers (future)
 
