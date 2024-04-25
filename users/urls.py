@@ -17,6 +17,5 @@ urlpatterns = [
     path("students/<int:pk>/", StudentsResource.as_view(), name="student-resource"),
     path("students/<int:pk>/points/", PointResource.as_view(), name="points-resource"),
     path("students/<int:pk>/prizes/", PrizesResource.as_view(), name="prizes-resource"),
-    path("tasks/", TasksResource.as_view(), name="tasks-resource"),
-    path("tasks/<int:pk>/", TasksResource.as_view(), name="task-resource"),
+    path("students/<int:pk>/tasks/", TasksResource.as_view(), name="tasks-resource"),
 ]

@@ -63,7 +63,10 @@ class TaskSerializer(serializers.Serializer):
     value = serializers.IntegerField()
 
     def create(self, validated_data):
-        return Task.objects.create(**validated_data)
+        student_id = validated_data.pop("student")["id"]
+        return Task.objects.create(
+            student=Student.objects.get(pk=student_id), **validated_data
+        )
 
     def update(self, instance, validated_data):
         instance.student = validated_data.get("student", instance.student)
