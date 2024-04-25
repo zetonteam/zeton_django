@@ -1,4 +1,6 @@
 from django.contrib.auth.models import AbstractUser
+from django.contrib.contenttypes.fields import GenericForeignKey
+from django.contrib.contenttypes.models import ContentType
 from django.db import models
 
 
@@ -89,11 +91,28 @@ class Role(models.Model):
 class Point(models.Model):
     class Meta:
         db_table = "student_points"
+        indexes = [
+            models.Index(fields=["content_type", "object_id"]),
+        ]
+
+    TASK_TYPE = "task"
+    PRIZE_TYPE = "prize"
+
+    POINTS_TYPE = (
+        (TASK_TYPE, "task"),
+        (PRIZE_TYPE,  "prize"),
+    )
 
     value = models.IntegerField()
+
     assigner = models.ForeignKey(Caregiver, on_delete=models.CASCADE)
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
     assignment_date = models.DateTimeField(auto_now_add=True)
+    points_type = models.CharField(max_length=20, choices=POINTS_TYPE, default=PRIZE_TYPE)
+
+    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
+    object_id = models.PositiveIntegerField()
+    content_object = GenericForeignKey("content_type", "object_id")
 
 
 class Prize(models.Model):
