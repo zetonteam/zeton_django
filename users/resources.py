@@ -42,12 +42,11 @@ class StudentsResource(APIView):
 
         return Response(serializer.data)
 
-    # TODO future
-    # def post(self, request):
-    #     serializer = StudentSerializer(data=request.data)
-    #     serializer.is_valid(raise_exception=True)
-    #     serializer.save()
-    #     return Response(serializer.data)
+    def post(self, request):
+        serializer = StudentSerializer(data=request.data, context={"request": request})
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data)
 
     def patch(self, request, pk):
         if pk is None:

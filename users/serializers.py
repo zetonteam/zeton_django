@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from rest_framework_jwt.settings import api_settings
 
-from users.models import CustomUser, Point, Prize, Student, Task
+from users.models import CustomUser, Point, Prize, Student, Task, Role, Caregiver
 
 
 class StudentSerializer(serializers.Serializer):
@@ -13,12 +13,15 @@ class StudentSerializer(serializers.Serializer):
     total_points = serializers.IntegerField(read_only=True)
 
     def create(self, validated_data):
-        user_data = validated_data.pop("user")
-        user = CustomUser.objects.create(**user_data)
-
-        return Student.objects.create(
-            user=user, total_points=validated_data["total_points"]
+        user_for_student = CustomUser.objects.create(**validated_data.pop("user"))
+        caregiver = Caregiver.objects.get(user=self.context["request"].user)
+        student = Student.objects.create(user=user_for_student, total_points=0)
+        Role.objects.create(
+            role_name=Role.RoleNameChoice.CAREGIVER,
+            caregiver=caregiver,
+            student=student,
         )
+        return student
 
     def update(self, instance, validated_data):
         user = instance.user
