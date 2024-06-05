@@ -256,7 +256,7 @@ List history of points received by student
 ~~Add new points to student~~
 Points should be automatically added when completing a task (another endpoint)
  (session012)
-### GET /api/students/<id:int>/tasks
+### GET /api/students/<id:int>/tasks | DONE
 
 List of tasks assigned to student
 
