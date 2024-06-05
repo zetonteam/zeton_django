@@ -1,0 +1,7 @@
+❯ pre-commit run -a
+ruff.....................................................................Passed
+ruff-format..............................................................Failed
+- hook id: ruff-format
+- files were modified by this hook
+
+1 file reformatted, 28 files left unchanged
