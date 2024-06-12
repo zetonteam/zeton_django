@@ -107,7 +107,7 @@ class PrizesResource(APIView):
     def post(self, request, pk):
         serializer = PrizeSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        serializer.save()
+        serializer.save(student_id=pk)
         return Response(serializer.data)
 
 
