@@ -189,3 +189,25 @@ class PointResource(generics.GenericAPIView):
 
         serializer = self.get_serializer(page, many=True)
         return self.get_paginated_response(serializer.data)
+
+
+class ClaimPrizeResource(APIView):
+    def post(self, request, pk_student, pk_prize):
+        student = Student.objects.get(pk=pk_student)
+        prize = Prize.objects.get(pk=pk_prize)
+        caregiver = Caregiver.objects.get(user=request.user)
+        # serializer = PointSerializer(
+        #     data={"student": pk_student, "assigner": caregiver.pk, "value": 1, "content_type": pk_prize}
+        # )
+        # serializer.is_valid(raise_exception=True)
+        # serializer.save(student=student, assigner=caregiver, value=1)
+        point = Point(
+            content_object=prize,
+            student=student,
+            assigner=caregiver,
+            value=1,
+            points_type="prize",
+        )
+        point.save()
+        # TODO: subtracting points from student
+        return Response(status=status.HTTP_201_CREATED)
