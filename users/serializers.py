@@ -38,15 +38,12 @@ class StudentSerializer(serializers.Serializer):
 
 class PrizeSerializer(serializers.Serializer):
     pk = serializers.IntegerField(read_only=True)
-    student = serializers.CharField(source="student.id")
+    student = serializers.CharField(source="student.id", read_only=True)
     name = serializers.CharField()
     value = serializers.IntegerField()
 
     def create(self, validated_data):
-        student_id = validated_data.pop("student")["id"]
-        return Prize.objects.create(
-            student=Student.objects.get(pk=student_id), **validated_data
-        )
+        return Prize.objects.create(**validated_data)
 
     def update(self, instance, validated_data):
         instance.student = validated_data.get("student", instance.student)

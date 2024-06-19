@@ -1,13 +1,14 @@
 from django.urls import path
 from rest_framework_jwt.views import obtain_jwt_token
 
-from users.resources import (
-    PointResource,
-    PrizesResource,
+from users.views import (
+    UserList,
+    current_user,
     StudentsResource,
+    PrizesResource,
     TasksResource,
+    PointResource,
 )
-from users.views import UserList, current_user
 
 urlpatterns = [
     path("token-auth/", obtain_jwt_token),
