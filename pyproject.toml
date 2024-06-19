@@ -19,10 +19,10 @@ pyyaml = "^6.0.1"
 uritemplate = "^4.1.1"
 drf-spectacular = "^0.27.2"
 djangorestframework-jwt-5 = "^1.13.0"
-
-[tool.poetry.group.dev.dependencies]
 pytest = "^8.2.0"
 pytest-django = "^4.8.0"
+
+[tool.poetry.group.dev.dependencies]
 
 [build-system]
 requires = ["poetry-core"]
