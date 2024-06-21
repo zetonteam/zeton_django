@@ -30,14 +30,21 @@ copy_to_clipboard() {
   fi
 }
 
-TOKEN=$(curl -s -X 'POST' \
-  'http://localhost:8000/api/token-auth/' \
-  -H 'accept: application/json' \
-  -H 'Content-Type: application/json' \
-  -d '{
-  "username": "opiekun1",
-  "password": "opiekun1"
-}' | jq -r .token)
+BASE_URL="http://localhost:8000/"
+TOKEN_PATH="api/token-auth/"
+DEFAULT_USERNAME="opiekun1"
+DEFAULT_PASSWORD="opiekun1"
+USERNAME=${1:-$DEFAULT_USERNAME}
+PASSWORD=${2:-$DEFAULT_PASSWORD}
+
+TOKEN=$(curl -s -X "POST" \
+  "${BASE_URL}${TOKEN_PATH}" \
+  -H "accept: application/json" \
+  -H "Content-Type: application/json" \
+  -d "{
+  \"username\": \"$USERNAME\",
+  \"password\": \"$PASSWORD\"
+}" | jq -r .token)
 
 if [ -n "$TOKEN" ]; then
   copy_to_clipboard "$TOKEN"
