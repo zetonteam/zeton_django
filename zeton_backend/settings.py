@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "rest_framework",
+    "rest_framework_simplejwt",
     "corsheaders",
     "users",
     "drf_spectacular",
@@ -134,7 +135,7 @@ REST_FRAMEWORK = {
         "rest_framework.permissions.AllowAny",
     ),
     "DEFAULT_AUTHENTICATION_CLASSES": (
-        "rest_framework_jwt.authentication.JSONWebTokenAuthentication",
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
         # "rest_framework.authentication.SessionAuthentication",
         # "rest_framework.authentication.BasicAuthentication",
     ),
@@ -142,10 +143,12 @@ REST_FRAMEWORK = {
     "PAGE_SIZE": 20,
 }
 
-JWT_AUTH = {
-    "JWT_RESPONSE_PAYLOAD_HANDLER": "zeton_backend.utils.my_jwt_response_handler",
-    "JWT_EXPIRATION_DELTA": datetime.timedelta(minutes=120),
-    "JWT_AUTH_HEADER_PREFIX": "Bearer",
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": datetime.timedelta(minutes=120),
+    "SLIDING_TOKEN_REFRESH_LIFETIME": datetime.timedelta(days=1),
+    "SLIDING_TOKEN_LIFETIME": datetime.timedelta(days=30),
+    "SLIDING_TOKEN_REFRESH_LIFETIME_LATE_USER": datetime.timedelta(days=1),
+    "SLIDING_TOKEN_LIFETIME_LATE_USER": datetime.timedelta(days=30),
 }
 
 SPECTACULAR_SETTINGS = {
