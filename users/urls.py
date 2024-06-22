@@ -13,7 +13,6 @@ from users.views import (
 urlpatterns = [
     path("token-auth/", token_obtain_pair),
     path("current-user/", current_user),
-    path("register/", UserList.as_view()),
     path("students/", StudentsResource.as_view(), name="students-resource"),
     path("students/<int:pk>/", StudentsResource.as_view(), name="student-resource"),
     path("students/<int:pk>/points/", PointResource.as_view(), name="points-resource"),
