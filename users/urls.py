@@ -1,5 +1,5 @@
 from django.urls import path
-from rest_framework_jwt.views import obtain_jwt_token
+from rest_framework_simplejwt.views import token_obtain_pair
 
 from users.views import (
     UserList,
@@ -12,7 +12,7 @@ from users.views import (
 )
 
 urlpatterns = [
-    path("token-auth/", obtain_jwt_token),
+    path("token-auth/", token_obtain_pair),
     path("current-user/", current_user),
     path("register/", UserList.as_view()),
     path("students/", StudentsResource.as_view(), name="students-resource"),
