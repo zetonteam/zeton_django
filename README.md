@@ -286,7 +286,7 @@ Points should be automatically added when completing a task (another endpoint)
 
 List of tasks assigned to student
 
-### POST /api/students/<id:int>/tasks
+### POST /api/students/<id:int>/tasks | DONE
 
 Add new task for student
 
