@@ -1,5 +1,5 @@
 from django.http import Http404
-from drf_spectacular.utils import extend_schema, OpenApiParameter, OpenApiRequest, OpenApiExample
+from drf_spectacular.utils import extend_schema, OpenApiParameter
 from rest_framework import permissions, status, generics
 from rest_framework.decorators import api_view
 from rest_framework.exceptions import PermissionDenied, MethodNotAllowed
@@ -17,7 +17,7 @@ from .serializers import (
     PrizeSerializer,
     TaskSerializer,
     PointSerializer,
-    PointShortSerializer
+    PointShortSerializer,
 )
 
 
@@ -52,7 +52,7 @@ class StudentsResource(APIView):
 
     def get_permissions(self):
         if self.kwargs.get(
-                "pk"
+            "pk"
         ):  # PK is provided- user wants to extract data for a single student
             return [permissions.IsAuthenticated(), HasUserAccessToStudent()]
         else:
@@ -156,7 +156,7 @@ class PointResource(generics.GenericAPIView):
         return queryset.order_by("-assignment_date")
 
     def get_serializer_class(self):
-        if self.request.method == 'POST':
+        if self.request.method == "POST":
             return PointShortSerializer()
         else:
             return PointSerializer
@@ -198,13 +198,13 @@ class PointResource(generics.GenericAPIView):
         return self.get_paginated_response(serializer.data)
 
     def post(self, request, pk=None):
-        content_type = request.data.get('content_type')
-        object_id = request.data.get('object_id')
+        content_type = request.data.get("content_type")
+        object_id = request.data.get("object_id")
         student = Student.objects.get(pk=pk)
 
-        if content_type == 'task':
+        if content_type == "task":
             content_object = Task.objects.get(pk=object_id, student=student)
-        elif content_type == 'prize':
+        elif content_type == "prize":
             content_object = Prize.objects.get(pk=object_id, student=student)
         else:
             return Response(status=status.HTTP_400_BAD_REQUEST)
@@ -212,16 +212,22 @@ class PointResource(generics.GenericAPIView):
         content_type_obj = ContentType.objects.get(model=content_type)
 
         serializer = PointSerializer(
-            data={"student": student.pk, "assigner": caregiver.pk, "value": content_object.value,
-                  "content_object": content_object.pk, "points_type": content_type, "content_type": content_type_obj.pk,
-                  "object_id": object_id}
+            data={
+                "student": student.pk,
+                "assigner": caregiver.pk,
+                "value": content_object.value,
+                "content_object": content_object.pk,
+                "points_type": content_type,
+                "content_type": content_type_obj.pk,
+                "object_id": object_id,
+            }
         )
         serializer.is_valid(raise_exception=True)
         serializer.save()
 
-        if content_type == 'task':
+        if content_type == "task":
             student.total_points += content_object.value
-        elif content_type == 'prize':
+        elif content_type == "prize":
             student.total_points -= content_object.value
         else:
             return Response(status=status.HTTP_400_BAD_REQUEST)
