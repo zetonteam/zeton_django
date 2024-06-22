@@ -114,3 +114,9 @@ class PointSerializer(serializers.ModelSerializer):
             "assignment_date",
             "points_type",
         )
+
+
+class PointShortSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Point
+        fields = ['content_type', 'object_id']

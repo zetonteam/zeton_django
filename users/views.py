@@ -1,10 +1,11 @@
 from django.http import Http404
-from drf_spectacular.utils import extend_schema, OpenApiParameter
+from drf_spectacular.utils import extend_schema, OpenApiParameter, OpenApiRequest, OpenApiExample
 from rest_framework import permissions, status, generics
 from rest_framework.decorators import api_view
 from rest_framework.exceptions import PermissionDenied, MethodNotAllowed
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from django.contrib.contenttypes.models import ContentType
 
 from .models import Caregiver, Student, Prize, Task, Point
 from .permissions import HasUserAccessToStudent
@@ -16,6 +17,7 @@ from .serializers import (
     PrizeSerializer,
     TaskSerializer,
     PointSerializer,
+    PointShortSerializer
 )
 
 
@@ -50,7 +52,7 @@ class StudentsResource(APIView):
 
     def get_permissions(self):
         if self.kwargs.get(
-            "pk"
+                "pk"
         ):  # PK is provided- user wants to extract data for a single student
             return [permissions.IsAuthenticated(), HasUserAccessToStudent()]
         else:
@@ -139,7 +141,6 @@ class TasksResource(APIView):
 
 
 class PointResource(generics.GenericAPIView):
-    serializer_class = PointSerializer
     permission_classes = [permissions.IsAuthenticated, HasUserAccessToStudent]
 
     def get_queryset(self):
@@ -153,6 +154,12 @@ class PointResource(generics.GenericAPIView):
         queryset = Point.objects.all()
         queryset = queryset.filter(student_id=resource_id)
         return queryset.order_by("-assignment_date")
+
+    def get_serializer_class(self):
+        if self.request.method == 'POST':
+            return PointShortSerializer()
+        else:
+            return PointSerializer
 
     @extend_schema(
         # extra parameters added to the schema
@@ -190,24 +197,34 @@ class PointResource(generics.GenericAPIView):
         serializer = self.get_serializer(page, many=True)
         return self.get_paginated_response(serializer.data)
 
+    def post(self, request, pk=None):
+        content_type = request.data.get('content_type')
+        object_id = request.data.get('object_id')
+        student = Student.objects.get(pk=pk)
 
-class ClaimPrizeResource(APIView):
-    def post(self, request, pk_student, pk_prize):
-        student = Student.objects.get(pk=pk_student)
-        prize = Prize.objects.get(pk=pk_prize)
+        if content_type == 'task':
+            content_object = Task.objects.get(pk=object_id, student=student)
+        elif content_type == 'prize':
+            content_object = Prize.objects.get(pk=object_id, student=student)
+        else:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
         caregiver = Caregiver.objects.get(user=request.user)
-        # serializer = PointSerializer(
-        #     data={"student": pk_student, "assigner": caregiver.pk, "value": 1, "content_type": pk_prize}
-        # )
-        # serializer.is_valid(raise_exception=True)
-        # serializer.save(student=student, assigner=caregiver, value=1)
-        point = Point(
-            content_object=prize,
-            student=student,
-            assigner=caregiver,
-            value=1,
-            points_type="prize",
+        content_type_obj = ContentType.objects.get(model=content_type)
+
+        serializer = PointSerializer(
+            data={"student": student.pk, "assigner": caregiver.pk, "value": content_object.value,
+                  "content_object": content_object.pk, "points_type": content_type, "content_type": content_type_obj.pk,
+                  "object_id": object_id}
         )
-        point.save()
-        # TODO: subtracting points from student
-        return Response(status=status.HTTP_201_CREATED)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+
+        if content_type == 'task':
+            student.total_points += content_object.value
+        elif content_type == 'prize':
+            student.total_points -= content_object.value
+        else:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+        student.save()
+
+        return Response(status=status.HTTP_201_CREATED, data=serializer.data)
