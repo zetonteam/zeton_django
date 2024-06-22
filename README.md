@@ -12,11 +12,37 @@ Allows you to earn points for your activities and exchange them for prizes.
 
 ## Dependencies
 
-[Python 3.12](https://www.python.org/downloads/)  
-[pip](https://pip.pypa.io/en/stable/installation/)  
-[Django 4.2](https://docs.djangoproject.com/en/4.2/)  
-[Django Rest Framework](https://www.django-rest-framework.org/)  
-[Postgres](https://www.postgresql.org/)
+- [Python 3.12](https://www.python.org/downloads/)
+- [pip](https://pip.pypa.io/en/stable/installation/)
+- [Django 4.2](https://docs.djangoproject.com/en/4.2/)
+- [Django Rest Framework](https://www.django-rest-framework.org/)
+- [Postgres](https://www.postgresql.org/)
+
+## Dependency management
+
+- Install [poetry](https://python-poetry.org/docs/#installing-with-pipx) on your local machine (installation with `pipx` is recommended).
+- In order to add a new dependency and its sub-dependencies use the following command:
+
+    ```poetry add $dependency_name```
+
+    This command will edit both pyproject.toml and poetry.lock files for you. 🙂
+
+- Install the project dependencies using the pyproject.toml file in the current directory:
+
+    ```poetry install```
+
+- Get the latest version of all dependencies and update `poetry.lock`:
+
+    ```poetry update```
+
+- Execute a command inside the project's virtual environment:
+
+    ```poetry run command```
+
+- Spawn a shell within the project's virtual environment:
+
+    ```poetry shell```
+
 
 ## Contributing
 
@@ -53,13 +79,13 @@ Build and run containers:
 
 Or
 
-Build the image:  
+Build the image:
 `docker compose build`
 
-Fire up containers:  
+Fire up containers:
 `docker compose up`
 
-Or fire up containers in detached mode:  
+Or fire up containers in detached mode:
 `docker compose up -d`
 
 ## Database: postgres (Django, docker-compose)
@@ -71,17 +97,17 @@ docker compose exec web python manage.py makemigrations
 docker compose exec web python manage.py migrate
 ```
 
-To create superuser:  
+To create superuser:
 `docker compose exec web python manage.py createsuperuser`
 
 ## To populate data
 
-To populate data using fixtures:  
+To populate data using fixtures:
 `make load_data`
 
 ## To rebuild database
 
-If you want rebuild database, you can use command:  
+If you want rebuild database, you can use command:
 `docker compose down -v`
 
 **WARNING!** This command will delete all data from the database
@@ -186,8 +212,8 @@ Result:
 
 Similarly, tasks:
 
-Go to  
-http://localhost:8000/api/users/tasks/  
+Go to
+http://localhost:8000/api/users/tasks/
 http://localhost:8000/api/users/tasks/1
 
 ## Points endpoints
@@ -195,7 +221,7 @@ http://localhost:8000/api/users/tasks/1
 There are currently several enpoints responsible for managing student points available:
 
 1. `api/users/points/` accesible with a `GET` request and followed by a query string pointing to a student primary
-   key.  
+   key.
    For example: `api/users/points/?studentId=2` should return Point instances assigned to the student with `pk=2`
 
 2. `api/users/points/` accessible with `POST` request, payload in a given format is required:
@@ -282,10 +308,10 @@ Edit existing prize + soft delete
 
 ### POST /api/students/<id:int>/tasks/<task_id:int>/reward
 
-Add points to student for a completed task 
+Add points to student for a completed task
 
 ### POST /api/students/<id:int>/prizes/<prize_id:int>/claim
- 
+
 Exchange points for prize
 
 ### POST /api/caregivers (future)
@@ -299,6 +325,6 @@ Add new role (association between student and caregiver)
 ## Swagger ui
 
 Our project supports a minimal swagger UI setup for Django Rest Framework,
-described [here](https://www.django-rest-framework.org/topics/documenting-your-api/).  
-You can access it with [http://localhost:8000/swagger-ui](http://localhost:8000/swagger-ui) endpoint.  
+described [here](https://www.django-rest-framework.org/topics/documenting-your-api/).
+You can access it with [http://localhost:8000/swagger-ui](http://localhost:8000/swagger-ui) endpoint.
 Openapi compliant text documentation: [http://localhost:8000/openapi](http://localhost:8000/openapi)
