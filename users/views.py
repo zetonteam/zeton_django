@@ -5,6 +5,7 @@ from rest_framework.decorators import api_view
 from rest_framework.exceptions import PermissionDenied, MethodNotAllowed
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from django.contrib.contenttypes.models import ContentType
 
 from .models import Caregiver, Student, Prize, Task, Point
 from .permissions import HasUserAccessToStudent
@@ -16,6 +17,7 @@ from .serializers import (
     PrizeSerializer,
     TaskSerializer,
     PointSerializer,
+    PointShortSerializer,
 )
 
 
@@ -139,7 +141,6 @@ class TasksResource(APIView):
 
 
 class PointResource(generics.GenericAPIView):
-    serializer_class = PointSerializer
     permission_classes = [permissions.IsAuthenticated, HasUserAccessToStudent]
 
     def get_queryset(self):
@@ -153,6 +154,12 @@ class PointResource(generics.GenericAPIView):
         queryset = Point.objects.all()
         queryset = queryset.filter(student_id=resource_id)
         return queryset.order_by("-assignment_date")
+
+    def get_serializer_class(self):
+        if self.request.method == "POST":
+            return PointShortSerializer()
+        else:
+            return PointSerializer
 
     @extend_schema(
         # extra parameters added to the schema
@@ -189,3 +196,41 @@ class PointResource(generics.GenericAPIView):
 
         serializer = self.get_serializer(page, many=True)
         return self.get_paginated_response(serializer.data)
+
+    def post(self, request, pk=None):
+        content_type = request.data.get("content_type")
+        object_id = request.data.get("object_id")
+        student = Student.objects.get(pk=pk)
+
+        if content_type == "task":
+            content_object = Task.objects.get(pk=object_id, student=student)
+        elif content_type == "prize":
+            content_object = Prize.objects.get(pk=object_id, student=student)
+        else:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+        caregiver = Caregiver.objects.get(user=request.user)
+        content_type_obj = ContentType.objects.get(model=content_type)
+
+        serializer = PointSerializer(
+            data={
+                "student": student.pk,
+                "assigner": caregiver.pk,
+                "value": content_object.value,
+                "content_object": content_object.pk,
+                "points_type": content_type,
+                "content_type": content_type_obj.pk,
+                "object_id": object_id,
+            }
+        )
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+
+        if content_type == "task":
+            student.total_points += content_object.value
+        elif content_type == "prize":
+            student.total_points -= content_object.value
+        else:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+        student.save()
+
+        return Response(status=status.HTTP_201_CREATED, data=serializer.data)
