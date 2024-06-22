@@ -100,7 +100,7 @@ class Point(models.Model):
 
     POINTS_TYPE = (
         (TASK_TYPE, "task"),
-        (PRIZE_TYPE,  "prize"),
+        (PRIZE_TYPE, "prize"),
     )
 
     value = models.IntegerField()
@@ -108,7 +108,9 @@ class Point(models.Model):
     assigner = models.ForeignKey(Caregiver, on_delete=models.CASCADE)
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
     assignment_date = models.DateTimeField(auto_now_add=True)
-    points_type = models.CharField(max_length=20, choices=POINTS_TYPE, default=PRIZE_TYPE)
+    points_type = models.CharField(
+        max_length=20, choices=POINTS_TYPE, default=PRIZE_TYPE
+    )
 
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
     object_id = models.PositiveIntegerField()
