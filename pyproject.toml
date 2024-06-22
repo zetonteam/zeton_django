@@ -1,0 +1,29 @@
+[tool.poetry]
+name = "zeton-django"
+version = "0.1.0"
+description = "Backend application for @ProjektZeton"
+authors = ["Zetonteam <l.miotk.py@gmail.com>"]
+license = "Apache"
+readme = "README.md"
+package-mode = false
+
+[tool.poetry.dependencies]
+python = "^3.12"
+Django = "^4.2.13"
+psycopg = "^3.1.19"
+djangorestframework = "^3.15.1"
+django-cors-headers = "^4.3.1"
+pyjwt = "^2.8.0"
+six = "^1.16.0"
+pyyaml = "^6.0.1"
+uritemplate = "^4.1.1"
+drf-spectacular = "^0.27.2"
+pytest = "^8.2.0"
+pytest-django = "^4.8.0"
+djangorestframework-simplejwt = "^5.3.1"
+
+[tool.poetry.group.dev.dependencies]
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
