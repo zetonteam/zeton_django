@@ -5,6 +5,7 @@ from rest_framework.decorators import api_view
 from rest_framework.exceptions import PermissionDenied, MethodNotAllowed
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from django.shortcuts import get_object_or_404
 
 from .models import Caregiver, Student, Prize, Task, Point
 from .permissions import HasUserAccessToStudent
@@ -110,6 +111,20 @@ class PrizesResource(APIView):
         serializer.save(student_id=pk)
         return Response(serializer.data)
 
+    def patch(self, request, pk):
+        prize_id = request.data.get("prize_id")
+        prize = get_object_or_404(Prize, pk=prize_id, student_id=pk)
+        serializer = PrizeSerializer(prize, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data)
+
+    def delete(self, request, pk):
+        prize_id = request.data.get("prize_id")
+        prize = get_object_or_404(Prize, pk=prize_id, student_id=pk)
+        prize.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
 
 class TasksResource(APIView):
     serializer_class = TaskSerializer
@@ -127,14 +142,17 @@ class TasksResource(APIView):
         return Response(serializer.data)
 
     def patch(self, request, pk):
-        task = Task.objects.get(pk=pk)
+        task_id = request.data.get("task_id")
+        task = get_object_or_404(Task, pk=task_id, student_id=pk)
         serializer = TaskSerializer(task, data=request.data, partial=True)
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data)
 
     def delete(self, request, pk):
-        Task.objects.filter(pk=pk).delete()
+        task_id = request.data.get("task_id")
+        task = get_object_or_404(Task, pk=task_id, student_id=pk)
+        task.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
