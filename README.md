@@ -290,7 +290,7 @@ List of tasks assigned to student
 
 Add new task for student
 
-### PATCH /api/students/<id:int>/tasks/<task_id:int>
+### PATCH /api/students/<id:int>/tasks | DONE
 
 Edit existing task + soft delete
 
@@ -302,17 +302,9 @@ List of prizes assigned to student
 
 Add new prize for student
 
-### PATCH /api/students/<id:int>/prizes/<prize_id:int>
+### PATCH /api/students/<id:int>/prizes/ | DONE
 
 Edit existing prize + soft delete
-
-### POST /api/students/<id:int>/tasks/<task_id:int>/reward
-
-Add points to student for a completed task
-
-### POST /api/students/<id:int>/prizes/<prize_id:int>/claim
-
-Exchange points for prize
 
 ### POST /api/caregivers (future)
 
