@@ -14,6 +14,6 @@ def has_caregiver_access_to_student(caregiver_id, student_id) -> bool:
     # This permission is currently not used anywhere-
     # we could probably remove it.
 
-    res = Role.objects.filter(student_id=student_id, caregiver_id=caregiver_id).exists()
-
-    return res
+    return Role.objects.filter(
+        student_id=student_id, caregiver_id=caregiver_id
+    ).exists()

@@ -37,7 +37,7 @@ class UserList(APIView):
 
     permission_classes = (permissions.AllowAny,)
 
-    def post(self, request, format=None):
+    def post(self, request):
         serializer = CustomUserSerializerWithToken(data=request.data)
         if serializer.is_valid():
             serializer.save()
@@ -177,7 +177,7 @@ class PointResource(generics.GenericAPIView):
         # or even completely override what AutoSchema would generate. Provide raw Open API spec as Dict.
         operation=None,
     )
-    def get(self, request, pk=None, format=None):
+    def get(self, request, pk=None):
         user_id = request.user.id
         try:
             _ = Caregiver.objects.get(user_id=user_id)
