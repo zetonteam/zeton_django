@@ -290,7 +290,7 @@ List of tasks assigned to student
 
 Add new task for student
 
-### PATCH /api/students/<id:int>/tasks | DONE
+### PATCH /api/students/<task_id:int>/tasks | DONE
 
 Edit existing task + soft delete
 
