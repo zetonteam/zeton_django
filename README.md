@@ -118,6 +118,16 @@ Go to http://localhost:8000/admin and create a new user.
 
 ## Access API
 
+### Getting authentication token
+
+To get authentication token use:
+
+```bash
+./scripts/get_token.py --username <USERNAME> --password <PASSWORD> | jq -r .access
+```
+
+Default data fixture is using `opiekun1` both for username and password.
+
 ### Auth
 
 To run app with tokens, set `.local.env` `ENVIRONMENT` to `PROD`.
