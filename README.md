@@ -1,14 +1,6 @@
 # zeton_django
 
-Zeton is an application that support behavioral therapy.
-Token system for the child.
-Allows you to earn points for your activities and exchange them for prizes.
-
-## Application goals
-
-- Developing deficit (desirable) behaviour
-- Reduction of undesired behaviour
-- Generating and maintaining therapy effects over time
+Django-based backend for Żeton application.
 
 ## Dependencies
 
@@ -18,99 +10,118 @@ Allows you to earn points for your activities and exchange them for prizes.
 - [Django Rest Framework](https://www.django-rest-framework.org/)
 - [Postgres](https://www.postgresql.org/)
 
-## Dependency management
+## Development environment setup
 
-- Install [poetry](https://python-poetry.org/docs/#installing-with-pipx) on your local machine (installation with `pipx` is recommended).
-- In order to add a new dependency and its sub-dependencies use the following command:
+Following instructions assume Ubuntu 24.04-based configuration.
 
-    ```poetry add $dependency_name```
+### Install `pipx`
 
-    This command will edit both pyproject.toml and poetry.lock files for you. 🙂
-
-- Install the project dependencies using the pyproject.toml file in the current directory:
-
-    ```poetry install```
-
-- Get the latest version of all dependencies and update `poetry.lock`:
-
-    ```poetry update```
-
-- Execute a command inside the project's virtual environment:
-
-    ```poetry run command```
-
-- Spawn a shell within the project's virtual environment:
-
-    ```poetry shell```
-
-
-## Contributing
-
-Before you make any commits to this repository make sure to install [pre-commit]() hooks:
-
-```
-# install pre-commit on your machine using pipx if you haven't already
-❯ pipx install pre-commit
-# install hooks defined in .pre-commit-config.yaml (only needs to be done once)
-❯ pre-commit install
-# (optional) invoke pre-commit against all files
-❯ pre-commit run -a
+```bash
+sudo apt update
+sudo apt install pipx
+pipx ensurepath
 ```
 
-## Docker and docker-compose
+### Install Poetry
 
-1. [Install Docker](https://docs.docker.com/get-docker/)
-
-If you use Linux and need to use `sudo` before `docker compose` command just follow step below:
-
-Manage Docker as a non-root
-user:  [Post-installation steps for Linux](https://docs.docker.com/engine/install/linux-postinstall/)
-
-2. We use Docker Compose V2 which is integrated into Docker Desktop versions. For more information,
-   see [Migrate to Compose V2](https://docs.docker.com/compose/migrate/)
-
-3. Commands:
-
-If you want to build and run containers - you can do it in two ways:
-
-Build and run containers:
-
-`docker compose up -d --build`
-
-Or
-
-Build the image:
-`docker compose build`
-
-Fire up containers:
-`docker compose up`
-
-Or fire up containers in detached mode:
-`docker compose up -d`
-
-## Database: postgres (Django, docker-compose)
-
-To make migrations and migrate:
-
+```bash
+pipx install poetry
 ```
+
+### Install Poetry dependencies
+
+Following command installs dependencies based on `pyproject.toml`:
+
+```bash
+poetry install
+```
+
+#### Other helpful poetry commands
+
+- Add a new dependency: `poetry add <DEPENDENCY_NAME>`.
+
+Both `pyproject.toml` and `poetry.lock` will be modified.
+
+- Get the altest version of all dependencies: `poetry update`.
+
+`poetry.lock` will be updated.
+
+- Execute a command inside the project's virtual environment: `poetry run command`.
+
+- Spawn a shell within the project's virtual environment: `poetry shell`.
+
+### Install `pre-commit`
+
+```bash
+pipx install pre-commit
+pre-commit install
+```
+
+### Docker set-up
+
+Install Docker using following instructions:
+
+- [Instructions for Windows/Mac](https://docs.docker.com/desktop/)
+- [Instructions for Ubuntu](https://docs.docker.com/engine/install/ubuntu/)
+- [Linux post-installation steps](https://docs.docker.com/engine/install/linux-postinstall/)
+
+Build images:
+
+```bash
+docker compose build
+```
+
+Run containers:
+
+```bash
+docker compose up
+```
+
+`-d` can be added to run containers in detached mode.
+
+### Database set-up
+
+Make migrations:
+
+```bash
 docker compose exec web python manage.py makemigrations
+```
+
+Run migration:
+
+```bash
 docker compose exec web python manage.py migrate
 ```
 
-To create superuser:
-`docker compose exec web python manage.py createsuperuser`
+Populate database using fixtures:
 
-## To populate data
+```bash
+docker compose exec web bash -c "python manage.py loaddata fixtures/*.json"
+```
 
-To populate data using fixtures:
-`make load_data`
+#### Other helpful database commands
 
-## To rebuild database
+Create new super-user:
 
-If you want rebuild database, you can use command:
-`docker compose down -v`
+```bash
+docker compose exec web python manage.py createsuperuser
+```
+
+Tear down database:
+
+```bash
+docker compose down -v
+```
 
 **WARNING!** This command will delete all data from the database
+
+## Contributing
+
+- Make sure all pre-commit hooks are passing.
+
+```bash
+pre-commit run -a
+```
 
 ## Register and login user in the Django app
 
