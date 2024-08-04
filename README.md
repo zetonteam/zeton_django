@@ -42,7 +42,7 @@ poetry install
 
 Both `pyproject.toml` and `poetry.lock` will be modified.
 
-- Get the altest version of all dependencies: `poetry update`.
+- Get the latest version of all dependencies: `poetry update`.
 
 `poetry.lock` will be updated.
 
