@@ -6,7 +6,6 @@ from .models import Caregiver, CustomUser, Role, Student
 
 class RoleInline(admin.TabularInline):
     model = Role
-    extra = 1
 
 
 @admin.register(CustomUser)
