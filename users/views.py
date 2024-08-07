@@ -1,10 +1,10 @@
-from django.http import Http404
 from drf_spectacular.utils import extend_schema, OpenApiParameter
 from rest_framework import permissions, status, generics
 from rest_framework.decorators import api_view
 from rest_framework.exceptions import PermissionDenied, MethodNotAllowed
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from django.shortcuts import get_object_or_404
 
 from .models import Caregiver, Student, Prize, Task, Point
 from .permissions import HasUserAccessToStudent
@@ -16,6 +16,7 @@ from .serializers import (
     PrizeSerializer,
     TaskSerializer,
     PointSerializer,
+    PointShortSerializer,
 )
 
 
@@ -37,7 +38,7 @@ class UserList(APIView):
 
     permission_classes = (permissions.AllowAny,)
 
-    def post(self, request):
+    def post(self, request, format=None):
         serializer = CustomUserSerializerWithToken(data=request.data)
         if serializer.is_valid():
             serializer.save()
@@ -50,15 +51,15 @@ class StudentsResource(APIView):
 
     def get_permissions(self):
         if self.kwargs.get(
-            "pk"
-        ):  # PK is provided- user wants to extract data for a single student
+            "student_id"
+        ):  # student_id is provided- user wants to extract data for a single student
             return [permissions.IsAuthenticated(), HasUserAccessToStudent()]
         else:
             return [permissions.IsAuthenticated()]
 
-    def get(self, request, pk=None):
+    def get(self, request, student_id=None):
         user_id = request.user.id
-        if pk is None:
+        if student_id is None:
             try:
                 caregiver = Caregiver.objects.get(user_id=user_id)
             except Caregiver.DoesNotExist:
@@ -67,92 +68,115 @@ class StudentsResource(APIView):
             students = caregiver.students.all()
             serializer = StudentSerializer(students, many=True)
         else:
-            student = Student.objects.get(pk=pk)
+            student = Student.objects.get(pk=student_id)
             serializer = StudentSerializer(student)
 
         return Response(serializer.data)
 
-    # TODO future
-    # def post(self, request):
-    #     serializer = StudentSerializer(data=request.data)
-    #     serializer.is_valid(raise_exception=True)
-    #     serializer.save()
-    #     return Response(serializer.data)
-
-    def patch(self, request, pk):
-        if pk is None:
+    def patch(self, request, student_id):
+        if student_id is None:
             raise MethodNotAllowed
 
-        student = Student.objects.get(pk=pk)
+        student = Student.objects.get(pk=student_id)
         serializer = StudentSerializer(student, data=request.data, partial=True)
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data)
-
-    # TODO future
-    # def delete(self, request, pk):
-    #     Student.objects.filter(pk=pk).delete()
-    #     return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 class PrizesResource(APIView):
     serializer_class = PrizeSerializer
     permission_classes = [permissions.IsAuthenticated, HasUserAccessToStudent]
 
-    def get(self, request, pk):
-        prizes = Prize.objects.filter(student_id=pk)
+    def get(self, request, student_id):
+        prizes = Prize.objects.filter(student_id=student_id)
         serializer = PrizeSerializer(prizes, many=True)
         return Response(serializer.data)
 
-    def post(self, request, pk):
+    def post(self, request, student_id):
         serializer = PrizeSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        serializer.save(student_id=pk)
+        serializer.save(student_id=student_id)
         return Response(serializer.data)
+
+
+class SinglePrizeResource(APIView):
+    serializer_class = PrizeSerializer
+    permission_classes = [permissions.IsAuthenticated, HasUserAccessToStudent]
+
+    def get(self, request, student_id, prize_id):
+        prize = Prize.objects.get(pk=prize_id)
+        serializer = PrizeSerializer(prize)
+        return Response(serializer.data)
+
+    def patch(self, request, student_id, prize_id):
+        prize = get_object_or_404(Prize, pk=prize_id, student_id=student_id)
+        serializer = PrizeSerializer(prize, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data)
+
+    def delete(self, request, student_id, prize_id):
+        prize = get_object_or_404(Prize, pk=prize_id, student_id=student_id)
+        prize.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 class TasksResource(APIView):
     serializer_class = TaskSerializer
     permission_classes = [permissions.IsAuthenticated, HasUserAccessToStudent]
 
-    def get(self, request, pk):
-        tasks = Task.objects.filter(student_id=pk)
+    def get(self, request, student_id):
+        tasks = Task.objects.filter(student_id=student_id)
         serializer = TaskSerializer(tasks, many=True)
         return Response(serializer.data)
 
-    def post(self, request, pk):
+    def post(self, request, student_id):
         serializer = TaskSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        serializer.save(student_id=pk)
+        serializer.save(student_id=student_id)
         return Response(serializer.data)
 
-    def patch(self, request, pk):
-        task = Task.objects.get(pk=pk)
+
+class SingleTaskResource(APIView):
+    serializer_class = TaskSerializer
+    permission_classes = [permissions.IsAuthenticated, HasUserAccessToStudent]
+
+    def get(self, request, student_id, task_id):
+        task = Task.objects.get(pk=task_id)
+        serializer = TaskSerializer(task)
+        return Response(serializer.data)
+
+    def patch(self, request, student_id, task_id=None):
+        if task_id is None:
+            raise MethodNotAllowed
+        task = get_object_or_404(Task, pk=task_id, student_id=student_id)
         serializer = TaskSerializer(task, data=request.data, partial=True)
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data)
 
-    def delete(self, request, pk):
-        Task.objects.filter(pk=pk).delete()
+    def delete(self, request, student_id, task_id=None):
+        if task_id is None:
+            raise MethodNotAllowed
+        task = get_object_or_404(Task, pk=task_id, student_id=student_id)
+        task.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 class PointResource(generics.GenericAPIView):
-    serializer_class = PointSerializer
     permission_classes = [permissions.IsAuthenticated, HasUserAccessToStudent]
+    serializer_class = PointShortSerializer
 
     def get_queryset(self):
-        if self.kwargs.get("pk") is not None:
-            resource_id = self.kwargs["pk"]
-        else:
-            resource_id = self.request.query_params.get("studentId", None)
-            if resource_id is None:
-                raise Http404
-
-        queryset = Point.objects.all()
-        queryset = queryset.filter(student_id=resource_id)
+        queryset = Point.objects.filter(student_id=self.kwargs["student_id"])
         return queryset.order_by("-assignment_date")
+
+    def get_serializer_class(self):
+        if self.request.method == "POST":
+            return PointShortSerializer()
+        else:
+            return PointSerializer
 
     @extend_schema(
         # extra parameters added to the schema
@@ -177,7 +201,7 @@ class PointResource(generics.GenericAPIView):
         # or even completely override what AutoSchema would generate. Provide raw Open API spec as Dict.
         operation=None,
     )
-    def get(self, request, pk=None):
+    def get(self, request, student_id):
         user_id = request.user.id
         try:
             _ = Caregiver.objects.get(user_id=user_id)
@@ -189,3 +213,65 @@ class PointResource(generics.GenericAPIView):
 
         serializer = self.get_serializer(page, many=True)
         return self.get_paginated_response(serializer.data)
+
+    @extend_schema(
+        # extra parameters added to the schema
+        request=PointShortSerializer,
+        # parameters=[
+        #     OpenApiParameter(
+        #         name="content_type",
+        #         description="task or prize",
+        #         required=True,
+        #         type=str,
+        #     ),
+        #     OpenApiParameter(
+        #         name="object_id",
+        #         description="task_id or prize_id",
+        #         required=True,
+        #         type=int,
+        #     ),
+        # ],
+        # override default docstring extraction
+        # description="Endpoint to generate last records of points of particular student by pagination",
+        # change the auto-generated operation name
+        # operation_id=None,
+        # or even completely override what AutoSchema would generate. Provide raw Open API spec as Dict.
+        # operation=None,
+    )
+    def post(self, request, student_id):
+        content_type = request.data.get("content_type")
+        object_id = request.data.get("object_id")
+        student = Student.objects.get(pk=student_id)
+
+        if content_type == "task":
+            content_object = Task.objects.get(pk=object_id, student=student)
+        elif content_type == "prize":
+            content_object = Prize.objects.get(pk=object_id, student=student)
+        else:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+        caregiver = Caregiver.objects.get(user=request.user)
+        # content_type_obj = ContentType.objects.get(model=content_type)
+
+        serializer = PointSerializer(
+            data={
+                "student": student.pk,
+                "assigner": caregiver.pk,
+                "value": content_object.value,
+                "content_object": content_object,
+                # "points_type": content_type,
+                # "content_type": content_type_obj.pk,
+                # "object_id": object_id,
+            }
+        )
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+
+        if content_type == "task":
+            student.total_points += content_object.value
+        elif content_type == "prize":
+            student.total_points -= content_object.value
+        else:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+        student.save()
+
+        return Response(status=status.HTTP_201_CREATED, data=serializer.data)
