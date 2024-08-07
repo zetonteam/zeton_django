@@ -115,21 +115,7 @@ docker compose down -v
 
 **WARNING!** This command will delete all data from the database
 
-## Contributing
-
-- Make sure all pre-commit hooks are passing.
-
-```bash
-pre-commit run -a
-```
-
-## Register and login user in the Django app
-
-Go to http://localhost:8000/admin and create a new user.
-
-## Access API
-
-### Getting authentication token
+### Authentication
 
 To get authentication token use:
 
@@ -139,213 +125,56 @@ To get authentication token use:
 
 Default data fixture is using `opiekun1` both for username and password.
 
-### Auth
-
-To run app with tokens, set `.local.env` `ENVIRONMENT` to `PROD`.
-
-Go to http://localhost:8000/api/users/register/
-
-You may use Postman for that.
-
-As you can see below, you can fill the body form-data with info:
-
-![](https://github.com/zetonteam/zeton_django/blob/develop/images/postman_register_01.png?raw=true)
-
-After that you can hit http://localhost:8000/api/users/students/ with GET method and put into Headers key and value.
-
-Then you have access to private endpoint.
-
-![](https://github.com/zetonteam/zeton_django/blob/develop/images/postman_register_02.png?raw=true)
-
-More private endpoints:
-
-Go to http://localhost:8000/api/users/students/
-
-You may expect this result:
-
-```
-[
-    {
-        "pk": 1,
-        "email": "wojtek-zeton@mailinator.com",
-        "username": "wojtek",
-        "first_name": "Wojtek",
-        "last_name": "",
-        "total_points": 250
-    },
-    {
-        "pk": 2,
-        "email": "kuba-zeton@mailinator.com",
-        "username": "kuba",
-        "first_name": "Kuba",
-        "last_name": "",
-        "total_points": 120
-    }
-]
-```
-
-Go to http://localhost:8000/api/users/students/1
-
-Result:
-
-```
-{
-    "pk": 1,
-    "email": "wojtek-zeton@mailinator.com",
-    "username": "wojtek",
-    "first_name": "Wojtek",
-    "last_name": "",
-    "total_points": 250
-}
-```
-
-Go to http://localhost:8000/api/users/prizes/
-
-```
-[
-    {
-        "pk": 1,
-        "student": "1",
-        "name": "Puszka Coca-cola",
-        "value": 10
-    },
-    {
-        "pk": 2,
-        "student": "2",
-        "name": "1 godzina na basenie",
-        "value": 30
-    }
-]
-```
-
-Go to http://localhost:8000/api/users/prizes/1
-
-Result:
-
-```
-{
-    "pk": 1,
-    "student": "1",
-    "name": "Puszka Coca-cola",
-    "value": 10
-}
-```
-
-Similarly, tasks:
-
-Go to
-http://localhost:8000/api/users/tasks/
-http://localhost:8000/api/users/tasks/1
-
-## Points endpoints
-
-There are currently several enpoints responsible for managing student points available:
-
-1. `api/users/points/` accesible with a `GET` request and followed by a query string pointing to a student primary
-   key.
-   For example: `api/users/points/?studentId=2` should return Point instances assigned to the student with `pk=2`
-
-2. `api/users/points/` accessible with `POST` request, payload in a given format is required:
-
-```
-{
-    "value": 40,
-    "assigner": 1,
-    "student": 1,
-}
-```
-
-As a result you should receive a response similar to the following:
-
-```
-{
-    "pk": 5,
-    "value": 40,
-    "assigner": 1,
-    "student": 1,
-    "assignment_date": "2021-01-26T21:41:04.952509Z"
-}
-```
-
-
 ### Tests
 
-There are also some tests, checking above endpoints, available in the `users/tests/users/test_points.py` module.
+To execute tests use:
 
-To execute the tests simply call `docker compose exec web pytest` (you can add the `-v` flag for a verbose ouput).
+```bash
+docker compose exec web pytest
+```
 
-## Planned endpoints
+`-v` can be added for more verbose output.
 
-### GET /api/students  / DONE
+### Swagger UI and OpenAPI
 
-List all students for logged in caregiver
+Swagger UI can be accessed with:
 
-### POST /api/students (future)
+```plain
+http://localhost:8000/swagger-ui
+```
 
-Add new student for a caregiver
+OpenAPI compliant text documentation can be accessed with:
 
-### GET /api/students/<id:int> / DONE
+```plain
+http://localhost:8000/openapi
+```
 
-Retrieve information about student with given ID:
-- ...
-- total_points
+## Contributing
 
-### PATCH /api/students/<id:int> / DONE
+- Make sure all pre-commit hooks are passing.
 
-Update student
+```bash
+pre-commit run -a
+```
 
-### GET /api/students/<id:int>/points / DONE
+## Endpoints
 
-List history of points received by student
-
-### POST /api/students/<id:int>/points (no longer needed)
-
-~~Add new points to student~~
-Points should be automatically added when completing a task (another endpoint)
- (session012)
-### GET /api/students/<id:int>/tasks | DONE
-
-List of tasks assigned to student
-
-### POST /api/students/<id:int>/tasks | DONE
-
-Add new task for student
-
-### PATCH /api/students/<id:int>/tasks/<task_id:int>
-
-Edit existing task + soft delete
-
-### GET /api/students/<id:int>/prizes / DONE
-
-List of prizes assigned to student
-
-### POST /api/students/<id:int>/prizes / DONE
-
-Add new prize for student
-
-### PATCH /api/students/<id:int>/prizes/<prize_id:int>
-
-Edit existing prize + soft delete
-
-### POST /api/students/<id:int>/tasks/<task_id:int>/reward
-
-Add points to student for a completed task
-
-### POST /api/students/<id:int>/prizes/<prize_id:int>/claim
-
-Exchange points for prize
-
-### POST /api/caregivers (future)
-
-Add new caregiver
-
-### POST /api/roles (future)
-
-Add new role (association between student and caregiver)
-
-## Swagger ui
-
-Our project supports a minimal swagger UI setup for Django Rest Framework,
-described [here](https://www.django-rest-framework.org/topics/documenting-your-api/).
-You can access it with [http://localhost:8000/swagger-ui](http://localhost:8000/swagger-ui) endpoint.
-Openapi compliant text documentation: [http://localhost:8000/openapi](http://localhost:8000/openapi)
+| URL                                           | Operation | Implementation | Tests | Description                                |
+| --------------------------------------------- | --------- | -------------- | ----- | ------------------------------------------ |
+| token-auth                                    | GET       | ✅             | ❌    | Authentication token for a user.           |
+| current-user                                  | GET       | ✅             | ❌    | Current user by their token.               |
+| students                                      | GET       | ✅             | ❌    | All students for logged-in caregiver.      |
+| students                                      | POST      | ❌             | ❌    | Add new student for a caregiver.           |
+| students/<int:id>                             | GET       | ✅             | ❌    | Info about student with given ID.          |
+| students/<int:id>                             | PATCH     | ✅             | ❌    | Update info about student with given ID.   |
+| students/<int:id>/points                      | GET       | ✅             | ❌    | Points history of a student.               |
+| students/<int:id>/tasks                       | GET       | ✅             | ❌    | Tasks assigned to a student.               |
+| students/<int:id>/tasks                       | POST      | ✅             | ❌    | Assign a task to a student.                |
+| students/<int:id>/tasks/<int:task_id>         | PATCH     | ❌             | ❌    | Edit a task. Soft delete a task.           |
+| students/<int:id>/tasks/<int:task_id>/reward  | POST      | ❌             | ❌    | Reward a student with points.              |
+| students/<int:id>/prizes                      | GET       | ✅             | ❌    | Prizes assigned to a student.              |
+| students/<int:id>/prizes                      | POST      | ✅             | ❌    | Add new prize to a student.                |
+| students/<int:id>/prizes/<int:prize_id>/      | PATCH     | ❌             | ❌    | Edit a prize. Soft delete a prize.         |
+| students/<int:id>/prizes/<int:prize_id>/claim | POST      | ❌             | ❌    | Exchange points for a prize.               |
+| caregivers                                    | POST      | ❌             | ❌    | Add a new caregiver.                       |
+| roles                                         | POST      | ❌             | ❌    | Add a new role.                            |
