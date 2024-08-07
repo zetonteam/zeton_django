@@ -88,35 +88,35 @@ class PrizesResource(APIView):
     serializer_class = PrizeSerializer
     permission_classes = [permissions.IsAuthenticated, HasUserAccessToStudent]
 
-    def get(self, request, student_id, prize_id=None):
-        if prize_id is None:
-            prizes = Prize.objects.filter(student_id=student_id)
-            serializer = PrizeSerializer(prizes, many=True)
-        else:
-            prize = Prize.objects.get(pk=prize_id)
-            serializer = PrizeSerializer(prize)
+    def get(self, request, student_id):
+        prizes = Prize.objects.filter(student_id=student_id)
+        serializer = PrizeSerializer(prizes, many=True)
         return Response(serializer.data)
 
-    def post(self, request, student_id, prize_id=None):
-        if prize_id is not None:
-            raise MethodNotAllowed
+    def post(self, request, student_id):
         serializer = PrizeSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save(student_id=student_id)
         return Response(serializer.data)
 
-    def patch(self, request, student_id, prize_id=None):
-        if prize_id is None:
-            raise MethodNotAllowed
+
+class SinglePrizeResource(APIView):
+    serializer_class = PrizeSerializer
+    permission_classes = [permissions.IsAuthenticated, HasUserAccessToStudent]
+
+    def get(self, request, student_id, prize_id):
+        prize = Prize.objects.get(pk=prize_id)
+        serializer = PrizeSerializer(prize)
+        return Response(serializer.data)
+
+    def patch(self, request, student_id, prize_id):
         prize = get_object_or_404(Prize, pk=prize_id, student_id=student_id)
         serializer = PrizeSerializer(prize, data=request.data, partial=True)
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data)
 
-    def delete(self, request, student_id, prize_id=None):
-        if prize_id is None:
-            raise MethodNotAllowed
+    def delete(self, request, student_id, prize_id):
         prize = get_object_or_404(Prize, pk=prize_id, student_id=student_id)
         prize.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
@@ -126,21 +126,25 @@ class TasksResource(APIView):
     serializer_class = TaskSerializer
     permission_classes = [permissions.IsAuthenticated, HasUserAccessToStudent]
 
-    def get(self, request, student_id, task_id=None):
-        if task_id is None:
-            tasks = Task.objects.filter(student_id=student_id)
-            serializer = TaskSerializer(tasks, many=True)
-        else:
-            task = Task.objects.get(pk=task_id)
-            serializer = TaskSerializer(task)
+    def get(self, request, student_id):
+        tasks = Task.objects.filter(student_id=student_id)
+        serializer = TaskSerializer(tasks, many=True)
         return Response(serializer.data)
 
-    def post(self, request, student_id, task_id=None):
-        if task_id is not None:
-            raise MethodNotAllowed
+    def post(self, request, student_id):
         serializer = TaskSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save(student_id=student_id)
+        return Response(serializer.data)
+
+
+class SingleTaskResource(APIView):
+    serializer_class = TaskSerializer
+    permission_classes = [permissions.IsAuthenticated, HasUserAccessToStudent]
+
+    def get(self, request, student_id, task_id):
+        task = Task.objects.get(pk=task_id)
+        serializer = TaskSerializer(task)
         return Response(serializer.data)
 
     def patch(self, request, student_id, task_id=None):

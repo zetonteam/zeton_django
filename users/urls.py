@@ -5,7 +5,9 @@ from users.views import (
     current_user,
     StudentsResource,
     PrizesResource,
+    SinglePrizeResource,
     TasksResource,
+    SingleTaskResource,
     PointResource,
 )
 
@@ -29,8 +31,8 @@ urlpatterns = [
         name="prizes-resource",
     ),
     path(
-        "students/<int:student_id>/prizes/<int:prize_id>",
-        PrizesResource.as_view(),
+        "students/<int:student_id>/prize/<int:prize_id>",
+        SinglePrizeResource.as_view(),
         name="prize-resource",
     ),
     path(
@@ -39,8 +41,8 @@ urlpatterns = [
         name="tasks-resource",
     ),
     path(
-        "students/<int:student_id>/tasks/<int:task_id>",
-        TasksResource.as_view(),
+        "students/<int:student_id>/task/<int:task_id>",
+        SingleTaskResource.as_view(),
         name="task-resource",
     ),
 ]
