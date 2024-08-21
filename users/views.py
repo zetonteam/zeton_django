@@ -1,3 +1,4 @@
+from django.contrib.contenttypes.models import ContentType
 from drf_spectacular.utils import extend_schema, OpenApiParameter
 from rest_framework import permissions, status, generics
 from rest_framework.decorators import api_view
@@ -250,7 +251,8 @@ class PointResource(generics.GenericAPIView):
         else:
             return Response(status=status.HTTP_400_BAD_REQUEST)
         caregiver = Caregiver.objects.get(user=request.user)
-        # content_type_obj = ContentType.objects.get(model=content_type)
+
+        content_type_obj = ContentType.objects.get(model=content_type)
 
         serializer = PointSerializer(
             data={
@@ -258,11 +260,12 @@ class PointResource(generics.GenericAPIView):
                 "assigner": caregiver.pk,
                 "value": content_object.value,
                 "content_object": content_object,
-                # "points_type": content_type,
-                # "content_type": content_type_obj.pk,
-                # "object_id": object_id,
+                "points_type": content_type,
+                "content_type": content_type_obj.pk,
+                "object_id": object_id,
             }
         )
+
         serializer.is_valid(raise_exception=True)
         serializer.save()
 

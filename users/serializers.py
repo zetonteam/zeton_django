@@ -97,7 +97,16 @@ class CustomUserSerializerWithToken(serializers.ModelSerializer):  # Handling Re
 class PointSerializer(serializers.ModelSerializer):
     class Meta:
         model = Point
-        fields = ("pk", "value", "assigner", "student", "assignment_date")
+        fields = (
+            "pk",
+            "value",
+            "assigner",
+            "student",
+            "assignment_date",
+            "points_type",
+            "content_type",
+            "object_id",
+        )
 
 
 class PointShortSerializer(serializers.ModelSerializer):
