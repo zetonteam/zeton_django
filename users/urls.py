@@ -1,5 +1,4 @@
 from django.urls import path
-from rest_framework_simplejwt.views import token_obtain_pair
 
 from users.views import (
     current_user,
@@ -12,7 +11,7 @@ from users.views import (
 )
 
 urlpatterns = [
-    path("current-user/", current_user),
+    path("current-user/", current_user),   
     path("students/", StudentsResource.as_view(), name="students-resource"),
     path(
         "students/<int:student_id>/",
