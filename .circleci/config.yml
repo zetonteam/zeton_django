@@ -3,7 +3,7 @@ jobs:
   build:
     working_directory: /app
     docker:
-      - image: docker:24.0.5-git
+      - image: docker:27.1.2
     steps:
       - checkout
       - setup_remote_docker
@@ -11,33 +11,35 @@ jobs:
           name: Install dependencies
           command: |
             apk add --no-cache \
-              py3-pip=23.1.2-r0
-            pip install \
-              docker-compose==1.12.0 \
-              ruff==0.3.5
+              docker-compose \
+              ruff
       - restore_cache:
           keys:
             - v1-{{ .Branch }}
           paths:
-            - /caches/app.tar
+            - /caches/app-web.tar
+            - /caches/app-migration.tar
       - run:
-          name: Load Docker image layer cache
+          name: Load Docker images layer cache
           command: |
             set +o pipefail
-            docker load -i /caches/app.tar | true
+            docker load -i /caches/app-web.tar | true
+            docker load -i /caches/app-migration.tar | true
       - run:
-          name: Build application Docker image
+          name: Build application Docker images
           command: |
-            docker build --cache-from=app -t app .
+            docker compose build
       - run:
-          name: Save Docker image layer cache
+          name: Save Docker images layer cache
           command: |
             mkdir -p /caches
-            docker save -o /caches/app.tar app
+            docker save -o /caches/app-web.tar app-web
+            docker save -o /caches/app-migration.tar app-migration
       - save_cache:
           key: v1-{{ .Branch }}-{{ epoch }}
           paths:
-            - /caches/app.tar
+            - /caches/app-web.tar
+            - /caches/app-migration.tar
       - run:
           name: Run static analysis
           command: |
@@ -46,4 +48,10 @@ jobs:
       - run:
           name: Run tests
           command: |
-            docker run --rm app python manage.py test
+            docker compose up --wait
+            docker compose exec web pytest
+      - run:
+          name: Test environment clean-up
+          command: |
+            docker compose down
+          when: always
