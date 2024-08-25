@@ -6,12 +6,10 @@ services:
             - POSTGRES_USER=postgres
             - POSTGRES_PASSWORD=postgres
         volumes:
-            - .:/postgres_data/  # Persist data even if container shuts down volumes
+            - .:/postgres_data/ # Persist data even if container shuts down volumes
     web:
         build: .
         command: python manage.py runserver 0.0.0.0:8000
-        volumes:
-            - .:/code
         ports:
             - "8000:8000"
         depends_on:
@@ -19,13 +17,16 @@ services:
             - migration
         env_file:
             - ./env_config/local.env
+        healthcheck:
+            test: curl -s -o /dev/null localhost:8000
+            interval: 3s
+            timeout: 5s
+            retries: 5
     migration:
         build: .
-        command: ["bash", "-c",  "while !</dev/tcp/db/5432; do sleep 1; done; python manage.py migrate"]
-        volumes:
-            - .:/code
+        command: [ "bash", "-c", "while !</dev/tcp/db/5432; do sleep 1; done; python manage.py migrate" ]
         depends_on:
-            -   db
+            - db
 
 volumes:
-  postgres_data:
+    postgres_data:
