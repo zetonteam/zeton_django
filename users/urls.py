@@ -12,7 +12,6 @@ from users.views import (
 )
 
 urlpatterns = [
-    path("token-auth/", token_obtain_pair),
     path("current-user/", current_user),
     path("students/", StudentsResource.as_view(), name="students-resource"),
     path(
