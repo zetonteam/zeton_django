@@ -43,8 +43,8 @@ jobs:
       - run:
           name: Run static analysis
           command: |
-            ruff check --fix --exit-non-zero-on-fix
-            ruff format
+            ruff check
+            ruff format --check
       - run:
           name: Run tests
           command: |
