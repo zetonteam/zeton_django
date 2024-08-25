@@ -44,7 +44,7 @@ jobs:
           name: Run static analysis
           command: |
             ruff check
-            ruff format
+            ruff format --check
       - run:
           name: Run tests
           command: |
