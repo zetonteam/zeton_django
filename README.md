@@ -168,6 +168,7 @@ pre-commit run -a
 | students/<int:id>                             | GET       | ✅             | ❌    | Info about student with given ID.          |
 | students/<int:id>                             | PATCH     | ✅             | ❌    | Update info about student with given ID.   |
 | students/<int:id>/points                      | GET       | ✅             | ❌    | Points history of a student.               |
+| students/<int:id>/points                      | POST      | ✅             | ❌    | Task/prize -> add/substract points.        |
 | students/<int:id>/tasks                       | GET       | ✅             | ❌    | Tasks assigned to a student.               |
 | students/<int:id>/tasks                       | POST      | ✅             | ❌    | Assign a task to a student.                |
 | students/<int:id>/tasks/<int:task_id>         | PATCH     | ❌             | ❌    | Edit a task. Soft delete a task.           |
