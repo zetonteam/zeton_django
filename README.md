@@ -162,7 +162,7 @@ pre-commit run -a
 | URL                                           | Operation | Implementation | Tests | Description                                |
 | --------------------------------------------- | --------- | -------------- | ----- | ------------------------------------------ |
 | token-auth                                    | GET       | ✅             | ✅    | Authentication token for a user.           |
-| current-user                                  | GET       | ✅             | ❌    | Current user by their token.               |
+| current-user                                  | GET       | ✅             | ✅    | Current user by their token.               |
 | students                                      | GET       | ✅             | ❌    | All students for logged-in caregiver.      |
 | students                                      | POST      | ❌             | ❌    | Add new student for a caregiver.           |
 | students/<int:id>                             | GET       | ✅             | ❌    | Info about student with given ID.          |
