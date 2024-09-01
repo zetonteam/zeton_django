@@ -1,12 +1,8 @@
-from django.test import TestCase
 from rest_framework import status
-from rest_framework.test import APIClient
+from .common import EndpointTestCase
 
 
-class TestTokenAuth(TestCase):
-    def setUp(self):
-        self.client = APIClient()
-
+class TestTokenAuth(EndpointTestCase):
     def test_Post_Success(self):
         data = {"username": "opiekun1", "password": "opiekun1"}
 

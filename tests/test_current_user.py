@@ -1,23 +1,12 @@
-import random
-from string import ascii_letters
-from django.test import TestCase
 from rest_framework import status
-from rest_framework.test import APIClient
+from .common import EndpointTestCase
 
 
-class TestCurrentUser(TestCase):
-    def setUp(self):
-        self.client = APIClient()
-
+class TestCurrentUser(EndpointTestCase):
     def test_Get_Success(self):
-        # Obtain token.
-        token_data = {"username": "opiekun1", "password": "opiekun1"}
-        token_response = self.client.post("/api/token-auth/", token_data)
-        token = token_response.json()["access"]
-
         # Access API.
         response = self.client.get(
-            "/api/current-user/", HTTP_AUTHORIZATION="Bearer " + token
+            "/api/current-user/", HTTP_AUTHORIZATION="Bearer " + self.access_token()
         )
 
         # General assertions.
@@ -33,36 +22,11 @@ class TestCurrentUser(TestCase):
         assert response_json["username"] == "opiekun1"
 
     def test_Get_NoToken(self):
-        # Access API.
         response = self.client.get("/api/current-user/")
-
-        # Assertions.
-        assert response.status_code == status.HTTP_401_UNAUTHORIZED
-        assert response.headers["Content-Type"] == "application/json"
-        response_json = response.json()
-        assert len(response_json) == 1
-        assert "detail" in response_json
-        assert (
-            response_json["detail"] == "Authentication credentials were not provided."
-        )
+        self.assert_no_token(response)
 
     def test_Get_InvalidToken(self):
-        # Obtain random data of the same length as token.
-        def random_text(length):
-            return "".join(random.choice(ascii_letters) for _ in range(length))
-
-        bogus_token = random_text(228)
-
-        # Access API.
         response = self.client.get(
-            "/api/current-user/", HTTP_AUTHORIZATION="Bearer " + bogus_token
+            "/api/current-user/", HTTP_AUTHORIZATION="Bearer " + self.bogus_token()
         )
-
-        # Assertions.
-        assert response.status_code == status.HTTP_401_UNAUTHORIZED
-        assert response.headers["Content-Type"] == "application/json"
-        response_json = response.json()
-        assert len(response_json) == 3
-        assert "detail" in response_json
-        assert "code" in response_json
-        assert "messages" in response_json
+        self.assert_invalid_token(response)
