@@ -10,3 +10,4 @@ def django_db_setup(django_db_setup, django_db_blocker):
         call_command("loaddata", "caregivers")
         call_command("loaddata", "tasks")
         call_command("loaddata", "prizes")
+        call_command("loaddata", "roles")
