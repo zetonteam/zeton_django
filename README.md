@@ -159,22 +159,23 @@ pre-commit run -a
 
 ## Endpoints
 
-| URL                                           | Operation | Implementation | Tests | Description                                |
-| --------------------------------------------- | --------- | -------------- | ---- | ------------------------------------------ |
-| token-auth                                    | GET       | ✅             | ✅   | Authentication token for a user.           |
-| current-user                                  | GET       | ✅             | ✅   | Current user by their token.               |
-| students                                      | GET       | ✅             | ✅   | All students for logged-in caregiver.      |
-| students                                      | POST      | ❌             | ❌   | Add new student for a caregiver.           |
-| students/<int:id>                             | GET       | ✅             | ✅   | Info about student with given ID.          |
-| students/<int:id>                             | PATCH     | ✅             | ❌   | Update info about student with given ID.   |
-| students/<int:id>/points                      | GET       | ✅             | ❌   | Points history of a student.               |
-| students/<int:id>/tasks                       | GET       | ✅             | ❌   | Tasks assigned to a student.               |
-| students/<int:id>/tasks                       | POST      | ✅             | ❌   | Assign a task to a student.                |
-| students/<int:id>/tasks/<int:task_id>         | PATCH     | ❌             | ❌   | Edit a task. Soft delete a task.           |
-| students/<int:id>/tasks/<int:task_id>/reward  | POST      | ❌             | ❌   | Reward a student with points.              |
-| students/<int:id>/prizes                      | GET       | ✅             | ❌   | Prizes assigned to a student.              |
-| students/<int:id>/prizes                      | POST      | ✅             | ❌   | Add new prize to a student.                |
-| students/<int:id>/prizes/<int:prize_id>/      | PATCH     | ❌             | ❌   | Edit a prize. Soft delete a prize.         |
-| students/<int:id>/prizes/<int:prize_id>/claim | POST      | ❌             | ❌   | Exchange points for a prize.               |
-| caregivers                                    | POST      | ❌             | ❌   | Add a new caregiver.                       |
-| roles                                         | POST      | ❌             | ❌   | Add a new role.                            |
+| URL                                          | Operation | Implementation | Tests | Description                                  |
+| -------------------------------------------- |-----------|----------------| ---- |----------------------------------------------|
+| token-auth                                   | GET       | ✅              | ✅   | Authentication token for a user.             |
+| current-user                                 | GET       | ✅              | ✅   | Current user by their token.                 |
+| students                                     | GET       | ✅              | ✅   | All students for logged-in caregiver.        |
+| students                                     | POST      | ❌              | ❌   | Add new student for a caregiver.             |
+| students/<int:id>                            | GET       | ✅              | ✅   | Info about student with given ID.            |
+| students/<int:id>                            | PATCH     | ✅              | ❌   | Update info about student with given ID.     |
+| students/<int:id>/points                     | GET       | ✅              | ❌   | Points history of a student.                 |
+| students/<int:id>/tasks                      | GET       | ✅              | ❌   | Tasks assigned to a student.                 |
+| students/<int:id>/tasks                      | POST      | ✅              | ❌   | Assign a task to a student.                  |
+| students/<int:id>/tasks/<int:task_id>        | PATCH     | ❌              | ❌   | Edit a task. Soft delete a task.             |
+| students/<int:id>/tasks/<int:task_id>/reward | POST      | ❌              | ❌   | Reward a student with points.                |
+| students/<int:id>/prizes                     | GET       | ✅              | ❌   | Prizes assigned to a student.                |
+| students/<int:id>/prizes                     | POST      | ✅              | ❌   | Add new prize to a student.                  |
+| students/<int:id>/prize/<int:prize_id>/      | GET       | ✅              | ❌   | Get single prize details.                    |
+| students/<int:id>/prize/<int:prize_id>/      | PATCH     | ✅❌?           | ❌   | Edit a prize.(Future - soft delete a prize). |
+| students/<int:id>/prize/<int:prize_id>/      | DELETE    | ✅              | ❌   | Hard delete a prize.                         |
+| caregivers                                   | POST      | ❌              | ❌   | Add a new caregiver.                         |
+| roles                                        | POST      | ❌              | ❌   | Add a new role.                              |
