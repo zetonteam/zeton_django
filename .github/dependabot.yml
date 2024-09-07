@@ -10,6 +10,10 @@ updates:
   - package-ecosystem: "pip"
     # Look for a `requirements.txt` in the `root` directory
     directory: "/"
+    # Ignore updates for the Django package with versions 5
+    ignore:
+      - dependency-name: "django"
+        versions: ["5.*"]
     # Check for updates once a week
     schedule:
       interval: "weekly"
