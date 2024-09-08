@@ -170,7 +170,7 @@ pre-commit run -a
 | students                                       | GET       | ✅              | ✅     | All students for logged-in caregiver.    |
 | students                                       | POST      | ❌              | ❌     | Add new student for a caregiver.         |
 | students/<int:student_id>                      | GET       | ✅              | ✅     | Info about student with given ID.        |
-| students/<int:student_id>                      | PATCH     | ✅              | ❌     | Update info about student with given ID. |
+| students/<int:student_id>                      | PATCH     | ✅              | ✅     | Update info about student with given ID. |
 | students/<int:student_id>/points               | GET       | ✅              | ✅     | Points history of a student.             |
 | students/<int:student_id>/points               | POST      | ✅              | ❌     | Add points to a student.                 |
 | students/<int:student_id>/prize/<int:prize_id> | GET       | ✅              | ❌     | Info about prize with given ID.          |
