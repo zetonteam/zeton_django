@@ -103,7 +103,7 @@ class SinglePrizeResource(APIView):
     permission_classes = [permissions.IsAuthenticated, HasUserAccessToStudent]
 
     def get(self, request, student_id, prize_id):
-        prize = Prize.objects.get(pk=prize_id)
+        prize = get_object_or_404(Prize, pk=prize_id, student_id=student_id)
         serializer = PrizeSerializer(prize)
         return Response(serializer.data)
 
@@ -141,7 +141,7 @@ class SingleTaskResource(APIView):
     permission_classes = [permissions.IsAuthenticated, HasUserAccessToStudent]
 
     def get(self, request, student_id, task_id):
-        task = Task.objects.get(pk=task_id)
+        task = get_object_or_404(Task, pk=task_id, student_id=student_id)
         serializer = TaskSerializer(task)
         return Response(serializer.data)
 
