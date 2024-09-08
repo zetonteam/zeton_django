@@ -4,6 +4,7 @@ from rest_framework_simplejwt.views import token_obtain_pair
 from users.views import (
     current_user,
     StudentsResource,
+    SingleStudentResource,
     PrizesResource,
     SinglePrizeResource,
     TasksResource,
@@ -17,7 +18,7 @@ urlpatterns = [
     path("students/", StudentsResource.as_view(), name="students-resource"),
     path(
         "students/<int:student_id>/",
-        StudentsResource.as_view(),
+        SingleStudentResource.as_view(),
         name="student-resource",
     ),
     path(
