@@ -16,9 +16,7 @@ class TestPoint(EndpointTestCase):
 
     def test_Get_Success(self):
         # Access API.
-        response = self.client.get(
-            self.VALID_URL, HTTP_AUTHORIZATION="Bearer " + self.access_token()
-        )
+        response = self.get(self.VALID_URL)
 
         # General assertions.
         assert response.status_code == status.HTTP_200_OK
@@ -72,46 +70,17 @@ class TestPoint(EndpointTestCase):
         )
 
     def test_Get_Forbidden(self):
-        # Access API.
-        response = self.client.get(
-            self.NOT_PERMITTED_URL, HTTP_AUTHORIZATION="Bearer " + self.access_token()
-        )
-
-        # Assertions.
-        assert response.status_code == status.HTTP_403_FORBIDDEN
-        assert response.headers["Content-Type"] == "application/json"
-        response_json = response.json()
-        assert len(response_json) == 1
-        assert "detail" in response_json
-        assert (
-            response_json["detail"]
-            == "You do not have permission to perform this action."
-        )
+        response = self.get(self.NOT_PERMITTED_URL)
+        self.assert_forbidden(response)
 
     def test_Get_NotFound(self):
-        # Access API.
-        response = self.client.get(
-            self.NOT_FOUND_URL, HTTP_AUTHORIZATION="Bearer " + self.access_token()
-        )
-
-        # Assertions.
-        # Result should be the same as for accessing student without rights.
-        assert response.status_code == status.HTTP_403_FORBIDDEN
-        assert response.headers["Content-Type"] == "application/json"
-        response_json = response.json()
-        assert len(response_json) == 1
-        assert "detail" in response_json
-        assert (
-            response_json["detail"]
-            == "You do not have permission to perform this action."
-        )
+        response = self.get(self.NOT_FOUND_URL)
+        self.assert_not_found(response)
 
     def test_Get_NoToken(self):
         response = self.client.get(self.VALID_URL)
         self.assert_no_token(response)
 
     def test_Get_InvalidToken(self):
-        response = self.client.get(
-            self.VALID_URL, HTTP_AUTHORIZATION="Bearer " + self.bogus_token()
-        )
+        response = self.get(self.VALID_URL, self.bogus_token())
         self.assert_invalid_token(response)

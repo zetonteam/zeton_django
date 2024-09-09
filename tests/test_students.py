@@ -7,11 +7,12 @@ class TestStudents(EndpointTestCase):
     Tests for '/api/students/' endpoint.
     """
 
+    # Fixture specific URL to available student data.
+    VALID_URL = "/api/students/"
+
     def test_Get_Success(self):
         # Access API.
-        response = self.client.get(
-            "/api/students/", HTTP_AUTHORIZATION="Bearer " + self.access_token()
-        )
+        response = self.get(self.VALID_URL)
 
         # General assertions.
         assert response.status_code == status.HTTP_200_OK
@@ -34,9 +35,7 @@ class TestStudents(EndpointTestCase):
         self.assert_no_token(response)
 
     def test_Get_InvalidToken(self):
-        response = self.client.get(
-            "/api/students/", HTTP_AUTHORIZATION="Bearer " + self.bogus_token()
-        )
+        response = self.get(self.VALID_URL, self.bogus_token())
         self.assert_invalid_token(response)
 
 
@@ -49,12 +48,12 @@ class TestSingleStudent(EndpointTestCase):
     VALID_URL = "/api/students/2/"
     # Fixture specific URL to data not available for current user.
     NOT_PERMITTED_URL = "/api/students/1/"
+    # Fixture specific URL to invalid student ID.
+    NOT_FOUND_URL = "/api/students/12345/"
 
     def test_Get_Success(self):
         # Access API.
-        response = self.client.get(
-            self.VALID_URL, HTTP_AUTHORIZATION="Bearer " + self.access_token()
-        )
+        response = self.get(self.VALID_URL)
 
         # General assertions.
         assert response.status_code == status.HTTP_200_OK
@@ -74,28 +73,75 @@ class TestSingleStudent(EndpointTestCase):
         assert "total_points" in response_json and response_json["total_points"] == 120
 
     def test_Get_Forbidden(self):
-        # Access API.
-        response = self.client.get(
-            self.NOT_PERMITTED_URL, HTTP_AUTHORIZATION="Bearer " + self.access_token()
-        )
+        response = self.get(self.NOT_PERMITTED_URL)
+        self.assert_forbidden(response)
 
-        # Assertions.
-        assert response.status_code == status.HTTP_403_FORBIDDEN
-        assert response.headers["Content-Type"] == "application/json"
-        response_json = response.json()
-        assert len(response_json) == 1
-        assert "detail" in response_json
-        assert (
-            response_json["detail"]
-            == "You do not have permission to perform this action."
-        )
+    def test_Get_NotFound(self):
+        response = self.get(self.NOT_FOUND_URL)
+        self.assert_not_found(response)
 
     def test_Get_NoToken(self):
         response = self.client.get(self.VALID_URL)
         self.assert_no_token(response)
 
     def test_Get_InvalidToken(self):
-        response = self.client.get(
-            self.VALID_URL, HTTP_AUTHORIZATION="Bearer " + self.bogus_token()
-        )
+        response = self.get(self.VALID_URL, self.bogus_token())
+        self.assert_invalid_token(response)
+
+    def test_Patch_Success(self):
+        # Get current student data.
+        student_data = self.get(self.VALID_URL).json()
+
+        # Modify student data.
+        student_data["email"] = "new-mail@mailinator.com"
+        student_data["username"] = "new-username"
+        student_data["first_name"] = "John"
+        student_data["last_name"] = "Doe"
+
+        # Perform PATCH operation.
+        response = self.patch(self.VALID_URL, student_data)
+
+        # General assertions.
+        assert response.status_code == status.HTTP_200_OK
+        assert response.headers["Content-Type"] == "application/json"
+
+        # Get current student data and check if modified properly.
+        post_patch_response = self.get(self.VALID_URL)
+        post_patch_data = post_patch_response.json()
+        # Compare data.
+        assert student_data == post_patch_data
+
+    def test_Patch_EmptyField(self):
+        # Get current student data.
+        student_data = self.get(self.VALID_URL).json()
+
+        # Modify student data.
+        student_data["last_name"] = ""
+
+        # Perform PATCH operation.
+        response = self.patch(self.VALID_URL, student_data)
+
+        # General assertions.
+        assert response.status_code == status.HTTP_400_BAD_REQUEST
+        assert response.headers["Content-Type"] == "application/json"
+        response_json = response.json()
+        assert isinstance(response_json, dict)
+        assert "last_name" in response_json and response_json["last_name"] == [
+            "This field may not be blank."
+        ]
+
+    def test_Patch_Forbidden(self):
+        response = self.patch(self.NOT_PERMITTED_URL, "")
+        self.assert_forbidden(response)
+
+    def test_Patch_NotFound(self):
+        response = self.patch(self.NOT_FOUND_URL, "")
+        self.assert_not_found(response)
+
+    def test_Patch_NoToken(self):
+        response = self.client.patch(self.VALID_URL)
+        self.assert_no_token(response)
+
+    def test_Patch_InvalidToken(self):
+        response = self.patch(self.VALID_URL, "", self.bogus_token())
         self.assert_invalid_token(response)
