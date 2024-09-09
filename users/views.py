@@ -49,35 +49,32 @@ class UserList(APIView):
 
 class StudentsResource(APIView):
     serializer_class = StudentSerializer
+    permission_classes = [permissions.IsAuthenticated]
 
-    def get_permissions(self):
-        if self.kwargs.get(
-            "student_id"
-        ):  # student_id is provided- user wants to extract data for a single student
-            return [permissions.IsAuthenticated(), HasUserAccessToStudent()]
-        else:
-            return [permissions.IsAuthenticated()]
-
-    def get(self, request, student_id=None):
+    def get(self, request):
         user_id = request.user.id
-        if student_id is None:
-            try:
-                caregiver = Caregiver.objects.get(user_id=user_id)
-            except Caregiver.DoesNotExist:
-                raise PermissionDenied
+        try:
+            caregiver = Caregiver.objects.get(user_id=user_id)
+        except Caregiver.DoesNotExist:
+            raise PermissionDenied
 
-            students = caregiver.students.all()
-            serializer = StudentSerializer(students, many=True)
-        else:
-            student = Student.objects.get(pk=student_id)
-            serializer = StudentSerializer(student)
+        students = caregiver.students.all()
+        serializer = StudentSerializer(students, many=True)
+
+        return Response(serializer.data)
+
+
+class SingleStudentResource(APIView):
+    serializer_class = StudentSerializer
+    permission_classes = [permissions.IsAuthenticated, HasUserAccessToStudent]
+
+    def get(self, request, student_id):
+        student = Student.objects.get(pk=student_id)
+        serializer = StudentSerializer(student)
 
         return Response(serializer.data)
 
     def patch(self, request, student_id):
-        if student_id is None:
-            raise MethodNotAllowed
-
         student = Student.objects.get(pk=student_id)
         serializer = StudentSerializer(student, data=request.data, partial=True)
         serializer.is_valid(raise_exception=True)
@@ -106,7 +103,7 @@ class SinglePrizeResource(APIView):
     permission_classes = [permissions.IsAuthenticated, HasUserAccessToStudent]
 
     def get(self, request, student_id, prize_id):
-        prize = Prize.objects.get(pk=prize_id)
+        prize = get_object_or_404(Prize, pk=prize_id, student_id=student_id)
         serializer = PrizeSerializer(prize)
         return Response(serializer.data)
 
@@ -144,7 +141,7 @@ class SingleTaskResource(APIView):
     permission_classes = [permissions.IsAuthenticated, HasUserAccessToStudent]
 
     def get(self, request, student_id, task_id):
-        task = Task.objects.get(pk=task_id)
+        task = get_object_or_404(Task, pk=task_id, student_id=student_id)
         serializer = TaskSerializer(task)
         return Response(serializer.data)
 
