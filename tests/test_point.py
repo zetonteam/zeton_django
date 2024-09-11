@@ -4,7 +4,7 @@ from .common import EndpointTestCase
 
 class TestPoint(EndpointTestCase):
     """
-    Test for '/api/students/<int:id>/points/' endpoint.
+    Test for '/api/students/<int:student_id>/points/' endpoints.
     """
 
     # Fixture specific URL to available student data.
@@ -13,6 +13,8 @@ class TestPoint(EndpointTestCase):
     NOT_PERMITTED_URL = "/api/students/1/points/"
     # Fixture specific URL to invalid student ID.
     NOT_FOUND_URL = "/api/students/12345/points/"
+
+    VALID_POST_DATA = {"content_type": "prize", "object_id": "2"}
 
     def test_Get_Success(self):
         # Access API.
@@ -83,4 +85,24 @@ class TestPoint(EndpointTestCase):
 
     def test_Get_InvalidToken(self):
         response = self.get(self.VALID_URL, self.bogus_token())
+        self.assert_invalid_token(response)
+
+    def test_Post_Success(self):
+        response = self.post(self.VALID_URL, self.VALID_POST_DATA)
+        assert response.status_code == status.HTTP_201_CREATED
+
+    def test_Post_Forbidden(self):
+        response = self.post(self.NOT_PERMITTED_URL, self.VALID_POST_DATA)
+        self.assert_forbidden(response)
+
+    def test_Post_NotFound(self):
+        response = self.post(self.NOT_FOUND_URL, self.VALID_POST_DATA)
+        self.assert_not_found(response)
+
+    def test_Post_NoToken(self):
+        response = self.client.post(self.VALID_URL, self.VALID_POST_DATA)
+        self.assert_no_token(response)
+
+    def test_Post_InvalidToken(self):
+        response = self.post(self.VALID_URL, self.VALID_POST_DATA, self.bogus_token())
         self.assert_invalid_token(response)
