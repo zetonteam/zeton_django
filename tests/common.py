@@ -34,6 +34,28 @@ class EndpointTestCase(TestCase):
             endpoint_url, HTTP_AUTHORIZATION=f"Bearer {access_token}"
         )
 
+    def post(self, endpoint_url: str, data: Any, token: str | None = None):
+        """
+        Helper method to make a POST request.
+        "json" format is assumed.
+
+        Parameters
+        ----------
+        endpoint_url : str
+            Endpoint URL.
+        data : Any
+            Data to send.
+        token : str | None
+            Token to be used. 'self.access_token()' is used if 'None'.
+        """
+        access_token = token if token is not None else self.access_token()
+        return self.client.post(
+            endpoint_url,
+            data,
+            format="json",
+            HTTP_AUTHORIZATION=f"Bearer {access_token}",
+        )
+
     def patch(self, endpoint_url: str, data: Any, token: str | None = None):
         """
         Helper method to make a PATCH request.
