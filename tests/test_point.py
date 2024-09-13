@@ -13,8 +13,12 @@ class TestPoint(EndpointTestCase):
     NOT_PERMITTED_URL = "/api/students/1/points/"
     # Fixture specific URL to invalid student ID.
     NOT_FOUND_URL = "/api/students/12345/points/"
-
-    VALID_POST_DATA = {"content_type": "prize", "object_id": "2"}
+    # Fixture specific valid data to post a prize.
+    VALID_POST_PRIZE = {"content_type": "prize", "object_id": "2"}
+    # Fixture specific valid data to post a task.
+    VALID_POST_TASK = {"content_type": "task", "object_id": "2"}
+    # Fixture specific data to post an invalid content type.
+    INVALID_POST_TYPE = {"content_type": "asdf", "object_id": "1"}
 
     def test_Get_Success(self):
         # Access API.
@@ -87,22 +91,46 @@ class TestPoint(EndpointTestCase):
         response = self.get(self.VALID_URL, self.bogus_token())
         self.assert_invalid_token(response)
 
-    def test_Post_Success(self):
-        response = self.post(self.VALID_URL, self.VALID_POST_DATA)
+    def test_Post_Prize_Success(self):
+        response = self.post(self.VALID_URL, self.VALID_POST_PRIZE)
         assert response.status_code == status.HTTP_201_CREATED
+        # Fixture specific assertions.
+        response_json = response.json()
+        assert response_json["value"] == 30
+        assert response_json["assigner"] == 1
+        assert response_json["student"] == 2
+        assert response_json["points_type"] == "prize"
+        assert response_json["content_type"] == 11
+        assert response_json["object_id"] == 2
+
+    def test_Post_Task_Success(self):
+        response = self.post(self.VALID_URL, self.VALID_POST_TASK)
+        assert response.status_code == status.HTTP_201_CREATED
+        # Fixture specific assertions.
+        response_json = response.json()
+        assert response_json["value"] == 1
+        assert response_json["assigner"] == 1
+        assert response_json["student"] == 2
+        assert response_json["points_type"] == "task"
+        assert response_json["content_type"] == 10
+        assert response_json["object_id"] == 2
+
+    def test_Post_Invalid_Type(self):
+        response = self.post(self.VALID_URL, self.INVALID_POST_TYPE)
+        assert response.status_code == status.HTTP_400_BAD_REQUEST
 
     def test_Post_Forbidden(self):
-        response = self.post(self.NOT_PERMITTED_URL, self.VALID_POST_DATA)
+        response = self.post(self.NOT_PERMITTED_URL, self.VALID_POST_PRIZE)
         self.assert_forbidden(response)
 
     def test_Post_NotFound(self):
-        response = self.post(self.NOT_FOUND_URL, self.VALID_POST_DATA)
+        response = self.post(self.NOT_FOUND_URL, self.VALID_POST_PRIZE)
         self.assert_not_found(response)
 
     def test_Post_NoToken(self):
-        response = self.client.post(self.VALID_URL, self.VALID_POST_DATA)
+        response = self.client.post(self.VALID_URL, self.VALID_POST_PRIZE)
         self.assert_no_token(response)
 
     def test_Post_InvalidToken(self):
-        response = self.post(self.VALID_URL, self.VALID_POST_DATA, self.bogus_token())
+        response = self.post(self.VALID_URL, self.VALID_POST_PRIZE, self.bogus_token())
         self.assert_invalid_token(response)
