@@ -2,15 +2,15 @@ from rest_framework import status
 from .common import EndpointTestCase
 
 
-class TestStudents(EndpointTestCase):
+class TestStudentsGet(EndpointTestCase):
     """
-    Tests for '/api/students/' endpoint.
+    Tests for '/api/students/' GET endpoint.
     """
 
     # Fixture specific URL to available student data.
     VALID_URL = "/api/students/"
 
-    def test_Get_Success(self):
+    def test_Success(self):
         # Access API.
         response = self.get(self.VALID_URL)
 
@@ -30,18 +30,18 @@ class TestStudents(EndpointTestCase):
         assert "last_name" in entry and entry["last_name"] == ""
         assert "total_points" in entry and entry["total_points"] == 120
 
-    def test_Get_NoToken(self):
+    def test_NoToken(self):
         response = self.client.get("/api/students/")
         self.assert_no_token(response)
 
-    def test_Get_InvalidToken(self):
+    def test_InvalidToken(self):
         response = self.get(self.VALID_URL, self.bogus_token())
         self.assert_invalid_token(response)
 
 
-class TestSingleStudent(EndpointTestCase):
+class TestSingleStudentGet(EndpointTestCase):
     """
-    Tests for '/api/students/<int:student_id>/' endpoint.
+    Tests for '/api/students/<int:student_id>/' GET endpoint.
     """
 
     # Fixture specific URL to available student data.
@@ -88,7 +88,20 @@ class TestSingleStudent(EndpointTestCase):
         response = self.get(self.VALID_URL, self.bogus_token())
         self.assert_invalid_token(response)
 
-    def test_Patch_Success(self):
+
+class TestSingleStudentPatch(EndpointTestCase):
+    """
+    Tests for '/api/students/<int:student_id>/' PATCH endpoint.
+    """
+
+    # Fixture specific URL to available student data.
+    VALID_URL = "/api/students/2/"
+    # Fixture specific URL to data not available for current user.
+    NOT_PERMITTED_URL = "/api/students/1/"
+    # Fixture specific URL to invalid student ID.
+    NOT_FOUND_URL = "/api/students/12345/"
+
+    def test_Success(self):
         # Get current student data.
         student_data = self.get(self.VALID_URL).json()
 
@@ -111,7 +124,7 @@ class TestSingleStudent(EndpointTestCase):
         # Compare data.
         assert student_data == post_patch_data
 
-    def test_Patch_EmptyField(self):
+    def test_EmptyField(self):
         # Get current student data.
         student_data = self.get(self.VALID_URL).json()
 
@@ -130,18 +143,18 @@ class TestSingleStudent(EndpointTestCase):
             "This field may not be blank."
         ]
 
-    def test_Patch_Forbidden(self):
+    def test_Forbidden(self):
         response = self.patch(self.NOT_PERMITTED_URL, "")
         self.assert_forbidden(response)
 
-    def test_Patch_NotFound(self):
+    def test_NotFound(self):
         response = self.patch(self.NOT_FOUND_URL, "")
         self.assert_not_found(response)
 
-    def test_Patch_NoToken(self):
+    def test_NoToken(self):
         response = self.client.patch(self.VALID_URL)
         self.assert_no_token(response)
 
-    def test_Patch_InvalidToken(self):
+    def test_InvalidToken(self):
         response = self.patch(self.VALID_URL, "", self.bogus_token())
         self.assert_invalid_token(response)
