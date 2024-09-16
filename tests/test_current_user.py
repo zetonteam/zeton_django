@@ -2,8 +2,12 @@ from rest_framework import status
 from .common import EndpointTestCase
 
 
-class TestCurrentUser(EndpointTestCase):
-    def test_Get_Success(self):
+class TestCurrentUserGet(EndpointTestCase):
+    """
+    Tests for '/api/current-user/' GET endpoint.
+    """
+
+    def test_Success(self):
         # Access API.
         response = self.client.get(
             "/api/current-user/", HTTP_AUTHORIZATION="Bearer " + self.access_token()
@@ -21,11 +25,11 @@ class TestCurrentUser(EndpointTestCase):
         assert response_json["id"] == 3
         assert response_json["username"] == "opiekun1"
 
-    def test_Get_NoToken(self):
+    def test_NoToken(self):
         response = self.client.get("/api/current-user/")
         self.assert_no_token(response)
 
-    def test_Get_InvalidToken(self):
+    def test_InvalidToken(self):
         response = self.client.get(
             "/api/current-user/", HTTP_AUTHORIZATION="Bearer " + self.bogus_token()
         )

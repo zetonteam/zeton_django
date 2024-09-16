@@ -2,9 +2,9 @@ from rest_framework import status
 from .common import EndpointTestCase
 
 
-class TestPrizes(EndpointTestCase):
+class TestPrizesGet(EndpointTestCase):
     """
-    Tests for '/api/students/<int:student_id>/prizes/' endpoint.
+    Tests for '/api/students/<int:student_id>/prizes/' GET endpoint.
     """
 
     # Fixture specific URL to available student data.
@@ -14,7 +14,7 @@ class TestPrizes(EndpointTestCase):
     # Fixture specific URL to invalid student ID.
     NOT_FOUND_URL = "/api/students/12345/prizes/"
 
-    def test_Get_Success(self):
+    def test_Success(self):
         # Access API.
         response = self.get(self.VALID_URL)
 
@@ -32,26 +32,26 @@ class TestPrizes(EndpointTestCase):
         assert entry["name"] == "1 godzina na basenie"
         assert entry["value"] == 30
 
-    def test_Get_Forbidden(self):
+    def test_Forbidden(self):
         response = self.get(self.NOT_PERMITTED_URL)
         self.assert_forbidden(response)
 
-    def test_Get_NotFound(self):
+    def test_NotFound(self):
         response = self.get(self.NOT_FOUND_URL)
         self.assert_not_found(response)
 
-    def test_Get_NoToken(self):
+    def test_NoToken(self):
         response = self.client.get(self.VALID_URL)
         self.assert_no_token(response)
 
-    def test_Get_InvalidToken(self):
+    def test_InvalidToken(self):
         response = self.get(self.VALID_URL, self.bogus_token())
         self.assert_invalid_token(response)
 
 
-class TestSinglePrize(EndpointTestCase):
+class TestSinglePrizeGet(EndpointTestCase):
     """
-    Tests for '/api/students/<int:student_id>/prizes/<int:prize_id>' endpoint.
+    Tests for '/api/students/<int:student_id>/prizes/<int:prize_id>' GET endpoint.
     """
 
     # Fixture specific URL to available student data.
@@ -63,7 +63,7 @@ class TestSinglePrize(EndpointTestCase):
     # Fixture specific URL to invalid prize ID.
     PRIZE_NOT_FOUND_URL = "/api/students/2/prize/12345"
 
-    def test_Get_Success(self):
+    def test_Success(self):
         # Access API.
         response = self.get(self.VALID_URL)
 
@@ -79,15 +79,15 @@ class TestSinglePrize(EndpointTestCase):
         assert response_json["name"] == "1 godzina na basenie"
         assert response_json["value"] == 30
 
-    def test_Get_Forbidden(self):
+    def test_Forbidden(self):
         response = self.get(self.NOT_PERMITTED_URL)
         self.assert_forbidden(response)
 
-    def test_Get_StudentNotFound(self):
+    def test_StudentNotFound(self):
         response = self.get(self.STUDENT_NOT_FOUND_URL)
         self.assert_not_found(response)
 
-    def test_Get_PrizeNotFound(self):
+    def test_PrizeNotFound(self):
         response = self.get(self.PRIZE_NOT_FOUND_URL)
         # TODO: This test provides results are not caught by 'self.assert_not_found'.
         # TODO: This is actually more expected result.
@@ -98,10 +98,10 @@ class TestSinglePrize(EndpointTestCase):
         assert "detail" in response_json
         assert response_json["detail"] == "No Prize matches the given query."
 
-    def test_Get_NoToken(self):
+    def test_NoToken(self):
         response = self.client.get(self.VALID_URL)
         self.assert_no_token(response)
 
-    def test_Get_InvalidToken(self):
+    def test_InvalidToken(self):
         response = self.get(self.VALID_URL, self.bogus_token())
         self.assert_invalid_token(response)
