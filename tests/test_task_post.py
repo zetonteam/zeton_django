@@ -2,7 +2,7 @@ from rest_framework import status
 from .common import EndpointTestCase
 
 
-class TestTask(EndpointTestCase):
+class TestTaskPost(EndpointTestCase):
     """
     Tests for '/api/students/<int:student_id>/tasks/' [POST] endpoint.
     """
@@ -18,7 +18,7 @@ class TestTask(EndpointTestCase):
         "value": 21,
     }
 
-    def test_Post_Success(self):
+    def test_Success(self):
         # Send POST data and response HTTPResponse:
         response = self.post(
             self.VALID_URL, data=self.DATA_JSON_POST, token=self.access_token()
@@ -34,13 +34,13 @@ class TestTask(EndpointTestCase):
         assert response_json["name"] == "Another new task to do"
         assert response_json["value"] == 21
 
-    def test_Post_Forbidden(self):
+    def test_Forbidden(self):
         response = self.post(
             self.NOT_PERMITTED_URL, data=self.DATA_JSON_POST, token=self.access_token()
         )
         self.assert_forbidden(response)
 
-    def test_Post_StudentNotFound(self):
+    def test_StudentNotFound(self):
         response = self.post(
             self.STUDENT_NOT_FOUND_URL,
             data=self.DATA_JSON_POST,
@@ -48,7 +48,7 @@ class TestTask(EndpointTestCase):
         )
         self.assert_not_found(response)
 
-    def test_Post_TaskNotFound(self):
+    def test_TaskNotFound(self):
         response = self.post(
             self.STUDENT_NOT_FOUND_URL,
             data=self.DATA_JSON_POST,
@@ -67,11 +67,11 @@ class TestTask(EndpointTestCase):
             == "You do not have permission to perform this action."
         )
 
-    def test_Post_NoToken(self):
+    def test_NoToken(self):
         response = self.client.post(self.VALID_URL, data=self.DATA_JSON_POST)
         self.assert_no_token(response)
 
-    def test_Post_InvalidToken(self):
+    def test_InvalidToken(self):
         response = self.post(
             endpoint_url=self.VALID_URL,
             data=self.DATA_JSON_POST,
