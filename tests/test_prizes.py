@@ -51,7 +51,7 @@ class TestPrizesGet(EndpointTestCase):
 
 class TestSinglePrizeGet(EndpointTestCase):
     """
-    Tests for '/api/students/<int:student_id>/prizes/<int:prize_id>' GET endpoint.
+    Tests for '/api/students/<int:student_id>/prize/<int:prize_id>' GET endpoint.
     """
 
     # Fixture specific URL to available student data.
@@ -104,4 +104,67 @@ class TestSinglePrizeGet(EndpointTestCase):
 
     def test_InvalidToken(self):
         response = self.get(self.VALID_URL, self.bogus_token())
+        self.assert_invalid_token(response)
+
+
+class TestSinglePrizePatch(EndpointTestCase):
+    """
+    Tests for '/api/students/<int:student_id>/prize/<int:prize_id>' PATCH endpoint.
+    """
+
+    # Fixture specific URL to available student data.
+    VALID_URL = "/api/students/2/prize/2"
+    # Fixture specific URL to student data not available for current user.
+    NOT_PERMITTED_URL = "/api/students/1/prize/1"
+    # Fixture specific URL to invalid student ID.
+    STUDENT_NOT_FOUND_URL = "/api/students/12345/prize/1"
+    # Fixture specific URL to invalid prize ID.
+    PRIZE_NOT_FOUND_URL = "/api/students/2/prize/12345"
+
+    def test_Success(self):
+        # Get current prize data.
+        prize_data = self.get(self.VALID_URL).json()
+
+        # Modify prize data.
+        prize_data["name"] = "Jazda konna"
+        prize_data["value"] = 50
+
+        # Perform PATCH operation.
+        response = self.patch(self.VALID_URL, data=prize_data)
+
+        # General assertions.
+        assert response.status_code == status.HTTP_200_OK
+        assert response.headers["Content-Type"] == "application/json"
+
+        # Get current prize data and check if modified properly.
+        post_patch_response = self.get(self.VALID_URL)
+        post_patch_data = post_patch_response.json()
+        # Compare data.
+        assert prize_data == post_patch_data
+
+    def test_Forbidden(self):
+        response = self.patch(self.NOT_PERMITTED_URL, "")
+        self.assert_forbidden(response)
+
+    def test_StudentNotFound(self):
+        response = self.patch(self.STUDENT_NOT_FOUND_URL, "")
+        self.assert_not_found(response)
+
+    def test_PrizeNotFound(self):
+        response = self.patch(self.PRIZE_NOT_FOUND_URL, "")
+        # TODO: This test provides results are not caught by 'self.assert_not_found'.
+        # TODO: This is actually more expected result.
+        assert response.status_code == status.HTTP_404_NOT_FOUND
+        assert response.headers["Content-Type"] == "application/json"
+        response_json = response.json()
+        assert len(response_json) == 1
+        assert "detail" in response_json
+        assert response_json["detail"] == "No Prize matches the given query."
+
+    def test_NoToken(self):
+        response = self.client.patch(self.VALID_URL)
+        self.assert_no_token(response)
+
+    def test_InvalidToken(self):
+        response = self.patch(self.VALID_URL, "", self.bogus_token())
         self.assert_invalid_token(response)
