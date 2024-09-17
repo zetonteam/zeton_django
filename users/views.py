@@ -18,6 +18,7 @@ from .serializers import (
     TaskSerializer,
     PointSerializer,
     PointShortSerializer,
+    RoleSerializer,
 )
 
 
@@ -62,6 +63,30 @@ class StudentsResource(APIView):
         serializer = StudentSerializer(students, many=True)
 
         return Response(serializer.data)
+
+    def post(self, request):
+        try:
+            user_id = request.user.id
+            caregiver_id = Caregiver.objects.get(user_id=user_id).id
+        except Caregiver.DoesNotExist:
+            raise PermissionDenied
+
+        # Create new student entry.
+        student_serializer = StudentSerializer(data=request.data)
+        student_serializer.is_valid(raise_exception=True)
+        student_serializer.save()
+
+        # Add a role.
+        role_data = {
+            "role_name": "caregiver",
+            "caregiver": caregiver_id,
+            "student": student_serializer.data["pk"],
+        }
+        role_serializer = RoleSerializer(data=role_data)
+        role_serializer.is_valid(raise_exception=True)
+        role_serializer.save()
+
+        return Response(student_serializer.data)
 
 
 class SingleStudentResource(APIView):

@@ -168,7 +168,7 @@ pre-commit run -a
 | token-auth                                     | POST      | ✅              | ✅     | Authentication token for a user.         |
 | current-user                                   | GET       | ✅              | ✅     | Current user by their token.             |
 | students                                       | GET       | ✅              | ✅     | All students for logged-in caregiver.    |
-| students                                       | POST      | ❌              | ❌     | Add new student for a caregiver.         |
+| students                                       | POST      | ✅              | ✅     | Add new student for a caregiver.         |
 | students/<int:student_id>                      | GET       | ✅              | ✅     | Info about student with given ID.        |
 | students/<int:student_id>                      | PATCH     | ✅              | ✅     | Update info about student with given ID. |
 | students/<int:student_id>/points               | GET       | ✅              | ✅     | Points history of a student.             |
