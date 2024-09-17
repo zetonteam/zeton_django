@@ -165,7 +165,7 @@ pre-commit run -a
 
 | URL                                            | Operation | Implementation | Tests | Description                              |
 |------------------------------------------------|-----------|----------------|-------|------------------------------------------|
-| token-auth                                     | GET       | ✅              | ✅     | Authentication token for a user.         |
+| token-auth                                     | POST      | ✅              | ✅     | Authentication token for a user.         |
 | current-user                                   | GET       | ✅              | ✅     | Current user by their token.             |
 | students                                       | GET       | ✅              | ✅     | All students for logged-in caregiver.    |
 | students                                       | POST      | ❌              | ❌     | Add new student for a caregiver.         |
@@ -174,10 +174,10 @@ pre-commit run -a
 | students/<int:student_id>/points               | GET       | ✅              | ✅     | Points history of a student.             |
 | students/<int:student_id>/points               | POST      | ✅              | ❌     | Add points to a student.                 |
 | students/<int:student_id>/prize/<int:prize_id> | GET       | ✅              | ✅     | Info about prize with given ID.          |
-| students/<int:student_id>/prize/<int:prize_id> | PATCH     | ✅              | ❌     | Edit a prize.                            |
+| students/<int:student_id>/prize/<int:prize_id> | PATCH     | ✅              | ✅     | Edit a prize.                            |
 | students/<int:student_id>/prize/<int:prize_id> | DELETE    | ✅              | ❌     | Delete a prize.                          |
 | students/<int:student_id>/prizes               | GET       | ✅              | ✅     | Prizes assigned to a student.            |
-| students/<int:student_id>/prizes               | POST      | ✅              | ❌     | Add new prize to a student.              |
+| students/<int:student_id>/prizes               | POST      | ✅              | ✅     | Add new prize to a student.              |
 | students/<int:student_id>/task/<int:task_id>   | GET       | ✅              | ❌     | Task assigned to a student.              |
 | students/<int:student_id>/task/<int:task_id>   | PATCH     | ✅              | ❌     | Edit a task.                             |
 | students/<int:student_id>/task/<int:task_id>   | DELETE    | ✅              | ❌     | Delete a task.                           |

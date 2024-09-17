@@ -2,9 +2,9 @@ from rest_framework import status
 from .common import EndpointTestCase
 
 
-class TestPoint(EndpointTestCase):
+class TestPointsGet(EndpointTestCase):
     """
-    Test for '/api/students/<int:student_id>/points/' endpoints.
+    Test for '/api/students/<int:student_id>/points/' GET endpoint.
     """
 
     # Fixture specific URL to available student data.
@@ -13,14 +13,8 @@ class TestPoint(EndpointTestCase):
     NOT_PERMITTED_URL = "/api/students/1/points/"
     # Fixture specific URL to invalid student ID.
     NOT_FOUND_URL = "/api/students/12345/points/"
-    # Fixture specific valid data to post a prize.
-    VALID_POST_PRIZE = {"content_type": "prize", "object_id": "2"}
-    # Fixture specific valid data to post a task.
-    VALID_POST_TASK = {"content_type": "task", "object_id": "2"}
-    # Fixture specific data to post an invalid content type.
-    INVALID_POST_TYPE = {"content_type": "asdf", "object_id": "1"}
 
-    def test_Get_Success(self):
+    def test_Success(self):
         # Access API.
         response = self.get(self.VALID_URL)
 
@@ -75,23 +69,42 @@ class TestPoint(EndpointTestCase):
             expected_object_id=2,
         )
 
-    def test_Get_Forbidden(self):
+    def test_Forbidden(self):
         response = self.get(self.NOT_PERMITTED_URL)
         self.assert_forbidden(response)
 
-    def test_Get_NotFound(self):
+    def test_NotFound(self):
         response = self.get(self.NOT_FOUND_URL)
         self.assert_not_found(response)
 
-    def test_Get_NoToken(self):
+    def test_NoToken(self):
         response = self.client.get(self.VALID_URL)
         self.assert_no_token(response)
 
-    def test_Get_InvalidToken(self):
+    def test_InvalidToken(self):
         response = self.get(self.VALID_URL, self.bogus_token())
         self.assert_invalid_token(response)
 
-    def test_Post_Prize_Success(self):
+
+class TestPointsPost(EndpointTestCase):
+    """
+    Test for '/api/students/<int:student_id>/points/' POST endpoint.
+    """
+
+    # Fixture specific URL to available student data.
+    VALID_URL = "/api/students/2/points/"
+    # Fixture specific URL to data not available for current user.
+    NOT_PERMITTED_URL = "/api/students/1/points/"
+    # Fixture specific URL to invalid student ID.
+    NOT_FOUND_URL = "/api/students/12345/points/"
+    # Fixture specific valid data to post a prize.
+    VALID_POST_PRIZE = {"content_type": "prize", "object_id": "2"}
+    # Fixture specific valid data to post a task.
+    VALID_POST_TASK = {"content_type": "task", "object_id": "2"}
+    # Fixture specific data to post an invalid content type.
+    INVALID_POST_TYPE = {"content_type": "asdf", "object_id": "1"}
+
+    def test_Prize_Success(self):
         response = self.post(self.VALID_URL, self.VALID_POST_PRIZE)
         assert response.status_code == status.HTTP_201_CREATED
         # Fixture specific assertions.
@@ -103,7 +116,7 @@ class TestPoint(EndpointTestCase):
         assert response_json["content_type"] == 11
         assert response_json["object_id"] == 2
 
-    def test_Post_Task_Success(self):
+    def test_Task_Success(self):
         response = self.post(self.VALID_URL, self.VALID_POST_TASK)
         assert response.status_code == status.HTTP_201_CREATED
         # Fixture specific assertions.
@@ -115,22 +128,22 @@ class TestPoint(EndpointTestCase):
         assert response_json["content_type"] == 10
         assert response_json["object_id"] == 2
 
-    def test_Post_Invalid_Type(self):
+    def test_Invalid_Type(self):
         response = self.post(self.VALID_URL, self.INVALID_POST_TYPE)
         assert response.status_code == status.HTTP_400_BAD_REQUEST
 
-    def test_Post_Forbidden(self):
+    def test_Forbidden(self):
         response = self.post(self.NOT_PERMITTED_URL, self.VALID_POST_PRIZE)
         self.assert_forbidden(response)
 
-    def test_Post_NotFound(self):
+    def test_NotFound(self):
         response = self.post(self.NOT_FOUND_URL, self.VALID_POST_PRIZE)
         self.assert_not_found(response)
 
-    def test_Post_NoToken(self):
+    def test_NoToken(self):
         response = self.client.post(self.VALID_URL, self.VALID_POST_PRIZE)
         self.assert_no_token(response)
 
-    def test_Post_InvalidToken(self):
+    def test_InvalidToken(self):
         response = self.post(self.VALID_URL, self.VALID_POST_PRIZE, self.bogus_token())
         self.assert_invalid_token(response)

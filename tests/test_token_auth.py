@@ -2,8 +2,12 @@ from rest_framework import status
 from .common import EndpointTestCase
 
 
-class TestTokenAuth(EndpointTestCase):
-    def test_Post_Success(self):
+class TestTokenAuthPost(EndpointTestCase):
+    """
+    Tests for '/api/token-auth/' POST endpoint.
+    """
+
+    def test_Success(self):
         data = {"username": "opiekun1", "password": "opiekun1"}
 
         response = self.client.post("/api/token-auth/", data=data, format="json")
@@ -15,7 +19,7 @@ class TestTokenAuth(EndpointTestCase):
         assert "refresh" in response_json
         assert "access" in response_json
 
-    def test_Post_InvalidUsername(self):
+    def test_InvalidUsername(self):
         data = {"username": "asdf", "password": "asdf"}
 
         response = self.client.post("/api/token-auth/", data=data, format="json")
@@ -30,7 +34,7 @@ class TestTokenAuth(EndpointTestCase):
             == "No active account found with the given credentials"
         )
 
-    def test_Post_InvalidPassword(self):
+    def test_InvalidPassword(self):
         data = {"username": "opiekun1", "password": "asdf"}
 
         response = self.client.post("/api/token-auth/", data=data, format="json")
