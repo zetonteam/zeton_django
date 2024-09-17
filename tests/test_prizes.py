@@ -49,6 +49,69 @@ class TestPrizesGet(EndpointTestCase):
         self.assert_invalid_token(response)
 
 
+class TestPrizesPost(EndpointTestCase):
+    """
+    Tests for '/api/students/<int:student_id>/prizes/' POST endpoint.
+    """
+
+    # Fixture specific URL to available student data.
+    VALID_URL = "/api/students/2/prizes/"
+    # Fixture specific URL to data not available for current user.
+    NOT_PERMITTED_URL = "/api/students/1/prizes/"
+    # Fixture specific URL to invalid student ID.
+    NOT_FOUND_URL = "/api/students/12345/prizes/"
+
+    # Valid prize data.
+    VALID_PRIZE_DATA = {"student": "2", "name": "Gry komputerowe", "value": 15}
+
+    def test_Success(self):
+        response = self.post(self.VALID_URL, self.VALID_PRIZE_DATA)
+
+        # General assertions.
+        assert response.status_code == status.HTTP_200_OK
+        assert response.headers["Content-Type"] == "application/json"
+
+        # Fixture specific assertions.
+        single_prize_url = "/api/students/2/prize/3"
+        post_op_data = self.get(single_prize_url).json()
+        assert post_op_data["student"] == "2"
+        assert post_op_data["name"] == "Gry komputerowe"
+        assert post_op_data["value"] == 15
+
+    def test_Forbidden(self):
+        response = self.post(self.NOT_PERMITTED_URL, self.VALID_PRIZE_DATA)
+        self.assert_forbidden(response)
+
+    def test_NotFound(self):
+        response = self.post(self.NOT_FOUND_URL, self.VALID_PRIZE_DATA)
+        self.assert_not_found(response)
+
+    def test_EmptyField(self):
+        # Remove content of a field.
+        invalid_prize_data = self.VALID_PRIZE_DATA.copy()
+        invalid_prize_data["name"] = ""
+
+        # Perform POST operation.
+        response = self.post(self.VALID_URL, invalid_prize_data)
+
+        # General assertions.
+        assert response.status_code == status.HTTP_400_BAD_REQUEST
+        assert response.headers["Content-Type"] == "application/json"
+        response_json = response.json()
+        assert isinstance(response_json, dict)
+        assert "name" in response_json and response_json["name"] == [
+            "This field may not be blank."
+        ]
+
+    def test_NoToken(self):
+        response = self.client.post(self.VALID_URL, self.VALID_PRIZE_DATA)
+        self.assert_no_token(response)
+
+    def test_InvalidToken(self):
+        response = self.post(self.VALID_URL, self.VALID_PRIZE_DATA, self.bogus_token())
+        self.assert_invalid_token(response)
+
+
 class TestSinglePrizeGet(EndpointTestCase):
     """
     Tests for '/api/students/<int:student_id>/prize/<int:prize_id>' GET endpoint.
