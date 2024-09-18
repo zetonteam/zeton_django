@@ -31,11 +31,54 @@ class TestStudentsGet(EndpointTestCase):
         assert "total_points" in entry and entry["total_points"] == 120
 
     def test_NoToken(self):
-        response = self.client.get("/api/students/")
+        response = self.client.get(self.VALID_URL)
         self.assert_no_token(response)
 
     def test_InvalidToken(self):
         response = self.get(self.VALID_URL, self.bogus_token())
+        self.assert_invalid_token(response)
+
+
+class TestStudentsPost(EndpointTestCase):
+    """
+    Tests for '/api/students/' POST endpoint.
+    """
+
+    # Fixture specific URL to available student data.
+    VALID_URL = "/api/students/"
+
+    # Valid student data.
+    VALID_DATA = {
+        "email": "user@example.com",
+        "username": "test_username",
+        "first_name": "test_first_name",
+        "last_name": "test_last_name",
+        "total_points": 321,
+    }
+
+    def test_Success(self):
+        # Access API.
+        response = self.post(self.VALID_URL, self.VALID_DATA)
+
+        # General assertions.
+        assert response.status_code == status.HTTP_200_OK
+        assert response.headers["Content-Type"] == "application/json"
+
+        # Fixture specific assertions.
+        single_student_url = "/api/students/3/"
+        post_op_data = self.get(single_student_url).json()
+        assert post_op_data["email"] == "user@example.com"
+        assert post_op_data["username"] == "test_username"
+        assert post_op_data["first_name"] == "test_first_name"
+        assert post_op_data["last_name"] == "test_last_name"
+        assert post_op_data["total_points"] == 321
+
+    def test_NoToken(self):
+        response = self.client.post(self.VALID_URL, self.VALID_DATA)
+        self.assert_no_token(response)
+
+    def test_InvalidToken(self):
+        response = self.post(self.VALID_URL, self.VALID_DATA, self.bogus_token())
         self.assert_invalid_token(response)
 
 
