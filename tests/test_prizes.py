@@ -68,7 +68,7 @@ class TestPrizesPost(EndpointTestCase):
         response = self.post(self.VALID_URL, self.VALID_PRIZE_DATA)
 
         # General assertions.
-        assert response.status_code == status.HTTP_200_OK
+        assert response.status_code == status.HTTP_201_CREATED
         assert response.headers["Content-Type"] == "application/json"
 
         # Fixture specific assertions.

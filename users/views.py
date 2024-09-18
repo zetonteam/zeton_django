@@ -120,7 +120,7 @@ class PrizesResource(APIView):
         serializer = PrizeSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save(student_id=student_id)
-        return Response(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
 class SinglePrizeResource(APIView):
@@ -158,7 +158,7 @@ class TasksResource(APIView):
         serializer = TaskSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save(student_id=student_id)
-        return Response(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
 class SingleTaskResource(APIView):
