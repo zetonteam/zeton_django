@@ -4,7 +4,7 @@ from .common import EndpointTestCase
 
 class TestTasksGet(EndpointTestCase):
     """
-    Tests for '/api/students/<int:student_id>/tasks/' [GET] endpoint.
+    Tests for '/api/students/<int:student_id>/tasks/' GET endpoint.
     """
 
     # Fixture specific URL to available student data.
@@ -50,17 +50,17 @@ class TestTasksGet(EndpointTestCase):
 
 class TestSingleTaskGet(EndpointTestCase):
     """
-    Tests for '/api/students/<int:student_id>/task/<int:task_id>' [GET] endpoint.
+    Tests for '/api/students/<int:student_id>/task/<int:task_id>/' GET endpoint.
     """
 
     # Fixture specific URL to available student data.
-    VALID_URL = "/api/students/2/task/2"
+    VALID_URL = "/api/students/2/task/2/"
     # Fixture specific URL to student data not available for current user.
-    NOT_PERMITTED_URL = "/api/students/1/task/1"
+    NOT_PERMITTED_URL = "/api/students/1/task/1/"
     # Fixture specific URL to invalid student ID.
-    STUDENT_NOT_FOUND_URL = "/api/students/12345/task/1"
+    STUDENT_NOT_FOUND_URL = "/api/students/12345/task/1/"
     # Fixture specific URL to invalid task ID.
-    TASK_NOT_FOUND_URL = "/api/students/2/task/12345"
+    TASK_NOT_FOUND_URL = "/api/students/2/task/12345/"
 
     def test_Success(self):
         # Access API.
