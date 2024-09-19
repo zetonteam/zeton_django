@@ -105,7 +105,9 @@ class TestPointsPost(EndpointTestCase):
     INVALID_POST_TYPE = {"content_type": "asdf", "object_id": "1"}
 
     def test_Prize_Success(self):
+        student_points = self.get_student_points(2)
         response = self.post(self.VALID_URL, self.VALID_POST_PRIZE)
+        # General assertions.
         assert response.status_code == status.HTTP_201_CREATED
         # Fixture specific assertions.
         response_json = response.json()
@@ -116,8 +118,13 @@ class TestPointsPost(EndpointTestCase):
         assert response_json["content_type"] == 11
         assert response_json["object_id"] == 2
 
+        points_spent = self.get_student_points(2)
+        assert student_points - response_json["value"] == points_spent
+
     def test_Task_Success(self):
+        student_points = self.get_student_points(2)
         response = self.post(self.VALID_URL, self.VALID_POST_TASK)
+        # General assertions.
         assert response.status_code == status.HTTP_201_CREATED
         # Fixture specific assertions.
         response_json = response.json()
@@ -127,6 +134,9 @@ class TestPointsPost(EndpointTestCase):
         assert response_json["points_type"] == "task"
         assert response_json["content_type"] == 10
         assert response_json["object_id"] == 2
+
+        points_added = self.get_student_points(2)
+        assert student_points + response_json["value"] == points_added
 
     def test_Invalid_Type(self):
         response = self.post(self.VALID_URL, self.INVALID_POST_TYPE)
