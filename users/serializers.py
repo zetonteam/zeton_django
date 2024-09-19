@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from users.models import CustomUser, Point, Prize, Student, Task
+from users.models import CustomUser, Point, Prize, Student, Task, Role
 
 
 class StudentSerializer(serializers.Serializer):
@@ -9,15 +9,14 @@ class StudentSerializer(serializers.Serializer):
     username = serializers.CharField(source="user.username")
     first_name = serializers.CharField(source="user.first_name")
     last_name = serializers.CharField(source="user.last_name")
-    total_points = serializers.IntegerField(read_only=True)
+    total_points = serializers.IntegerField()
 
     def create(self, validated_data):
         user_data = validated_data.pop("user")
         user = CustomUser.objects.create(**user_data)
+        total_points = validated_data.pop("total_points")
 
-        return Student.objects.create(
-            user=user, total_points=validated_data["total_points"]
-        )
+        return Student.objects.create(user=user, total_points=total_points)
 
     def update(self, instance, validated_data):
         user = instance.user
@@ -113,3 +112,9 @@ class PointShortSerializer(serializers.ModelSerializer):
     class Meta:
         model = Point
         fields = ["content_type", "object_id"]
+
+
+class RoleSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Role
+        fields = ["role_name", "caregiver", "student"]

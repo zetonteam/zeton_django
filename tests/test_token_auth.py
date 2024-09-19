@@ -7,10 +7,13 @@ class TestTokenAuthPost(EndpointTestCase):
     Tests for '/api/token-auth/' POST endpoint.
     """
 
+    # Endpoint URL.
+    VALID_URL = "/api/token-auth/"
+
     def test_Success(self):
         data = {"username": "opiekun1", "password": "opiekun1"}
 
-        response = self.client.post("/api/token-auth/", data=data, format="json")
+        response = self.post(self.VALID_URL, data=data)
 
         assert response.status_code == status.HTTP_200_OK
         assert response.headers["Content-Type"] == "application/json"
@@ -22,7 +25,7 @@ class TestTokenAuthPost(EndpointTestCase):
     def test_InvalidUsername(self):
         data = {"username": "asdf", "password": "asdf"}
 
-        response = self.client.post("/api/token-auth/", data=data, format="json")
+        response = self.post(self.VALID_URL, data=data)
 
         assert response.status_code == status.HTTP_401_UNAUTHORIZED
         assert response.headers["Content-Type"] == "application/json"
@@ -37,7 +40,7 @@ class TestTokenAuthPost(EndpointTestCase):
     def test_InvalidPassword(self):
         data = {"username": "opiekun1", "password": "asdf"}
 
-        response = self.client.post("/api/token-auth/", data=data, format="json")
+        response = self.post(self.VALID_URL, data=data)
 
         assert response.status_code == status.HTTP_401_UNAUTHORIZED
         assert response.headers["Content-Type"] == "application/json"

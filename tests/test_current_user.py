@@ -7,11 +7,12 @@ class TestCurrentUserGet(EndpointTestCase):
     Tests for '/api/current-user/' GET endpoint.
     """
 
+    # Endpoint URL.
+    VALID_URL = "/api/current-user/"
+
     def test_Success(self):
         # Access API.
-        response = self.client.get(
-            "/api/current-user/", HTTP_AUTHORIZATION="Bearer " + self.access_token()
-        )
+        response = self.get(self.VALID_URL)
 
         # General assertions.
         assert response.status_code == status.HTTP_200_OK
@@ -26,11 +27,9 @@ class TestCurrentUserGet(EndpointTestCase):
         assert response_json["username"] == "opiekun1"
 
     def test_NoToken(self):
-        response = self.client.get("/api/current-user/")
+        response = self.client.get(self.VALID_URL)
         self.assert_no_token(response)
 
     def test_InvalidToken(self):
-        response = self.client.get(
-            "/api/current-user/", HTTP_AUTHORIZATION="Bearer " + self.bogus_token()
-        )
+        response = self.get(self.VALID_URL, self.bogus_token())
         self.assert_invalid_token(response)

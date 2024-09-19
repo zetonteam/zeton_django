@@ -32,7 +32,7 @@ urlpatterns = [
         name="prizes-resource",
     ),
     path(
-        "students/<int:student_id>/prize/<int:prize_id>",
+        "students/<int:student_id>/prize/<int:prize_id>/",
         SinglePrizeResource.as_view(),
         name="prize-resource",
     ),
@@ -42,7 +42,7 @@ urlpatterns = [
         name="tasks-resource",
     ),
     path(
-        "students/<int:student_id>/task/<int:task_id>",
+        "students/<int:student_id>/task/<int:task_id>/",
         SingleTaskResource.as_view(),
         name="task-resource",
     ),

@@ -68,11 +68,11 @@ class TestPrizesPost(EndpointTestCase):
         response = self.post(self.VALID_URL, self.VALID_PRIZE_DATA)
 
         # General assertions.
-        assert response.status_code == status.HTTP_200_OK
+        assert response.status_code == status.HTTP_201_CREATED
         assert response.headers["Content-Type"] == "application/json"
 
         # Fixture specific assertions.
-        single_prize_url = "/api/students/2/prize/3"
+        single_prize_url = "/api/students/2/prize/3/"
         post_op_data = self.get(single_prize_url).json()
         assert post_op_data["student"] == "2"
         assert post_op_data["name"] == "Gry komputerowe"
@@ -114,17 +114,17 @@ class TestPrizesPost(EndpointTestCase):
 
 class TestSinglePrizeGet(EndpointTestCase):
     """
-    Tests for '/api/students/<int:student_id>/prize/<int:prize_id>' GET endpoint.
+    Tests for '/api/students/<int:student_id>/prize/<int:prize_id>/' GET endpoint.
     """
 
     # Fixture specific URL to available student data.
-    VALID_URL = "/api/students/2/prize/2"
+    VALID_URL = "/api/students/2/prize/2/"
     # Fixture specific URL to student data not available for current user.
-    NOT_PERMITTED_URL = "/api/students/1/prize/1"
+    NOT_PERMITTED_URL = "/api/students/1/prize/1/"
     # Fixture specific URL to invalid student ID.
-    STUDENT_NOT_FOUND_URL = "/api/students/12345/prize/1"
+    STUDENT_NOT_FOUND_URL = "/api/students/12345/prize/1/"
     # Fixture specific URL to invalid prize ID.
-    PRIZE_NOT_FOUND_URL = "/api/students/2/prize/12345"
+    PRIZE_NOT_FOUND_URL = "/api/students/2/prize/12345/"
 
     def test_Success(self):
         # Access API.
@@ -172,17 +172,17 @@ class TestSinglePrizeGet(EndpointTestCase):
 
 class TestSinglePrizePatch(EndpointTestCase):
     """
-    Tests for '/api/students/<int:student_id>/prize/<int:prize_id>' PATCH endpoint.
+    Tests for '/api/students/<int:student_id>/prize/<int:prize_id>/' PATCH endpoint.
     """
 
     # Fixture specific URL to available student data.
-    VALID_URL = "/api/students/2/prize/2"
+    VALID_URL = "/api/students/2/prize/2/"
     # Fixture specific URL to student data not available for current user.
-    NOT_PERMITTED_URL = "/api/students/1/prize/1"
+    NOT_PERMITTED_URL = "/api/students/1/prize/1/"
     # Fixture specific URL to invalid student ID.
-    STUDENT_NOT_FOUND_URL = "/api/students/12345/prize/1"
+    STUDENT_NOT_FOUND_URL = "/api/students/12345/prize/1/"
     # Fixture specific URL to invalid prize ID.
-    PRIZE_NOT_FOUND_URL = "/api/students/2/prize/12345"
+    PRIZE_NOT_FOUND_URL = "/api/students/2/prize/12345/"
 
     def test_Success(self):
         # Get current prize data.
