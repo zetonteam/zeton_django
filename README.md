@@ -163,6 +163,12 @@ pre-commit run -a
 
 - Make sure endpoint URLs end with slash.
 
+- Expected HTTP status codes for successful operations:
+  - GET - 200.
+  - PATCH - 200.
+  - POST - 201.
+  - DELETE - 204.
+
 ## Endpoints
 
 | URL                                             | Operation | Implementation | Tests | Description                              |
