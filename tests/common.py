@@ -168,14 +168,3 @@ class EndpointTestCase(TestCase):
             response_json["detail"]
             == "You do not have permission to perform this action."
         )
-
-    def get_student_points(self, student_id: int) -> int:
-        """
-        Helper method to get total student points.
-
-        Parameters
-        ----------
-        student_id : int
-            Student ID.
-        """
-        return self.get(f"/api/students/{student_id}/").json()["total_points"]

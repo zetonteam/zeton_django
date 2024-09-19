@@ -1,5 +1,6 @@
 from rest_framework import status
 from .common import EndpointTestCase
+from django.contrib.contenttypes.models import ContentType
 
 
 class TestPointsGet(EndpointTestCase):
@@ -104,11 +105,23 @@ class TestPointsPost(EndpointTestCase):
     # Fixture specific data to post an invalid content type.
     INVALID_POST_TYPE = {"content_type": "asdf", "object_id": "1"}
 
+    def _get_student_points(self, student_id: int) -> int:
+        """
+        Helper method to get total student points.
+
+        Parameters
+        ----------
+        student_id : int
+            Student ID.
+        """
+        return self.get(f"/api/students/{student_id}/").json()["total_points"]
+
     def test_Prize_Success(self):
-        student_points = self.get_student_points(2)
+        student_points = self._get_student_points(2)
         response = self.post(self.VALID_URL, self.VALID_POST_PRIZE)
         # General assertions.
         assert response.status_code == status.HTTP_201_CREATED
+        assert response.headers["Content-Type"] == "application/json"
         # Fixture specific assertions.
         response_json = response.json()
         student_prize = self.get("/api/students/2/prize/2/").json()
@@ -117,30 +130,33 @@ class TestPointsPost(EndpointTestCase):
         assert response_json["object_id"] == student_prize["pk"]
         assert response_json["assigner"] == 1
         assert response_json["points_type"] == "prize"
-        assert response_json["content_type"] == 11
+        assert (
+            response_json["content_type"] == ContentType.objects.get(model="prize").pk
+        )
 
-        points_spent = self.get_student_points(2)
-        assert student_points - response_json["value"] == points_spent
+        total_points = self._get_student_points(2)
+        assert student_points - response_json["value"] == total_points
 
     def test_Task_Success(self):
-        student_points = self.get_student_points(2)
+        student_points = self._get_student_points(2)
         response = self.post(self.VALID_URL, self.VALID_POST_TASK)
         # General assertions.
         assert response.status_code == status.HTTP_201_CREATED
+        assert response.headers["Content-Type"] == "application/json"
         # Fixture specific assertions.
         response_json = response.json()
         student_task = self.get("/api/students/2/task/2/").json()
         assert response_json["value"] == int(student_task["value"])
-        assert response_json["object_id"] == student_task["pk"]
         assert response_json["student"] == 2
+        assert response_json["object_id"] == student_task["pk"]
         assert response_json["assigner"] == 1
         assert response_json["points_type"] == "task"
-        assert response_json["content_type"] == 10
+        assert response_json["content_type"] == ContentType.objects.get(model="task").pk
 
-        points_added = self.get_student_points(2)
-        assert student_points + response_json["value"] == points_added
+        total_points = self._get_student_points(2)
+        assert student_points + response_json["value"] == total_points
 
-    def test_Invalid_Type(self):
+    def test_InvalidType(self):
         response = self.post(self.VALID_URL, self.INVALID_POST_TYPE)
         assert response.status_code == status.HTTP_400_BAD_REQUEST
 
