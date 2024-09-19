@@ -111,12 +111,13 @@ class TestPointsPost(EndpointTestCase):
         assert response.status_code == status.HTTP_201_CREATED
         # Fixture specific assertions.
         response_json = response.json()
-        assert response_json["value"] == 30
+        student_prize = self.get("/api/students/2/prize/2/").json()
+        assert response_json["value"] == int(student_prize["value"])
+        assert response_json["student"] == int(student_prize["student"])
+        assert response_json["object_id"] == student_prize["pk"]
         assert response_json["assigner"] == 1
-        assert response_json["student"] == 2
         assert response_json["points_type"] == "prize"
         assert response_json["content_type"] == 11
-        assert response_json["object_id"] == 2
 
         points_spent = self.get_student_points(2)
         assert student_points - response_json["value"] == points_spent
@@ -128,12 +129,13 @@ class TestPointsPost(EndpointTestCase):
         assert response.status_code == status.HTTP_201_CREATED
         # Fixture specific assertions.
         response_json = response.json()
-        assert response_json["value"] == 1
-        assert response_json["assigner"] == 1
+        student_task = self.get("/api/students/2/task/2/").json()
+        assert response_json["value"] == int(student_task["value"])
+        assert response_json["object_id"] == student_task["pk"]
         assert response_json["student"] == 2
+        assert response_json["assigner"] == 1
         assert response_json["points_type"] == "task"
         assert response_json["content_type"] == 10
-        assert response_json["object_id"] == 2
 
         points_added = self.get_student_points(2)
         assert student_points + response_json["value"] == points_added
