@@ -1,16 +1,16 @@
 [
-{
-  "model": "users.caregiver",
-  "pk": 1,
-  "fields": {
-    "user": 3
-  }
-},
-{
-  "model": "users.caregiver",
-  "pk": 2,
-  "fields": {
-    "user": 6
-  }
-}
+    {
+        "model": "users.caregiver",
+        "pk": 1,
+        "fields": {
+            "user": 3
+        }
+    },
+    {
+        "model": "users.caregiver",
+        "pk": 2,
+        "fields": {
+            "user": 6
+        }
+    }
 ]

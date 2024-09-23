@@ -1,80 +1,80 @@
 [
-  {
-    "model": "users.point",
-    "pk": 6,
-    "fields": {
-      "value": 1,
-      "assigner": 1,
-      "student": 2,
-      "assignment_date": "2024-08-21T18:07:06.789Z",
-      "points_type": "task",
-      "content_type": 10,
-      "object_id": 2
+    {
+        "model": "users.point",
+        "pk": 6,
+        "fields": {
+            "value": 1,
+            "assigner": 1,
+            "student": 2,
+            "assignment_date": "2024-08-21T18:07:06.789Z",
+            "points_type": "task",
+            "content_type": 10,
+            "object_id": 2
+        }
+    },
+    {
+        "model": "users.point",
+        "pk": 7,
+        "fields": {
+            "value": 30,
+            "assigner": 1,
+            "student": 2,
+            "assignment_date": "2024-08-21T18:09:23.263Z",
+            "points_type": "prize",
+            "content_type": 11,
+            "object_id": 2
+        }
+    },
+    {
+        "model": "users.point",
+        "pk": 8,
+        "fields": {
+            "value": 30,
+            "assigner": 1,
+            "student": 2,
+            "assignment_date": "2024-08-21T19:09:40.924Z",
+            "points_type": "prize",
+            "content_type": 11,
+            "object_id": 2
+        }
+    },
+    {
+        "model": "users.point",
+        "pk": 9,
+        "fields": {
+            "value": 30,
+            "assigner": 1,
+            "student": 2,
+            "assignment_date": "2024-08-21T19:10:14.014Z",
+            "points_type": "prize",
+            "content_type": 11,
+            "object_id": 2
+        }
+    },
+    {
+        "model": "users.point",
+        "pk": 10,
+        "fields": {
+            "value": 30,
+            "assigner": 1,
+            "student": 2,
+            "assignment_date": "2024-08-28T17:08:29.614Z",
+            "points_type": "prize",
+            "content_type": 11,
+            "object_id": 2
+        }
+    },
+    {
+        "model": "users.point",
+        "pk": 11,
+        "fields": {
+            "value": 1,
+            "assigner": 1,
+            "student": 2,
+            "assignment_date": "2024-09-04T17:58:47.019Z",
+            "points_type": "task",
+            "content_type": 10,
+            "object_id": 2
+        }
     }
-  },
-  {
-    "model": "users.point",
-    "pk": 7,
-    "fields": {
-      "value": 30,
-      "assigner": 1,
-      "student": 2,
-      "assignment_date": "2024-08-21T18:09:23.263Z",
-      "points_type": "prize",
-      "content_type": 11,
-      "object_id": 2
-    }
-  },
-  {
-    "model": "users.point",
-    "pk": 8,
-    "fields": {
-      "value": 30,
-      "assigner": 1,
-      "student": 2,
-      "assignment_date": "2024-08-21T19:09:40.924Z",
-      "points_type": "prize",
-      "content_type": 11,
-      "object_id": 2
-    }
-  },
-  {
-    "model": "users.point",
-    "pk": 9,
-    "fields": {
-      "value": 30,
-      "assigner": 1,
-      "student": 2,
-      "assignment_date": "2024-08-21T19:10:14.014Z",
-      "points_type": "prize",
-      "content_type": 11,
-      "object_id": 2
-    }
-  },
-  {
-    "model": "users.point",
-    "pk": 10,
-    "fields": {
-      "value": 30,
-      "assigner": 1,
-      "student": 2,
-      "assignment_date": "2024-08-28T17:08:29.614Z",
-      "points_type": "prize",
-      "content_type": 11,
-      "object_id": 2
-    }
-  },
-  {
-    "model": "users.point",
-    "pk": 11,
-    "fields": {
-      "value": 1,
-      "assigner": 1,
-      "student": 2,
-      "assignment_date": "2024-09-04T17:58:47.019Z",
-      "points_type": "task",
-      "content_type": 10,
-      "object_id": 2
-    }
-  }
 ]

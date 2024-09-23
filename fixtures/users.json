@@ -1,137 +1,137 @@
 [
-{
-    "model": "users.customuser",
-    "pk": 2,
-    "fields": {
-        "password": "pbkdf2_sha256$600000$Jj1r3D4fFxqzaZ512p6eei$FcPt6F5fuw1DIrfsP7hBBiWI9AT8AmFBcTN7NEAsNmE=",
-        "last_login": null,
-        "is_superuser": false,
-        "username": "student2",
-        "first_name": "Wojtek",
-        "last_name": "",
-        "email": "wojtek-zeton@mailinator.com",
-        "is_staff": false,
-        "is_active": true,
-        "date_joined": "2020-09-29T10:20:55Z",
-        "is_auth": null,
-        "groups": [],
-        "user_permissions": []
+    {
+        "model": "users.customuser",
+        "pk": 2,
+        "fields": {
+            "password": "pbkdf2_sha256$600000$Jj1r3D4fFxqzaZ512p6eei$FcPt6F5fuw1DIrfsP7hBBiWI9AT8AmFBcTN7NEAsNmE=",
+            "last_login": null,
+            "is_superuser": false,
+            "username": "student2",
+            "first_name": "Wojtek",
+            "last_name": "Nowacki",
+            "email": "wojtek-zeton@mailinator.com",
+            "is_staff": false,
+            "is_active": true,
+            "date_joined": "2020-09-29T10:20:55Z",
+            "is_auth": null,
+            "groups": [],
+            "user_permissions": []
+        }
+    },
+    {
+        "model": "users.customuser",
+        "pk": 3,
+        "fields": {
+            "password": "pbkdf2_sha256$600000$QKYyJo3mTIXx3kPqr4OwTY$VeXVq+8NJY6NJKjxbQ94KYrV6nuGIHnOluuHqtFkdlY=",
+            "last_login": null,
+            "is_superuser": false,
+            "username": "opiekun1",
+            "first_name": "Marek",
+            "last_name": "Iksiński",
+            "email": "marek-zeton@mailinator.com",
+            "is_staff": false,
+            "is_active": true,
+            "date_joined": "2020-09-29T10:20:55Z",
+            "is_auth": null,
+            "groups": [],
+            "user_permissions": []
+        }
+    },
+    {
+        "model": "users.customuser",
+        "pk": 4,
+        "fields": {
+            "password": "pbkdf2_sha256$600000$0CrqUAlfxsBnYJVaevgsVj$92VnOF+4IxSLdEMHR5xu7XZqCH2yHsJJ9MY7aJ4EHGc=",
+            "last_login": null,
+            "is_superuser": false,
+            "username": "student1",
+            "first_name": "Kuba",
+            "last_name": "Jakubowski",
+            "email": "kuba-zeton@mailinator.com",
+            "is_staff": false,
+            "is_active": true,
+            "date_joined": "2020-09-29T10:20:55Z",
+            "is_auth": null,
+            "groups": [],
+            "user_permissions": []
+        }
+    },
+    {
+        "model": "users.customuser",
+        "pk": 5,
+        "fields": {
+            "password": "pbkdf2_sha256$600000$dWWRVMHNml80UXMt8MF3x9$btMLQmvUJMJd/ZfWKThJBpGIdhmrl58vmvJjDYOkgX8=",
+            "last_login": "2024-02-07T18:39:10.566Z",
+            "is_superuser": true,
+            "username": "admin",
+            "first_name": "Adam",
+            "last_name": "Mickiewicz",
+            "email": "admin@admin.com",
+            "is_staff": true,
+            "is_active": true,
+            "date_joined": "2023-12-06T19:02:45.423Z",
+            "is_auth": null,
+            "groups": [],
+            "user_permissions": []
+        }
+    },
+    {
+        "model": "users.customuser",
+        "pk": 6,
+        "fields": {
+            "password": "pbkdf2_sha256$600000$SGbap8wYwsKDElaa2DfDSb$+Fm/LRYPZWdVRdwwnXx5Wu1UdXbmh6KPQ3v6iqqX8dk=",
+            "last_login": null,
+            "is_superuser": false,
+            "username": "opiekun2",
+            "first_name": "Halina",
+            "last_name": "Nowak",
+            "email": "halina-zeton@mailinator.com",
+            "is_staff": false,
+            "is_active": true,
+            "date_joined": "2023-12-06T20:00:48Z",
+            "is_auth": true,
+            "groups": [],
+            "user_permissions": [
+                1
+            ]
+        }
+    },
+    {
+        "model": "users.customuser",
+        "pk": 7,
+        "fields": {
+            "password": "pbkdf2_sha256$600000$1kYglRQ1SVGk0TZbfIkImU$j4YMVoxfSwtOiYE+gW9tf6qxRT9X7fHH4dNh91IXxqQ=",
+            "last_login": "2024-02-07T18:39:38Z",
+            "is_superuser": false,
+            "username": "opiekun3",
+            "first_name": "Stefan",
+            "last_name": "Jarecki",
+            "email": "stefanjarecki@email.com",
+            "is_staff": false,
+            "is_active": true,
+            "date_joined": "2024-02-07T18:39:18Z",
+            "is_auth": null,
+            "groups": [],
+            "user_permissions": []
+        }
+    },
+    {
+        "model": "users.customuser",
+        "pk": 8,
+        "fields": {
+            "password": "pbkdf2_sha256$600000$u1Os83qszH0EVe9nETBZh9$RP8Q2BsnA9WmiRtjm7B16okOQa708IaSM5IY3RMUITk=",
+            "last_login": null,
+            "is_superuser": false,
+            "username": "opiekun4",
+            "first_name": "Janina",
+            "last_name": "Stefańska",
+            "email": "stefcia123@mailinator.com",
+            "is_staff": false,
+            "is_active": true,
+            "date_joined": "2024-02-07T18:44:11Z",
+            "is_auth": null,
+            "groups": [],
+            "user_permissions": []
+        }
     }
-},
-{
-    "model": "users.customuser",
-    "pk": 3,
-    "fields": {
-        "password": "pbkdf2_sha256$600000$QKYyJo3mTIXx3kPqr4OwTY$VeXVq+8NJY6NJKjxbQ94KYrV6nuGIHnOluuHqtFkdlY=",
-        "last_login": null,
-        "is_superuser": false,
-        "username": "opiekun1",
-        "first_name": "Marek",
-        "last_name": "",
-        "email": "marek-zeton@mailinator.com",
-        "is_staff": false,
-        "is_active": true,
-        "date_joined": "2020-09-29T10:20:55Z",
-        "is_auth": null,
-        "groups": [],
-        "user_permissions": []
-    }
-},
-{
-    "model": "users.customuser",
-    "pk": 4,
-    "fields": {
-        "password": "pbkdf2_sha256$600000$0CrqUAlfxsBnYJVaevgsVj$92VnOF+4IxSLdEMHR5xu7XZqCH2yHsJJ9MY7aJ4EHGc=",
-        "last_login": null,
-        "is_superuser": false,
-        "username": "student1",
-        "first_name": "Kuba",
-        "last_name": "",
-        "email": "kuba-zeton@mailinator.com",
-        "is_staff": false,
-        "is_active": true,
-        "date_joined": "2020-09-29T10:20:55Z",
-        "is_auth": null,
-        "groups": [],
-        "user_permissions": []
-    }
-},
-{
-    "model": "users.customuser",
-    "pk": 5,
-    "fields": {
-        "password": "pbkdf2_sha256$600000$dWWRVMHNml80UXMt8MF3x9$btMLQmvUJMJd/ZfWKThJBpGIdhmrl58vmvJjDYOkgX8=",
-        "last_login": "2024-02-07T18:39:10.566Z",
-        "is_superuser": true,
-        "username": "admin",
-        "first_name": "",
-        "last_name": "",
-        "email": "admin@admin.com",
-        "is_staff": true,
-        "is_active": true,
-        "date_joined": "2023-12-06T19:02:45.423Z",
-        "is_auth": null,
-        "groups": [],
-        "user_permissions": []
-    }
-},
-{
-    "model": "users.customuser",
-    "pk": 6,
-    "fields": {
-        "password": "pbkdf2_sha256$600000$SGbap8wYwsKDElaa2DfDSb$+Fm/LRYPZWdVRdwwnXx5Wu1UdXbmh6KPQ3v6iqqX8dk=",
-        "last_login": null,
-        "is_superuser": false,
-        "username": "opiekun2",
-        "first_name": "Halina",
-        "last_name": "Nowak",
-        "email": "halina-zeton@mailinator.com",
-        "is_staff": false,
-        "is_active": true,
-        "date_joined": "2023-12-06T20:00:48Z",
-        "is_auth": true,
-        "groups": [],
-        "user_permissions": [
-            1
-        ]
-    }
-},
-{
-    "model": "users.customuser",
-    "pk": 7,
-    "fields": {
-        "password": "pbkdf2_sha256$600000$1kYglRQ1SVGk0TZbfIkImU$j4YMVoxfSwtOiYE+gW9tf6qxRT9X7fHH4dNh91IXxqQ=",
-        "last_login": "2024-02-07T18:39:38Z",
-        "is_superuser": false,
-        "username": "opiekun3",
-        "first_name": "",
-        "last_name": "",
-        "email": "",
-        "is_staff": false,
-        "is_active": true,
-        "date_joined": "2024-02-07T18:39:18Z",
-        "is_auth": null,
-        "groups": [],
-        "user_permissions": []
-    }
-},
-{
-    "model": "users.customuser",
-    "pk": 8,
-    "fields": {
-        "password": "pbkdf2_sha256$600000$u1Os83qszH0EVe9nETBZh9$RP8Q2BsnA9WmiRtjm7B16okOQa708IaSM5IY3RMUITk=",
-        "last_login": null,
-        "is_superuser": false,
-        "username": "opiekun4",
-        "first_name": "",
-        "last_name": "",
-        "email": "",
-        "is_staff": false,
-        "is_active": true,
-        "date_joined": "2024-02-07T18:44:11Z",
-        "is_auth": null,
-        "groups": [],
-        "user_permissions": []
-    }
-}
 ]

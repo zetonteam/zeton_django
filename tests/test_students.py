@@ -27,7 +27,7 @@ class TestStudentsGet(EndpointTestCase):
         assert "email" in entry and entry["email"] == "kuba-zeton@mailinator.com"
         assert "username" in entry and entry["username"] == "student1"
         assert "first_name" in entry and entry["first_name"] == "Kuba"
-        assert "last_name" in entry and entry["last_name"] == ""
+        assert "last_name" in entry and entry["last_name"] == "Jakubowski"
         assert "total_points" in entry and entry["total_points"] == 120
 
     def test_NoToken(self):
@@ -112,7 +112,9 @@ class TestSingleStudentGet(EndpointTestCase):
         )
         assert "username" in response_json and response_json["username"] == "student1"
         assert "first_name" in response_json and response_json["first_name"] == "Kuba"
-        assert "last_name" in response_json and response_json["last_name"] == ""
+        assert (
+            "last_name" in response_json and response_json["last_name"] == "Jakubowski"
+        )
         assert "total_points" in response_json and response_json["total_points"] == 120
 
     def test_Forbidden(self):

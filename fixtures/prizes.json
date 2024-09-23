@@ -1,20 +1,20 @@
 [
-  {
-    "model": "users.prize",
-    "pk": 1,
-    "fields": {
-      "student": 1,
-      "name": "Puszka Coca-cola",
-      "value": 10
+    {
+        "model": "users.prize",
+        "pk": 1,
+        "fields": {
+            "student": 1,
+            "name": "Puszka Coca-cola",
+            "value": 10
+        }
+    },
+    {
+        "model": "users.prize",
+        "pk": 2,
+        "fields": {
+            "student": 2,
+            "name": "1 godzina na basenie",
+            "value": 30
+        }
     }
-  },
-  {
-    "model": "users.prize",
-    "pk": 2,
-    "fields": {
-      "student": 2,
-      "name": "1 godzina na basenie",
-      "value": 30
-    }
-  }
 ]
