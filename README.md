@@ -180,7 +180,7 @@ pre-commit run -a
 | students/<int:student_id>/                      | GET       | ✅              | ✅     | Info about student with given ID.        |
 | students/<int:student_id>/                      | PATCH     | ✅              | ✅     | Update info about student with given ID. |
 | students/<int:student_id>/points/               | GET       | ✅              | ✅     | Points history of a student.             |
-| students/<int:student_id>/points/               | POST      | ✅              | ❌     | Add points to a student.                 |
+| students/<int:student_id>/points/               | POST      | ✅              | ✅     | Add points to a student.                 |
 | students/<int:student_id>/prize/<int:prize_id>/ | GET       | ✅              | ✅     | Info about prize with given ID.          |
 | students/<int:student_id>/prize/<int:prize_id>/ | PATCH     | ✅              | ✅     | Edit a prize.                            |
 | students/<int:student_id>/prize/<int:prize_id>/ | DELETE    | ✅              | ❌     | Delete a prize.                          |
