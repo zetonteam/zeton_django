@@ -78,6 +78,22 @@ class EndpointTestCase(TestCase):
             HTTP_AUTHORIZATION=f"Bearer {access_token}",
         )
 
+    def delete(self, endpoint_url: str, token: str | None = None):
+        """
+        Helper method to make a DELETE request.
+
+        Parameters
+        ----------
+        endpoint_url : str
+            Endpoint URL.
+        token : str | None
+            Token to be used. 'self.access_token()' is used if 'None'.
+        """
+        access_token = token if token is not None else self.access_token()
+        return self.client.delete(
+            endpoint_url, HTTP_AUTHORIZATION=f"Bearer {access_token}"
+        )
+
     def access_token(self) -> str:
         """
         Get access token.
