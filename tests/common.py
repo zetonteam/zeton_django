@@ -146,25 +146,6 @@ class EndpointTestCase(TestCase):
         assert "code" in response_json
         assert "messages" in response_json
 
-    def assert_forbidden(self, response) -> None:
-        """
-        Common set of assertions for forbidden access tests.
-
-        Parameters
-        ----------
-        response
-            Response for a forbidden access request.
-        """
-        assert response.status_code == status.HTTP_403_FORBIDDEN
-        assert response.headers["Content-Type"] == "application/json"
-        response_json = response.json()
-        assert len(response_json) == 1
-        assert "detail" in response_json
-        assert (
-            response_json["detail"]
-            == "You do not have permission to perform this action."
-        )
-
     def assert_not_found(self, response) -> None:
         """
         Common set of assertions for not found access tests.
@@ -175,12 +156,9 @@ class EndpointTestCase(TestCase):
             Response for a request with not found access request.
         """
         # Result should be the same as for accessing without rights.
-        assert response.status_code == status.HTTP_403_FORBIDDEN
+        assert response.status_code == status.HTTP_404_NOT_FOUND
         assert response.headers["Content-Type"] == "application/json"
         response_json = response.json()
         assert len(response_json) == 1
         assert "detail" in response_json
-        assert (
-            response_json["detail"]
-            == "You do not have permission to perform this action."
-        )
+        assert response_json["detail"] == "Resource not found or permission denied."

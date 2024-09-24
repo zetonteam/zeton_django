@@ -137,7 +137,7 @@ class TestSingleStudentGet(EndpointTestCase):
 
     def test_Forbidden(self):
         response = self.get(self.NOT_PERMITTED_URL)
-        self.assert_forbidden(response)
+        self.assert_not_found(response)
 
     def test_NotFound(self):
         response = self.get(self.NOT_FOUND_URL)
@@ -228,7 +228,7 @@ class TestSingleStudentPatch(EndpointTestCase):
 
     def test_Forbidden(self):
         response = self.patch(self.NOT_PERMITTED_URL, "")
-        self.assert_forbidden(response)
+        self.assert_not_found(response)
 
     def test_NotFound(self):
         response = self.patch(self.NOT_FOUND_URL, "")

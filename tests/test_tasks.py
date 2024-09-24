@@ -34,7 +34,7 @@ class TestTasksGet(EndpointTestCase):
 
     def test_Forbidden(self):
         response = self.get(self.NOT_PERMITTED_URL)
-        self.assert_forbidden(response)
+        self.assert_not_found(response)
 
     def test_NotFound(self):
         response = self.get(self.NOT_FOUND_URL)
@@ -56,20 +56,16 @@ class TestTasksPost(EndpointTestCase):
 
     # Fixture specific URL to available student data.
     VALID_URL = "/api/students/2/tasks/"
-    # Fixture specific URL to student data not available for current user.
+    # Fixture specific URL to data not available for current user.
     NOT_PERMITTED_URL = "/api/students/1/tasks/"
     # Fixture specific URL to invalid student ID.
     TASK_NOT_FOUND_URL = "/api/students/12345/tasks/"
 
     # Valid task data.
-    VALID_JSON_TASK_POST = {
-        "name": "Another new task to do",
-        "value": 21,
-    }
+    VALID_TASK_DATA = {"student": "2", "name": "Another new task to do", "value": 21}
 
     def test_Success(self):
-        # Send POST data and response HTTPResponse:
-        response = self.post(self.VALID_URL, data=self.VALID_JSON_TASK_POST)
+        response = self.post(self.VALID_URL, self.VALID_TASK_DATA)
 
         # General assertions.
         assert response.status_code == status.HTTP_201_CREATED
@@ -78,20 +74,39 @@ class TestTasksPost(EndpointTestCase):
         # Fixture specific assertions.
         single_task_url = "/api/students/2/task/3/"
         post_op_data = self.get(single_task_url).json()
+        assert post_op_data["student"] == "2"
         assert post_op_data["name"] == "Another new task to do"
         assert post_op_data["value"] == 21
 
+    def test_NegativePoints(self):
+        # Modify valid data.
+        task_data = self.VALID_TASK_DATA.copy()
+        task_data["value"] = -15
+
+        # Access API.
+        response = self.post(self.VALID_URL, task_data)
+
+        # General assertions.
+        assert response.status_code == status.HTTP_400_BAD_REQUEST
+        assert response.headers["Content-Type"] == "application/json"
+        response_json = response.json()
+        assert isinstance(response_json, dict)
+        assert "value" in response_json
+        assert response_json["value"] == [
+            "Ensure this value is greater than or equal to 0."
+        ]
+
     def test_Forbidden(self):
-        response = self.post(self.NOT_PERMITTED_URL, self.VALID_JSON_TASK_POST)
-        self.assert_forbidden(response)
+        response = self.post(self.NOT_PERMITTED_URL, self.VALID_TASK_DATA)
+        self.assert_not_found(response)
 
     def test_NotFound(self):
-        response = self.post(self.TASK_NOT_FOUND_URL, self.VALID_JSON_TASK_POST)
+        response = self.post(self.TASK_NOT_FOUND_URL, self.VALID_TASK_DATA)
         self.assert_not_found(response)
 
     def test_EmptyField(self):
         # Remove content of a field.
-        invalid_prize_data = self.VALID_JSON_TASK_POST.copy()
+        invalid_prize_data = self.VALID_TASK_DATA.copy()
         invalid_prize_data["name"] = ""
 
         # Perform POST operation.
@@ -107,13 +122,11 @@ class TestTasksPost(EndpointTestCase):
         ]
 
     def test_NoToken(self):
-        response = self.client.post(self.VALID_URL, self.VALID_JSON_TASK_POST)
+        response = self.client.post(self.VALID_URL, self.VALID_TASK_DATA)
         self.assert_no_token(response)
 
     def test_InvalidToken(self):
-        response = self.post(
-            self.VALID_URL, self.VALID_JSON_TASK_POST, self.bogus_token()
-        )
+        response = self.post(self.VALID_URL, self.VALID_TASK_DATA, self.bogus_token())
         self.assert_invalid_token(response)
 
 
@@ -149,7 +162,7 @@ class TestSingleTaskGet(EndpointTestCase):
 
     def test_Forbidden(self):
         response = self.get(self.NOT_PERMITTED_URL)
-        self.assert_forbidden(response)
+        self.assert_not_found(response)
 
     def test_StudentNotFound(self):
         response = self.get(self.STUDENT_NOT_FOUND_URL)
@@ -157,14 +170,7 @@ class TestSingleTaskGet(EndpointTestCase):
 
     def test_TaskNotFound(self):
         response = self.get(self.TASK_NOT_FOUND_URL)
-        # TODO: This test provides results are not caught by 'self.assert_not_found'.
-        # TODO: This is actually more expected result.
-        assert response.status_code == status.HTTP_404_NOT_FOUND
-        assert response.headers["Content-Type"] == "application/json"
-        response_json = response.json()
-        assert len(response_json) == 1
-        assert "detail" in response_json
-        assert response_json["detail"] == "No Task matches the given query."
+        self.assert_not_found(response)
 
     def test_NoToken(self):
         response = self.client.get(self.VALID_URL)
@@ -232,7 +238,7 @@ class TestSingleTaskPatch(EndpointTestCase):
 
     def test_Forbidden(self):
         response = self.patch(self.NOT_PERMITTED_URL, "")
-        self.assert_forbidden(response)
+        self.assert_not_found(response)
 
     def test_StudentNotFound(self):
         response = self.patch(self.STUDENT_NOT_FOUND_URL, "")
@@ -240,14 +246,7 @@ class TestSingleTaskPatch(EndpointTestCase):
 
     def test_TaskNotFound(self):
         response = self.patch(self.TASK_NOT_FOUND_URL, "")
-        # TODO: This test provides results are not caught by 'self.assert_not_found'.
-        # TODO: This is actually more expected result.
-        assert response.status_code == status.HTTP_404_NOT_FOUND
-        assert response.headers["Content-Type"] == "application/json"
-        response_json = response.json()
-        assert len(response_json) == 1
-        assert "detail" in response_json
-        assert response_json["detail"] == "No Task matches the given query."
+        self.assert_not_found(response)
 
     def test_NoToken(self):
         response = self.client.patch(self.VALID_URL)
@@ -282,18 +281,11 @@ class TestSingleTaskDelete(EndpointTestCase):
 
         # Try to GET.
         get_response = self.get(self.VALID_URL)
-        # TODO: This test provides results are not caught by 'self.assert_not_found'.
-        # TODO: This is actually more expected result.
-        assert get_response.status_code == status.HTTP_404_NOT_FOUND
-        assert get_response.headers["Content-Type"] == "application/json"
-        response_json = get_response.json()
-        assert len(response_json) == 1
-        assert "detail" in response_json
-        assert response_json["detail"] == "No Task matches the given query."
+        self.assert_not_found(get_response)
 
     def test_Forbidden(self):
         response = self.delete(self.NOT_PERMITTED_URL)
-        self.assert_forbidden(response)
+        self.assert_not_found(response)
 
     def test_StudentNotFound(self):
         response = self.delete(self.STUDENT_NOT_FOUND_URL)
@@ -301,14 +293,7 @@ class TestSingleTaskDelete(EndpointTestCase):
 
     def test_TaskNotFound(self):
         response = self.delete(self.TASK_NOT_FOUND_URL)
-        # TODO: This test provides results are not caught by 'self.assert_not_found'.
-        # TODO: This is actually more expected result.
-        assert response.status_code == status.HTTP_404_NOT_FOUND
-        assert response.headers["Content-Type"] == "application/json"
-        response_json = response.json()
-        assert len(response_json) == 1
-        assert "detail" in response_json
-        assert response_json["detail"] == "No Task matches the given query."
+        self.assert_not_found(response)
 
     def test_NoToken(self):
         response = self.client.delete(self.VALID_URL)
