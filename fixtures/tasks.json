@@ -1,20 +1,20 @@
 [
-  {
-    "model": "users.task",
-    "pk": 1,
-    "fields": {
-      "student": 1,
-      "name": "Odkurzenie pokoju",
-      "value": 5
+    {
+        "model": "users.task",
+        "pk": 1,
+        "fields": {
+            "student": 1,
+            "name": "Odkurzenie pokoju",
+            "value": 5
+        }
+    },
+    {
+        "model": "users.task",
+        "pk": 2,
+        "fields": {
+            "student": 2,
+            "name": "Podlanie kwiatów",
+            "value": 1
+        }
     }
-  },
-  {
-    "model": "users.task",
-    "pk": 2,
-    "fields": {
-      "student": 2,
-      "name": "Podlanie kwiatów",
-      "value": 1
-    }
-  }
 ]

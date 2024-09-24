@@ -1,29 +1,29 @@
 [
-{
-  "model": "users.role",
-  "pk": 1,
-  "fields": {
-    "role_name": "caregiver",
-    "caregiver": 1,
-    "student": 2
-  }
-},
-{
-  "model": "users.role",
-  "pk": 2,
-  "fields": {
-    "role_name": "caregiver",
-    "caregiver": 2,
-    "student": 1
-  }
-},
-{
-  "model": "users.role",
-  "pk": 3,
-  "fields": {
-    "role_name": "caregiver",
-    "caregiver": 2,
-    "student": 2
-  }
-}
+    {
+        "model": "users.role",
+        "pk": 1,
+        "fields": {
+            "role_name": "caregiver",
+            "caregiver": 1,
+            "student": 2
+        }
+    },
+    {
+        "model": "users.role",
+        "pk": 2,
+        "fields": {
+            "role_name": "caregiver",
+            "caregiver": 2,
+            "student": 1
+        }
+    },
+    {
+        "model": "users.role",
+        "pk": 3,
+        "fields": {
+            "role_name": "caregiver",
+            "caregiver": 2,
+            "student": 2
+        }
+    }
 ]
