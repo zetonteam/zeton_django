@@ -28,6 +28,7 @@ class TestTasksGet(EndpointTestCase):
         assert len(response_json) == 1
         entry = response_json[0]
         assert entry["pk"] == 2
+        assert entry["student"] == "2"
         assert entry["name"] == "Podlanie kwiatów"
         assert entry["value"] == 1
 
@@ -74,9 +75,9 @@ class TestSingleTaskGet(EndpointTestCase):
 
         # Fixture specific assertions.
         assert response_json["pk"] == 2
+        assert response_json["student"] == "2"
         assert response_json["name"] == "Podlanie kwiatów"
         assert response_json["value"] == 1
-        # TODO: https://github.com/zetonteam/zeton_django/issues/202
 
     def test_Forbidden(self):
         response = self.get(self.NOT_PERMITTED_URL)
