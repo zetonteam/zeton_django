@@ -135,6 +135,14 @@ docker compose exec web pytest
 
 `-v` can be added for more verbose output.
 
+Full command to rebuild, restart and run tests:
+
+```bash
+docker compose build && docker compose up --wait && docker compose exec web pytest
+```
+
+Rebuilding Docker images is necessary after each change of the source code.
+
 ### Swagger UI and OpenAPI
 
 Swagger UI can be accessed with:
