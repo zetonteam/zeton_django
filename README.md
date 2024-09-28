@@ -141,7 +141,7 @@ Full command to rebuild, restart and run tests:
 docker compose build && docker compose up --wait && docker compose exec web pytest
 ```
 
-Rebuilding Docker images in necessary after each change of the source code.
+Rebuilding Docker images is necessary after each change of the source code.
 
 ### Swagger UI and OpenAPI
 
