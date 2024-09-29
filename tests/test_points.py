@@ -156,6 +156,18 @@ class TestPointsPost(EndpointTestCase):
         total_points = self._get_student_points(2)
         assert student_points + response_json["value"] == total_points
 
+    def test_Prize_NegativeTotalPoints(self):
+        prize_data = {"content_type": "prize", "object_id": "3"}
+        response = self.post(self.VALID_URL, prize_data)
+
+        # General assertions.
+        assert response.status_code == status.HTTP_400_BAD_REQUEST
+        assert response.headers["Content-Type"] == "application/json"
+        response_json = response.json()
+        assert len(response_json) == 1
+        assert "detail" in response_json
+        assert response_json["detail"] == "Total points cannot be negative."
+
     def test_InvalidType(self):
         response = self.post(self.VALID_URL, self.INVALID_POST_TYPE)
         assert response.status_code == status.HTTP_400_BAD_REQUEST
