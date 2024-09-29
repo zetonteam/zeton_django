@@ -53,14 +53,12 @@ class PrizeSerializer(serializers.Serializer):
 
 class TaskSerializer(serializers.Serializer):
     pk = serializers.IntegerField(read_only=True)
+    student = serializers.CharField(source="student_id", read_only=True)
     name = serializers.CharField()
     value = serializers.IntegerField()
 
     def create(self, validated_data):
-        student_id = validated_data.pop("student_id")
-        return Task.objects.create(
-            student=Student.objects.get(pk=student_id), **validated_data
-        )
+        return Task.objects.create(**validated_data)
 
     def update(self, instance, validated_data):
         instance.student = validated_data.get("student", instance.student)
