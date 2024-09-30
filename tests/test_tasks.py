@@ -142,6 +142,26 @@ class TestSingleTaskPatch(EndpointTestCase):
         # Compare data.
         assert task_data == post_patch_data
 
+    def test_NegativePoints(self):
+        # Get current task data.
+        task_data = self.get(self.VALID_URL).json()
+
+        # Modify task data.
+        task_data["value"] = -15
+
+        # Perform PATCH operation.
+        response = self.patch(self.VALID_URL, data=task_data)
+
+        # General assertions.
+        assert response.status_code == status.HTTP_400_BAD_REQUEST
+        assert response.headers["Content-Type"] == "application/json"
+        response_json = response.json()
+        assert isinstance(response_json, dict)
+        assert "value" in response_json
+        assert response_json["value"] == [
+            "Ensure this value is greater than or equal to 0."
+        ]
+
     def test_Forbidden(self):
         response = self.patch(self.NOT_PERMITTED_URL, "")
         self.assert_forbidden(response)
