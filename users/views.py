@@ -2,7 +2,7 @@ from django.contrib.contenttypes.models import ContentType
 from drf_spectacular.utils import extend_schema, OpenApiParameter
 from rest_framework import permissions, status, generics
 from rest_framework.decorators import api_view
-from rest_framework.exceptions import PermissionDenied, MethodNotAllowed
+from rest_framework.exceptions import PermissionDenied
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from django.shortcuts import get_object_or_404
@@ -57,7 +57,7 @@ class StudentsResource(APIView):
         try:
             caregiver = Caregiver.objects.get(user_id=user_id)
         except Caregiver.DoesNotExist:
-            raise PermissionDenied
+            raise PermissionDenied()
 
         students = caregiver.students.all()
         serializer = StudentSerializer(students, many=True)
@@ -69,7 +69,7 @@ class StudentsResource(APIView):
             user_id = request.user.id
             caregiver_id = Caregiver.objects.get(user_id=user_id).id
         except Caregiver.DoesNotExist:
-            raise PermissionDenied
+            raise PermissionDenied()
 
         # Create new student entry.
         student_serializer = StudentSerializer(data=request.data)
@@ -170,18 +170,14 @@ class SingleTaskResource(APIView):
         serializer = TaskSerializer(task)
         return Response(serializer.data)
 
-    def patch(self, request, student_id, task_id=None):
-        if task_id is None:
-            raise MethodNotAllowed
+    def patch(self, request, student_id, task_id):
         task = get_object_or_404(Task, pk=task_id, student_id=student_id)
         serializer = TaskSerializer(task, data=request.data, partial=True)
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data)
 
-    def delete(self, request, student_id, task_id=None):
-        if task_id is None:
-            raise MethodNotAllowed
+    def delete(self, request, student_id, task_id):
         task = get_object_or_404(Task, pk=task_id, student_id=student_id)
         task.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
@@ -229,7 +225,7 @@ class PointResource(generics.GenericAPIView):
         try:
             _ = Caregiver.objects.get(user_id=user_id)
         except Caregiver.DoesNotExist:
-            raise PermissionDenied
+            raise PermissionDenied()
 
         query_set = self.get_queryset()
         page = self.paginate_queryset(query_set)
@@ -266,17 +262,27 @@ class PointResource(generics.GenericAPIView):
         object_id = request.data.get("object_id")
         student = Student.objects.get(pk=student_id)
 
+        # Get points type and points difference.
         if content_type == "task":
             content_object = Task.objects.get(pk=object_id, student=student)
+            total_points_diff = content_object.value
         elif content_type == "prize":
             content_object = Prize.objects.get(pk=object_id, student=student)
+            total_points_diff = -content_object.value
         else:
             return Response(status=status.HTTP_400_BAD_REQUEST)
         caregiver = Caregiver.objects.get(user=request.user)
-
         content_type_obj = ContentType.objects.get(model=content_type)
 
-        serializer = PointSerializer(
+        # Update student with new total points.
+        new_total_points = student.total_points + total_points_diff
+        student_data = {"total_points": new_total_points}
+        student_serializer = StudentSerializer(student, data=student_data, partial=True)
+        student_serializer.is_valid(raise_exception=True)
+        student_serializer.save()
+
+        # Add new Point.
+        point_serializer = PointSerializer(
             data={
                 "student": student.pk,
                 "assigner": caregiver.pk,
@@ -287,16 +293,7 @@ class PointResource(generics.GenericAPIView):
                 "object_id": object_id,
             }
         )
+        point_serializer.is_valid(raise_exception=True)
+        point_serializer.save()
 
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-
-        if content_type == "task":
-            student.total_points += content_object.value
-        elif content_type == "prize":
-            student.total_points -= content_object.value
-        else:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
-        student.save()
-
-        return Response(status=status.HTTP_201_CREATED, data=serializer.data)
+        return Response(status=status.HTTP_201_CREATED, data=point_serializer.data)
