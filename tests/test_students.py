@@ -73,6 +73,24 @@ class TestStudentsPost(EndpointTestCase):
         assert post_op_data["last_name"] == "test_last_name"
         assert post_op_data["total_points"] == 321
 
+    def test_NegativePoints(self):
+        # Modify valid data.
+        student_data = self.VALID_DATA.copy()
+        student_data["total_points"] = -15
+
+        # Access API.
+        response = self.post(self.VALID_URL, student_data)
+
+        # General assertions.
+        assert response.status_code == status.HTTP_400_BAD_REQUEST
+        assert response.headers["Content-Type"] == "application/json"
+        response_json = response.json()
+        assert isinstance(response_json, dict)
+        assert "total_points" in response_json
+        assert response_json["total_points"] == [
+            "Ensure this value is greater than or equal to 0."
+        ]
+
     def test_NoToken(self):
         response = self.client.post(self.VALID_URL, self.VALID_DATA)
         self.assert_no_token(response)
@@ -168,6 +186,26 @@ class TestSingleStudentPatch(EndpointTestCase):
         post_patch_data = post_patch_response.json()
         # Compare data.
         assert student_data == post_patch_data
+
+    def test_NegativePoints(self):
+        # Get current student data.
+        student_data = self.get(self.VALID_URL).json()
+
+        # Modify student data.
+        student_data["total_points"] = -15
+
+        # Perform PATCH operation.
+        response = self.patch(self.VALID_URL, data=student_data)
+
+        # General assertions.
+        assert response.status_code == status.HTTP_400_BAD_REQUEST
+        assert response.headers["Content-Type"] == "application/json"
+        response_json = response.json()
+        assert isinstance(response_json, dict)
+        assert "total_points" in response_json
+        assert response_json["total_points"] == [
+            "Ensure this value is greater than or equal to 0."
+        ]
 
     def test_EmptyField(self):
         # Get current student data.

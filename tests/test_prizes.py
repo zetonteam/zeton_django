@@ -25,7 +25,7 @@ class TestPrizesGet(EndpointTestCase):
         assert isinstance(response_json, list)
 
         # Fixture specific assertions.
-        assert len(response_json) == 1
+        assert len(response_json) == 2
         entry = response_json[0]
         assert entry["pk"] == 2
         assert entry["student"] == "2"
@@ -72,11 +72,29 @@ class TestPrizesPost(EndpointTestCase):
         assert response.headers["Content-Type"] == "application/json"
 
         # Fixture specific assertions.
-        single_prize_url = "/api/students/2/prize/3/"
+        single_prize_url = "/api/students/2/prize/4/"
         post_op_data = self.get(single_prize_url).json()
         assert post_op_data["student"] == "2"
         assert post_op_data["name"] == "Gry komputerowe"
         assert post_op_data["value"] == 15
+
+    def test_NegativePoints(self):
+        # Modify valid data.
+        prize_data = self.VALID_PRIZE_DATA.copy()
+        prize_data["value"] = -15
+
+        # Access API.
+        response = self.post(self.VALID_URL, prize_data)
+
+        # General assertions.
+        assert response.status_code == status.HTTP_400_BAD_REQUEST
+        assert response.headers["Content-Type"] == "application/json"
+        response_json = response.json()
+        assert isinstance(response_json, dict)
+        assert "value" in response_json
+        assert response_json["value"] == [
+            "Ensure this value is greater than or equal to 0."
+        ]
 
     def test_Forbidden(self):
         response = self.post(self.NOT_PERMITTED_URL, self.VALID_PRIZE_DATA)
@@ -204,6 +222,26 @@ class TestSinglePrizePatch(EndpointTestCase):
         post_patch_data = post_patch_response.json()
         # Compare data.
         assert prize_data == post_patch_data
+
+    def test_NegativePoints(self):
+        # Get current prize data.
+        prize_data = self.get(self.VALID_URL).json()
+
+        # Modify prize data.
+        prize_data["value"] = -15
+
+        # Perform PATCH operation.
+        response = self.patch(self.VALID_URL, data=prize_data)
+
+        # General assertions.
+        assert response.status_code == status.HTTP_400_BAD_REQUEST
+        assert response.headers["Content-Type"] == "application/json"
+        response_json = response.json()
+        assert isinstance(response_json, dict)
+        assert "value" in response_json
+        assert response_json["value"] == [
+            "Ensure this value is greater than or equal to 0."
+        ]
 
     def test_Forbidden(self):
         response = self.patch(self.NOT_PERMITTED_URL, "")

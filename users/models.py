@@ -49,7 +49,7 @@ class Student(models.Model):
         db_table = "students"
 
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
-    total_points = models.IntegerField()
+    total_points = models.PositiveIntegerField()
     caregivers = models.ManyToManyField(
         Caregiver, related_name="students", through="Role"
     )
@@ -103,7 +103,7 @@ class Point(models.Model):
         (PRIZE_TYPE, "prize"),
     )
 
-    value = models.IntegerField()
+    value = models.PositiveIntegerField()
 
     assigner = models.ForeignKey(Caregiver, on_delete=models.CASCADE)
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
@@ -123,7 +123,7 @@ class Prize(models.Model):
 
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
     name = models.CharField(max_length=100)
-    value = models.IntegerField()
+    value = models.PositiveIntegerField()
 
 
 class Task(models.Model):
@@ -132,4 +132,4 @@ class Task(models.Model):
 
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
     name = models.CharField(max_length=100)
-    value = models.IntegerField()
+    value = models.PositiveIntegerField()

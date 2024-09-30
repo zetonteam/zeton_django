@@ -16,5 +16,14 @@
             "name": "1 godzina na basenie",
             "value": 30
         }
+    },
+    {
+        "model": "users.prize",
+        "pk": 3,
+        "fields": {
+            "student": 2,
+            "name": "Lot w kosmos",
+            "value": 10000
+        }
     }
 ]

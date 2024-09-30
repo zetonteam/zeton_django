@@ -137,6 +137,21 @@ class TestPointsPost(EndpointTestCase):
         total_points = self._get_student_points(2)
         assert student_points - response_json["value"] == total_points
 
+    def test_Prize_NegativePoints(self):
+        # Access API.
+        prize_data = {"content_type": "prize", "object_id": "3"}
+        response = self.post(self.VALID_URL, prize_data)
+
+        # General assertions.
+        assert response.status_code == status.HTTP_400_BAD_REQUEST
+        assert response.headers["Content-Type"] == "application/json"
+        response_json = response.json()
+        assert isinstance(response_json, dict)
+        assert "total_points" in response_json
+        assert response_json["total_points"] == [
+            "Ensure this value is greater than or equal to 0."
+        ]
+
     def test_Task_Success(self):
         student_points = self._get_student_points(2)
         response = self.post(self.VALID_URL, self.VALID_POST_TASK)

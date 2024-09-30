@@ -9,7 +9,7 @@ class StudentSerializer(serializers.Serializer):
     username = serializers.CharField(source="user.username")
     first_name = serializers.CharField(source="user.first_name")
     last_name = serializers.CharField(source="user.last_name")
-    total_points = serializers.IntegerField()
+    total_points = serializers.IntegerField(min_value=0)
 
     def create(self, validated_data):
         user_data = validated_data.pop("user")
@@ -38,7 +38,7 @@ class PrizeSerializer(serializers.Serializer):
     pk = serializers.IntegerField(read_only=True)
     student = serializers.CharField(source="student.id", read_only=True)
     name = serializers.CharField()
-    value = serializers.IntegerField()
+    value = serializers.IntegerField(min_value=0)
 
     def create(self, validated_data):
         return Prize.objects.create(**validated_data)
@@ -55,7 +55,7 @@ class TaskSerializer(serializers.Serializer):
     pk = serializers.IntegerField(read_only=True)
     student = serializers.CharField(source="student_id", read_only=True)
     name = serializers.CharField()
-    value = serializers.IntegerField()
+    value = serializers.IntegerField(min_value=0)
 
     def create(self, validated_data):
         return Task.objects.create(**validated_data)
