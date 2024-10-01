@@ -49,6 +49,74 @@ class TestTasksGet(EndpointTestCase):
         self.assert_invalid_token(response)
 
 
+class TestTasksPost(EndpointTestCase):
+    """
+    Tests for '/api/students/<int:student_id>/tasks/' POST endpoint.
+    """
+
+    # Fixture specific URL to available student data.
+    VALID_URL = "/api/students/2/tasks/"
+    # Fixture specific URL to student data not available for current user.
+    NOT_PERMITTED_URL = "/api/students/1/tasks/"
+    # Fixture specific URL to invalid student ID.
+    TASK_NOT_FOUND_URL = "/api/students/12345/tasks/"
+
+    # Valid task data.
+    VALID_JSON_TASK_POST = {
+        "name": "Another new task to do",
+        "value": 21,
+    }
+
+    def test_Success(self):
+        # Send POST data and response HTTPResponse:
+        response = self.post(self.VALID_URL, data=self.VALID_JSON_TASK_POST)
+
+        # General assertions.
+        assert response.status_code == status.HTTP_201_CREATED
+        assert response.headers["Content-Type"] == "application/json"
+
+        # Fixture specific assertions.
+        single_task_url = "/api/students/2/task/3/"
+        post_op_data = self.get(single_task_url).json()
+        assert post_op_data["name"] == "Another new task to do"
+        assert post_op_data["value"] == 21
+
+    def test_Forbidden(self):
+        response = self.post(self.NOT_PERMITTED_URL, self.VALID_JSON_TASK_POST)
+        self.assert_forbidden(response)
+
+    def test_NotFound(self):
+        response = self.post(self.TASK_NOT_FOUND_URL, self.VALID_JSON_TASK_POST)
+        self.assert_not_found(response)
+
+    def test_EmptyField(self):
+        # Remove content of a field.
+        invalid_prize_data = self.VALID_JSON_TASK_POST.copy()
+        invalid_prize_data["name"] = ""
+
+        # Perform POST operation.
+        response = self.post(self.VALID_URL, invalid_prize_data)
+
+        # General assertions.
+        assert response.status_code == status.HTTP_400_BAD_REQUEST
+        assert response.headers["Content-Type"] == "application/json"
+        response_json = response.json()
+        assert isinstance(response_json, dict)
+        assert "name" in response_json and response_json["name"] == [
+            "This field may not be blank."
+        ]
+
+    def test_NoToken(self):
+        response = self.client.post(self.VALID_URL, self.VALID_JSON_TASK_POST)
+        self.assert_no_token(response)
+
+    def test_InvalidToken(self):
+        response = self.post(
+            self.VALID_URL, self.VALID_JSON_TASK_POST, self.bogus_token()
+        )
+        self.assert_invalid_token(response)
+
+
 class TestSingleTaskGet(EndpointTestCase):
     """
     Tests for '/api/students/<int:student_id>/task/<int:task_id>/' GET endpoint.
