@@ -83,6 +83,13 @@ class _CustomAPIView(APIView):
 
 
 class StudentsResource(_CustomAPIView):
+    """
+    Access students assigned to current user.
+    User must be authenticated and must be a caregiver.
+
+    Adding a new student automatically assigns it to current user.
+    """
+
     serializer_class = StudentSerializer
     permission_classes = [permissions.IsAuthenticated, IsUserCaregiver]
 
@@ -114,6 +121,11 @@ class StudentsResource(_CustomAPIView):
 
 
 class SingleStudentResource(_CustomAPIView):
+    """
+    Access single student assigned to current user.
+    User must be authenticated and must be assigned to the accessed student.
+    """
+
     serializer_class = StudentSerializer
     permission_classes = [permissions.IsAuthenticated, HasUserAccessToStudent]
 
@@ -133,6 +145,11 @@ class SingleStudentResource(_CustomAPIView):
 
 
 class PrizesResource(_CustomAPIView):
+    """
+    Access prizes assigned to the student.
+    User must be authenticated and must be assigned to the accessed student.
+    """
+
     serializer_class = PrizeSerializer
     permission_classes = [permissions.IsAuthenticated, HasUserAccessToStudent]
 
@@ -151,6 +168,11 @@ class PrizesResource(_CustomAPIView):
 
 
 class SinglePrizeResource(_CustomAPIView):
+    """
+    Access single prize assigned to the student.
+    User must be authenticated and must be assigned to the accessed student.
+    """
+
     serializer_class = PrizeSerializer
     permission_classes = [permissions.IsAuthenticated, HasUserAccessToStudent]
 
@@ -176,6 +198,11 @@ class SinglePrizeResource(_CustomAPIView):
 
 
 class TasksResource(_CustomAPIView):
+    """
+    Access tasks assigned to the student.
+    User must be authenticated and must be assigned to the accessed student.
+    """
+
     serializer_class = TaskSerializer
     permission_classes = [permissions.IsAuthenticated, HasUserAccessToStudent]
 
@@ -194,6 +221,11 @@ class TasksResource(_CustomAPIView):
 
 
 class SingleTaskResource(_CustomAPIView):
+    """
+    Access single task assigned to the student.
+    User must be authenticated and must be assigned to the accessed student.
+    """
+
     serializer_class = TaskSerializer
     permission_classes = [permissions.IsAuthenticated, HasUserAccessToStudent]
 
@@ -219,6 +251,12 @@ class SingleTaskResource(_CustomAPIView):
 
 
 class PointResource(_CustomAPIView):
+    """
+    Access points assigned to the student.
+    This means claimed prizes and task rewards.
+    User must be authenticated and must be assigned to the accessed student.
+    """
+
     permission_classes = [permissions.IsAuthenticated, HasUserAccessToStudent]
 
     def get(self, request, student_id):
