@@ -62,7 +62,7 @@ class TestPrizesPost(EndpointTestCase):
     NOT_FOUND_URL = "/api/students/12345/prizes/"
 
     # Valid prize data.
-    VALID_PRIZE_DATA = {"student": "2", "name": "Gry komputerowe", "value": 15}
+    VALID_PRIZE_DATA = {"name": "Gry komputerowe", "value": 15}
 
     def test_Success(self):
         response = self.post(self.VALID_URL, self.VALID_PRIZE_DATA)

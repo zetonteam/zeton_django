@@ -62,7 +62,7 @@ class TestTasksPost(EndpointTestCase):
     TASK_NOT_FOUND_URL = "/api/students/12345/tasks/"
 
     # Valid task data.
-    VALID_TASK_DATA = {"student": "2", "name": "Another new task to do", "value": 21}
+    VALID_TASK_DATA = {"name": "Another new task to do", "value": 21}
 
     def test_Success(self):
         response = self.post(self.VALID_URL, self.VALID_TASK_DATA)
