@@ -106,12 +106,6 @@ class PointSerializer(serializers.ModelSerializer):
         )
 
 
-class PointShortSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Point
-        fields = ["content_type", "object_id"]
-
-
 class RoleSerializer(serializers.ModelSerializer):
     class Meta:
         model = Role

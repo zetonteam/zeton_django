@@ -34,7 +34,7 @@ class TestPrizesGet(EndpointTestCase):
 
     def test_Forbidden(self):
         response = self.get(self.NOT_PERMITTED_URL)
-        self.assert_forbidden(response)
+        self.assert_not_found(response)
 
     def test_NotFound(self):
         response = self.get(self.NOT_FOUND_URL)
@@ -62,7 +62,7 @@ class TestPrizesPost(EndpointTestCase):
     NOT_FOUND_URL = "/api/students/12345/prizes/"
 
     # Valid prize data.
-    VALID_PRIZE_DATA = {"student": "2", "name": "Gry komputerowe", "value": 15}
+    VALID_PRIZE_DATA = {"name": "Gry komputerowe", "value": 15}
 
     def test_Success(self):
         response = self.post(self.VALID_URL, self.VALID_PRIZE_DATA)
@@ -98,7 +98,7 @@ class TestPrizesPost(EndpointTestCase):
 
     def test_Forbidden(self):
         response = self.post(self.NOT_PERMITTED_URL, self.VALID_PRIZE_DATA)
-        self.assert_forbidden(response)
+        self.assert_not_found(response)
 
     def test_NotFound(self):
         response = self.post(self.NOT_FOUND_URL, self.VALID_PRIZE_DATA)
@@ -162,7 +162,7 @@ class TestSinglePrizeGet(EndpointTestCase):
 
     def test_Forbidden(self):
         response = self.get(self.NOT_PERMITTED_URL)
-        self.assert_forbidden(response)
+        self.assert_not_found(response)
 
     def test_StudentNotFound(self):
         response = self.get(self.STUDENT_NOT_FOUND_URL)
@@ -170,14 +170,7 @@ class TestSinglePrizeGet(EndpointTestCase):
 
     def test_PrizeNotFound(self):
         response = self.get(self.PRIZE_NOT_FOUND_URL)
-        # TODO: This test provides results are not caught by 'self.assert_not_found'.
-        # TODO: This is actually more expected result.
-        assert response.status_code == status.HTTP_404_NOT_FOUND
-        assert response.headers["Content-Type"] == "application/json"
-        response_json = response.json()
-        assert len(response_json) == 1
-        assert "detail" in response_json
-        assert response_json["detail"] == "No Prize matches the given query."
+        self.assert_not_found(response)
 
     def test_NoToken(self):
         response = self.client.get(self.VALID_URL)
@@ -245,7 +238,7 @@ class TestSinglePrizePatch(EndpointTestCase):
 
     def test_Forbidden(self):
         response = self.patch(self.NOT_PERMITTED_URL, "")
-        self.assert_forbidden(response)
+        self.assert_not_found(response)
 
     def test_StudentNotFound(self):
         response = self.patch(self.STUDENT_NOT_FOUND_URL, "")
@@ -253,14 +246,7 @@ class TestSinglePrizePatch(EndpointTestCase):
 
     def test_PrizeNotFound(self):
         response = self.patch(self.PRIZE_NOT_FOUND_URL, "")
-        # TODO: This test provides results are not caught by 'self.assert_not_found'.
-        # TODO: This is actually more expected result.
-        assert response.status_code == status.HTTP_404_NOT_FOUND
-        assert response.headers["Content-Type"] == "application/json"
-        response_json = response.json()
-        assert len(response_json) == 1
-        assert "detail" in response_json
-        assert response_json["detail"] == "No Prize matches the given query."
+        self.assert_not_found(response)
 
     def test_NoToken(self):
         response = self.client.patch(self.VALID_URL)
@@ -295,18 +281,11 @@ class TestSinglePrizeDelete(EndpointTestCase):
 
         # Try to GET.
         get_response = self.get(self.VALID_URL)
-        # TODO: This test provides results are not caught by 'self.assert_not_found'.
-        # TODO: This is actually more expected result.
-        assert get_response.status_code == status.HTTP_404_NOT_FOUND
-        assert get_response.headers["Content-Type"] == "application/json"
-        response_json = get_response.json()
-        assert len(response_json) == 1
-        assert "detail" in response_json
-        assert response_json["detail"] == "No Prize matches the given query."
+        self.assert_not_found(get_response)
 
     def test_Forbidden(self):
         response = self.delete(self.NOT_PERMITTED_URL)
-        self.assert_forbidden(response)
+        self.assert_not_found(response)
 
     def test_StudentNotFound(self):
         response = self.delete(self.STUDENT_NOT_FOUND_URL)
@@ -314,14 +293,7 @@ class TestSinglePrizeDelete(EndpointTestCase):
 
     def test_PrizeNotFound(self):
         response = self.delete(self.PRIZE_NOT_FOUND_URL)
-        # TODO: This test provides results are not caught by 'self.assert_not_found'.
-        # TODO: This is actually more expected result.
-        assert response.status_code == status.HTTP_404_NOT_FOUND
-        assert response.headers["Content-Type"] == "application/json"
-        response_json = response.json()
-        assert len(response_json) == 1
-        assert "detail" in response_json
-        assert response_json["detail"] == "No Prize matches the given query."
+        self.assert_not_found(response)
 
     def test_NoToken(self):
         response = self.client.delete(self.VALID_URL)

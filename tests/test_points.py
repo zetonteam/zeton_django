@@ -23,7 +23,7 @@ class TestPointsGet(EndpointTestCase):
         assert response.status_code == status.HTTP_200_OK
         assert response.headers["Content-Type"] == "application/json"
         response_json = response.json()
-        assert isinstance(response_json, dict)
+        assert isinstance(response_json, list)
 
         # Fixture specific assertions.
         def assert_entry(
@@ -45,12 +45,9 @@ class TestPointsGet(EndpointTestCase):
             assert recv_point["content_type"] == expected_content_type
             assert recv_point["object_id"] == expected_object_id
 
-        assert response_json["count"] == 6
-        # TODO: what are 'previous' and 'next' fields for?
-        results = response_json["results"]
         # Only first two entries are now tested.
         assert_entry(
-            results[0],
+            response_json[0],
             expected_pk=11,
             expected_value=1,
             expected_assigner=1,
@@ -60,7 +57,7 @@ class TestPointsGet(EndpointTestCase):
             expected_object_id=2,
         )
         assert_entry(
-            results[1],
+            response_json[1],
             expected_pk=10,
             expected_value=30,
             expected_assigner=1,
@@ -72,7 +69,7 @@ class TestPointsGet(EndpointTestCase):
 
     def test_Forbidden(self):
         response = self.get(self.NOT_PERMITTED_URL)
-        self.assert_forbidden(response)
+        self.assert_not_found(response)
 
     def test_NotFound(self):
         response = self.get(self.NOT_FOUND_URL)
@@ -177,7 +174,7 @@ class TestPointsPost(EndpointTestCase):
 
     def test_Forbidden(self):
         response = self.post(self.NOT_PERMITTED_URL, self.VALID_POST_PRIZE)
-        self.assert_forbidden(response)
+        self.assert_not_found(response)
 
     def test_NotFound(self):
         response = self.post(self.NOT_FOUND_URL, self.VALID_POST_PRIZE)

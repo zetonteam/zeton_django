@@ -1,14 +1,15 @@
 from django.contrib.contenttypes.models import ContentType
-from drf_spectacular.utils import extend_schema, OpenApiParameter
-from rest_framework import permissions, status, generics
+from rest_framework import permissions, status
 from rest_framework.decorators import api_view
-from rest_framework.exceptions import PermissionDenied
+from rest_framework.exceptions import (
+    NotAuthenticated,
+    APIException,
+)
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from django.shortcuts import get_object_or_404
 
 from .models import Caregiver, Student, Prize, Task, Point
-from .permissions import HasUserAccessToStudent
+from .permissions import HasUserAccessToStudent, IsUserCaregiver
 
 from .serializers import (
     CustomUserSerializer,
@@ -17,7 +18,6 @@ from .serializers import (
     PrizeSerializer,
     TaskSerializer,
     PointSerializer,
-    PointShortSerializer,
     RoleSerializer,
 )
 
@@ -48,30 +48,61 @@ class UserList(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class StudentsResource(APIView):
+class _NotFoundOrPermissionDenied(APIException):
+    status_code = status.HTTP_404_NOT_FOUND
+    default_detail = "Resource not found or permission denied."
+    default_code = "not_found_or_permission_denied"
+
+
+class _CustomAPIView(APIView):
+    """
+    Modified 'APIView'.
+    Throws 'NotFound' exception when permission is denied.
+    """
+
+    def permission_denied(self, request, message=None, code=None):
+        """
+        If request is not permitted, determine what kind of exception to raise.
+        - 'NotAuthenticated' when user is not authenticated.
+        - 'NotFound' when permission is denied.
+        """
+        if request.authenticators and not request.successful_authenticator:
+            raise NotAuthenticated()
+        raise _NotFoundOrPermissionDenied()
+
+    def get_object(self, model_type, **kwargs):
+        """
+        Return object or raise 404.
+        Replacement for 'get_object_or_404', but with consistent error message.
+        """
+        try:
+            return model_type.objects.get(**kwargs)
+
+        except model_type.DoesNotExist:
+            raise _NotFoundOrPermissionDenied()
+
+
+class StudentsResource(_CustomAPIView):
+    """
+    Access students assigned to current user.
+    User must be authenticated and must be a caregiver.
+
+    Adding a new student automatically assigns it to current user.
+    """
+
     serializer_class = StudentSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated, IsUserCaregiver]
 
     def get(self, request):
-        user_id = request.user.id
-        try:
-            caregiver = Caregiver.objects.get(user_id=user_id)
-        except Caregiver.DoesNotExist:
-            raise PermissionDenied()
-
+        caregiver = self.get_object(Caregiver, user_id=request.user.id)
         students = caregiver.students.all()
         serializer = StudentSerializer(students, many=True)
 
         return Response(serializer.data)
 
     def post(self, request):
-        try:
-            user_id = request.user.id
-            caregiver_id = Caregiver.objects.get(user_id=user_id).id
-        except Caregiver.DoesNotExist:
-            raise PermissionDenied()
-
         # Create new student entry.
+        caregiver = self.get_object(Caregiver, user_id=request.user.id)
         student_serializer = StudentSerializer(data=request.data)
         student_serializer.is_valid(raise_exception=True)
         student_serializer.save()
@@ -79,7 +110,7 @@ class StudentsResource(APIView):
         # Add a role.
         role_data = {
             "role_name": "caregiver",
-            "caregiver": caregiver_id,
+            "caregiver": caregiver.id,
             "student": student_serializer.data["pk"],
         }
         role_serializer = RoleSerializer(data=role_data)
@@ -89,174 +120,153 @@ class StudentsResource(APIView):
         return Response(student_serializer.data)
 
 
-class SingleStudentResource(APIView):
+class SingleStudentResource(_CustomAPIView):
+    """
+    Access single student assigned to current user.
+    User must be authenticated and must be assigned to the accessed student.
+    """
+
     serializer_class = StudentSerializer
     permission_classes = [permissions.IsAuthenticated, HasUserAccessToStudent]
 
     def get(self, request, student_id):
-        student = Student.objects.get(pk=student_id)
+        student = self.get_object(Student, pk=student_id)
         serializer = StudentSerializer(student)
 
         return Response(serializer.data)
 
     def patch(self, request, student_id):
-        student = Student.objects.get(pk=student_id)
+        student = self.get_object(Student, pk=student_id)
         serializer = StudentSerializer(student, data=request.data, partial=True)
         serializer.is_valid(raise_exception=True)
         serializer.save()
+
         return Response(serializer.data)
 
 
-class PrizesResource(APIView):
+class PrizesResource(_CustomAPIView):
+    """
+    Access prizes assigned to the student.
+    User must be authenticated and must be assigned to the accessed student.
+    """
+
     serializer_class = PrizeSerializer
     permission_classes = [permissions.IsAuthenticated, HasUserAccessToStudent]
 
     def get(self, request, student_id):
         prizes = Prize.objects.filter(student_id=student_id)
         serializer = PrizeSerializer(prizes, many=True)
+
         return Response(serializer.data)
 
     def post(self, request, student_id):
         serializer = PrizeSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save(student_id=student_id)
+
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
-class SinglePrizeResource(APIView):
+class SinglePrizeResource(_CustomAPIView):
+    """
+    Access single prize assigned to the student.
+    User must be authenticated and must be assigned to the accessed student.
+    """
+
     serializer_class = PrizeSerializer
     permission_classes = [permissions.IsAuthenticated, HasUserAccessToStudent]
 
     def get(self, request, student_id, prize_id):
-        prize = get_object_or_404(Prize, pk=prize_id, student_id=student_id)
+        prize = self.get_object(Prize, pk=prize_id, student_id=student_id)
         serializer = PrizeSerializer(prize)
+
         return Response(serializer.data)
 
     def patch(self, request, student_id, prize_id):
-        prize = get_object_or_404(Prize, pk=prize_id, student_id=student_id)
+        prize = self.get_object(Prize, pk=prize_id, student_id=student_id)
         serializer = PrizeSerializer(prize, data=request.data, partial=True)
         serializer.is_valid(raise_exception=True)
         serializer.save()
+
         return Response(serializer.data)
 
     def delete(self, request, student_id, prize_id):
-        prize = get_object_or_404(Prize, pk=prize_id, student_id=student_id)
+        prize = self.get_object(Prize, pk=prize_id, student_id=student_id)
         prize.delete()
+
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-class TasksResource(APIView):
+class TasksResource(_CustomAPIView):
+    """
+    Access tasks assigned to the student.
+    User must be authenticated and must be assigned to the accessed student.
+    """
+
     serializer_class = TaskSerializer
     permission_classes = [permissions.IsAuthenticated, HasUserAccessToStudent]
 
     def get(self, request, student_id):
         tasks = Task.objects.filter(student_id=student_id)
         serializer = TaskSerializer(tasks, many=True)
+
         return Response(serializer.data)
 
     def post(self, request, student_id):
         serializer = TaskSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save(student_id=student_id)
+
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
-class SingleTaskResource(APIView):
+class SingleTaskResource(_CustomAPIView):
+    """
+    Access single task assigned to the student.
+    User must be authenticated and must be assigned to the accessed student.
+    """
+
     serializer_class = TaskSerializer
     permission_classes = [permissions.IsAuthenticated, HasUserAccessToStudent]
 
     def get(self, request, student_id, task_id):
-        task = get_object_or_404(Task, pk=task_id, student_id=student_id)
+        task = self.get_object(Task, pk=task_id, student_id=student_id)
         serializer = TaskSerializer(task)
+
         return Response(serializer.data)
 
-    def patch(self, request, student_id, task_id):
-        task = get_object_or_404(Task, pk=task_id, student_id=student_id)
+    def patch(self, request, student_id, task_id=None):
+        task = self.get_object(Task, pk=task_id, student_id=student_id)
         serializer = TaskSerializer(task, data=request.data, partial=True)
         serializer.is_valid(raise_exception=True)
         serializer.save()
+
         return Response(serializer.data)
 
-    def delete(self, request, student_id, task_id):
-        task = get_object_or_404(Task, pk=task_id, student_id=student_id)
+    def delete(self, request, student_id, task_id=None):
+        task = self.get_object(Task, pk=task_id, student_id=student_id)
         task.delete()
+
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-class PointResource(generics.GenericAPIView):
+class PointResource(_CustomAPIView):
+    """
+    Access points assigned to the student.
+    This means claimed prizes and task rewards.
+    User must be authenticated and must be assigned to the accessed student.
+    """
+
     permission_classes = [permissions.IsAuthenticated, HasUserAccessToStudent]
-    serializer_class = PointShortSerializer
 
-    def get_queryset(self):
-        queryset = Point.objects.filter(student_id=self.kwargs["student_id"])
-        return queryset.order_by("-assignment_date")
-
-    def get_serializer_class(self):
-        if self.request.method == "POST":
-            return PointShortSerializer()
-        else:
-            return PointSerializer
-
-    @extend_schema(
-        # extra parameters added to the schema
-        parameters=[
-            OpenApiParameter(
-                name="page",
-                description="number of page from pagination",
-                required=False,
-                type=int,
-            ),
-            OpenApiParameter(
-                name="page_size",
-                description="number of records in page for pagination",
-                required=False,
-                type=int,
-            ),
-        ],
-        # override default docstring extraction
-        description="Endpoint to generate last records of points of particular student by pagination",
-        # change the auto-generated operation name
-        operation_id=None,
-        # or even completely override what AutoSchema would generate. Provide raw Open API spec as Dict.
-        operation=None,
-    )
     def get(self, request, student_id):
-        user_id = request.user.id
-        try:
-            _ = Caregiver.objects.get(user_id=user_id)
-        except Caregiver.DoesNotExist:
-            raise PermissionDenied()
+        points = Point.objects.filter(student_id=student_id).order_by(
+            "-assignment_date"
+        )
+        serializer = PointSerializer(points, many=True)
 
-        query_set = self.get_queryset()
-        page = self.paginate_queryset(query_set)
+        return Response(serializer.data)
 
-        serializer = self.get_serializer(page, many=True)
-        return self.get_paginated_response(serializer.data)
-
-    @extend_schema(
-        # extra parameters added to the schema
-        request=PointShortSerializer,
-        # parameters=[
-        #     OpenApiParameter(
-        #         name="content_type",
-        #         description="task or prize",
-        #         required=True,
-        #         type=str,
-        #     ),
-        #     OpenApiParameter(
-        #         name="object_id",
-        #         description="task_id or prize_id",
-        #         required=True,
-        #         type=int,
-        #     ),
-        # ],
-        # override default docstring extraction
-        # description="Endpoint to generate last records of points of particular student by pagination",
-        # change the auto-generated operation name
-        # operation_id=None,
-        # or even completely override what AutoSchema would generate. Provide raw Open API spec as Dict.
-        # operation=None,
-    )
     def post(self, request, student_id):
         content_type = request.data.get("content_type")
         object_id = request.data.get("object_id")

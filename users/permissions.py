@@ -1,5 +1,10 @@
-from users.models import Role
+from users.models import Role, Caregiver
 from rest_framework import permissions
+
+
+class IsUserCaregiver(permissions.BasePermission):
+    def has_permission(self, request, view):
+        return Caregiver.objects.filter(user_id=request.user.id).exists()
 
 
 class HasUserAccessToStudent(permissions.BasePermission):
@@ -7,13 +12,3 @@ class HasUserAccessToStudent(permissions.BasePermission):
         return Role.objects.filter(
             student_id=view.kwargs.get("student_id"), caregiver__user_id=request.user.id
         ).exists()
-
-
-def has_caregiver_access_to_student(caregiver_id, student_id) -> bool:
-    # TODO:
-    # This permission is currently not used anywhere-
-    # we could probably remove it.
-
-    return Role.objects.filter(
-        student_id=student_id, caregiver_id=caregiver_id
-    ).exists()
