@@ -19,7 +19,7 @@ uritemplate = "^4.1.1"
 drf-spectacular = "^0.28.0"
 pytest = "^8.3.4"
 pytest-django = "^4.9.0"
-djangorestframework-simplejwt = "^5.3.1"
+djangorestframework-simplejwt = "^5.4.0"
 
 [tool.poetry.group.dev.dependencies]
 
