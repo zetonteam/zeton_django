@@ -6,6 +6,10 @@ jobs:
       - image: docker:27.1.2
     steps:
       - checkout
+      - run:
+          name: Copy base docker-compose
+          command: |
+            cp ../docker-compose.base.yml ./docker-compose.base.yml
       - setup_remote_docker
       - run:
           name: Install dependencies
